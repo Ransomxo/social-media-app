@@ -6,12 +6,12 @@ const FACEBOOK_API_VERSION = 'v18.0';
 const FACEBOOK_GRAPH_URL = `https://graph.facebook.com/${FACEBOOK_API_VERSION}`;
 
 export class FacebookGraphAPI {
-  private static async handleError(error: any): Promise<never> {
+  private static handleError(error: any): never {
     if (axios.isAxiosError(error) && error.response?.data) {
       const fbError = error.response.data.error as FacebookError;
-      return Promise.reject(new ValidationError(`Facebook API Error: ${fbError.message}`));
+      throw new ValidationError(`Facebook API Error: ${fbError.message}`);
     }
-    return Promise.reject(error);
+    throw error;
   }
 
   static async exchangeCodeForToken(code: string, redirectUri: string, clientId: string, clientSecret: string): Promise<FacebookTokenExchangeResponse> {
