@@ -89,8 +89,7 @@ describe('TwitterAnalyticsAPI', () => {
                 message: 'Invalid token',
                 code: 'invalid_token'
               }
-            ],
-            message: 'Invalid token'
+            ]
           }
         }
       };
