@@ -44,9 +44,9 @@ describe('FacebookGraphAPI', () => {
     });
 
     it('should handle Facebook API errors', async () => {
-      const mockError = new Error('Invalid OAuth code');
-      (mockError as any).isAxiosError = true;
-      (mockError as any).response = {
+      const mockError = new Error('Invalid OAuth code') as any;
+      mockError.isAxiosError = true;
+      mockError.response = {
         data: {
           error: {
             message: 'Invalid OAuth code',
@@ -107,9 +107,9 @@ describe('FacebookGraphAPI', () => {
     });
 
     it('should handle post creation errors', async () => {
-      const mockError = new Error('Invalid page access token');
-      (mockError as any).isAxiosError = true;
-      (mockError as any).response = {
+      const mockError = new Error('Invalid page access token') as any;
+      mockError.isAxiosError = true;
+      mockError.response = {
         data: {
           error: {
             message: 'Invalid page access token',
@@ -157,9 +157,9 @@ describe('FacebookGraphAPI', () => {
     });
 
     it('should handle page token fetch errors', async () => {
-      const mockError = new Error('Invalid user access token');
-      (mockError as any).isAxiosError = true;
-      (mockError as any).response = {
+      const mockError = new Error('Invalid user access token') as any;
+      mockError.isAxiosError = true;
+      mockError.response = {
         data: {
           error: {
             message: 'Invalid user access token',
