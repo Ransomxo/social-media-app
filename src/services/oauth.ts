@@ -2,18 +2,18 @@ import { PrismaClient } from '@prisma/client';
 import { OAuthToken, SocialPlatform, SocialTokenResponse } from '../types/social-media/oauth';
 import { oauthConfigs } from '../config/oauth';
 import { ValidationError } from '../utils/errors/AppError';
-import prisma from '../lib/prisma';
 
-type DBSocialToken = {
-  id: string;
-  platform: SocialPlatform;
-  accessToken: string;
-  refreshToken: string | null;
-  expiresAt: Date | null;
-  userId: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+const prisma = new PrismaClient().$extends({
+  model: {
+    socialToken: {
+      async findByPlatform(userId: string, platform: string) {
+        return this.findUnique({
+          where: { userId_platform: { userId, platform } }
+        });
+      }
+    }
+  }
+});
 
 
 
