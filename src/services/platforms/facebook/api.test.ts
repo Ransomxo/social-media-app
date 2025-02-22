@@ -72,7 +72,8 @@ describe('FacebookGraphAPI', () => {
     const mockPost = {
       content: 'Test post',
       scheduledAt: new Date('2025-03-01T12:00:00Z'),
-      media: 'https://example.com/image.jpg'
+      media: 'https://example.com/image.jpg',
+      platforms: ['facebook']
     };
 
     it('should create a post successfully', async () => {
