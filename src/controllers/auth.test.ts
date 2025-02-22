@@ -6,8 +6,15 @@ import { User } from '../models/User';
 
 describe('Authentication Endpoints', () => {
   beforeAll(async () => {
-    if (!TestDataSource.isInitialized) {
-      await TestDataSource.initialize();
+    try {
+      if (!TestDataSource.isInitialized) {
+        await TestDataSource.initialize();
+      }
+      const userRepository = TestDataSource.getRepository(User);
+      await userRepository.clear();
+    } catch (error) {
+      console.error('Database initialization error:', error);
+      throw error;
     }
   });
 
