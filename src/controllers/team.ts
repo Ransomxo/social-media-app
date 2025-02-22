@@ -21,9 +21,7 @@ export class TeamController {
       const user = await prisma.user.findUnique({
         where: { id: userId },
         include: {
-          ownedTeams: {
-            where: { ownerId: userId }
-          }
+          ownedTeams: true
         }
       });
 
@@ -162,14 +160,12 @@ export class TeamController {
         where: { id: teamId },
         include: {
           members: true,
-          owner: {
-            include: {
-              teams: {
-                include: { members: true }
-              }
-            }
-          }
+          owner: true
         }
+      });
+
+      const owner = await prisma.user.findUnique({
+        where: { id: team?.ownerId }
       });
 
       if (!team) {
@@ -184,12 +180,12 @@ export class TeamController {
       }
 
       // Check plan limits
-      if (team.owner.plan === 'minimal' && team.members.length >= 1) {
+      if (owner?.plan === 'minimal' && team?.members.length >= 1) {
         next(new ForbiddenError('Minimal plan teams are limited to 1 member'));
         return;
       }
 
-      if (team.owner.plan === 'team' && team.members.length >= 3) {
+      if (owner?.plan === 'team' && team?.members.length >= 3) {
         next(new ForbiddenError('Team plan teams are limited to 3 members'));
         return;
       }
@@ -205,7 +201,7 @@ export class TeamController {
       }
 
       // Check if user is already a member
-      const existingMember = team.members.find((member: { userId: string }) => member.userId === invitedUser.id);
+      const existingMember = team?.members.find(member => member.userId === invitedUser.id);
       if (existingMember) {
         next(new ValidationError('User is already a team member'));
         return;
