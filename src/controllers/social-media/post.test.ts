@@ -27,7 +27,8 @@ describe('Post Scheduling Endpoints', () => {
       },
     });
     userId = user.id;
-    authToken = jwt.sign({ id: user.id }, 'test-secret-key', { expiresIn: '1h' });
+    authToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'test-secret-key', { expiresIn: '1h' });
+    console.log('Test token generated:', { userId: user.id });
   });
 
   afterAll(async () => {
