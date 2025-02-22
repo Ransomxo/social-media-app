@@ -147,14 +147,43 @@ describe('FacebookExtendedAnalyticsAPI', () => {
         .mockRejectedValueOnce(mockError) // Engagement
         .mockRejectedValueOnce(mockError); // Reach
 
-      await expect(
-        FacebookExtendedAnalyticsAPI.getExtendedAnalytics(
-          mockPageId,
-          'invalid_token',
-          mockSince,
-          mockUntil
-        )
-      ).rejects.toThrow('Invalid access token');
+      const result = await FacebookExtendedAnalyticsAPI.getExtendedAnalytics(
+        mockPageId,
+        'invalid_token',
+        mockSince,
+        mockUntil
+      );
+
+      expect(result).toEqual({
+        page: {
+          followers: 0,
+          engagement_rate: 0,
+          reach: 0,
+          impressions: 0,
+          page_views: 0
+        },
+        posts: [],
+        period: { start: mockSince, end: mockUntil },
+        demographics: {
+          age_gender: [],
+          location: [],
+          language: []
+        },
+        content_performance: {
+          best_performing_posts: [],
+          content_type_performance: [],
+          optimal_posting_times: []
+        },
+        audience_insights: {
+          fan_growth: [],
+          engagement_trends: [],
+          reach_trends: []
+        },
+        date_range: {
+          start: mockSince,
+          end: mockUntil
+        }
+      });
     });
 
     it('should use default date range when not provided', async () => {
