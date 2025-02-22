@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { JwtPayload } from '../types/jwt';
 import { UnauthorizedError } from '../utils/errors/AppError';
-import prisma from '../lib/prisma';
+import { prisma } from '../lib/prisma';
 import { User } from '../models/User';
 
 export interface AuthRequest extends Request {

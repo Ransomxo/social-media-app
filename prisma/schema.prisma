@@ -21,8 +21,8 @@ model User {
   updatedAt     DateTime       @updatedAt
   posts         Post[]
   socialTokens  SocialToken[]
-  ownedTeams    Team[]        @relation("TeamOwner")
-  memberOfTeams TeamMember[]
+  teams         Team[]         @relation("TeamOwner")
+  teamMembers   TeamMember[]
 }
 
 model Team {

@@ -1,8 +1,9 @@
 import { Response } from 'express';
 import { TeamController } from './team';
 import { prisma } from '../lib/prisma';
-import { ValidationError, NotFoundError, ForbiddenError, AppError } from '../utils/errors/AppError';
+import { ValidationError, NotFoundError, ForbiddenError } from '../utils/errors/AppError';
 import { AuthRequest } from '../middleware/auth';
+import { Prisma } from '@prisma/client';
 
 describe('TeamController', () => {
   let mockRequest: Partial<AuthRequest>;
@@ -67,9 +68,8 @@ describe('TeamController', () => {
         mockNext
       );
 
-      expect(mockNext).toHaveBeenCalledWith(
-        expect.any(ValidationError)
-      );
+      const error = new ValidationError('Team name is required');
+      expect(mockNext).toHaveBeenCalledWith(error);
     });
 
     it('should throw error if minimal plan user tries to create second team', async () => {
@@ -85,9 +85,8 @@ describe('TeamController', () => {
         mockNext
       );
 
-      expect(mockNext).toHaveBeenCalledWith(
-        expect.any(ForbiddenError)
-      );
+      const error = new ForbiddenError('Minimal plan users can only create one team');
+      expect(mockNext).toHaveBeenCalledWith(error);
     });
   });
 
@@ -145,9 +144,8 @@ describe('TeamController', () => {
         mockNext
       );
 
-      expect(mockNext).toHaveBeenCalledWith(
-        expect.any(NotFoundError)
-      );
+      const error = new NotFoundError('Team not found');
+      expect(mockNext).toHaveBeenCalledWith(error);
     });
 
     it('should throw error if user is not team owner', async () => {
@@ -161,10 +159,8 @@ describe('TeamController', () => {
         mockResponse as Response,
         mockNext
       );
-
-      expect(mockNext).toHaveBeenCalledWith(
-        expect.any(ForbiddenError)
-      );
+      const error = new ForbiddenError('Minimal plan users can only create one team');
+      expect(mockNext).toHaveBeenCalledWith(error);
     });
   });
 });
