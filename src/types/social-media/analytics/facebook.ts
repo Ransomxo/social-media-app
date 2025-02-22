@@ -1,3 +1,23 @@
+import { BaseProfile, BasePost, BaseAnalyticsResponse } from './base';
+
+export interface FacebookProfile extends BaseProfile {
+  reach: number;
+  impressions: number;
+  page_views: number;
+}
+
+export interface FacebookPost extends BasePost {
+  reactions: number;
+  comments: number;
+  shares: number;
+  reach: number;
+}
+
+export interface FacebookAnalyticsResponse extends BaseAnalyticsResponse {
+  profile: FacebookProfile;
+  posts: FacebookPost[];
+}
+
 export interface FacebookInsightsMetric {
   name: string;
   period: string;
@@ -23,45 +43,6 @@ export interface FacebookPostInsights {
   paging?: {
     previous: string;
     next: string;
-  };
-}
-
-import { BaseProfile, BasePost, BaseAnalyticsResponse } from './base';
-
-export interface FacebookProfile extends BaseProfile {
-  reach: number;
-  impressions: number;
-  page_views: number;
-}
-
-export interface FacebookPost extends BasePost {
-  reactions: number;
-  comments: number;
-  shares: number;
-  reach: number;
-}
-
-export interface FacebookAnalyticsResponse extends BaseAnalyticsResponse {
-  profile: FacebookProfile;
-  posts: FacebookPost[];
-    page_views: number;
-  };
-  posts: Array<{
-    id: string;
-    created_time: string;
-    message?: string;
-    insights: {
-      reactions: number;
-      comments: number;
-      shares: number;
-      reach: number;
-      impressions: number;
-      engagement_rate: number;
-    };
-  }>;
-  period: {
-    start: string;
-    end: string;
   };
 }
 
