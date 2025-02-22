@@ -42,8 +42,8 @@ beforeAll(async () => {
         firstName: 'Test',
         lastName: 'User',
         plan: 'minimal',
-        ownedTeams: [],
-      memberOfTeams: [],
+        ownedTeams: { create: [] },
+        memberOfTeams: { create: [] }
       },
     });
     
@@ -83,8 +83,8 @@ beforeEach(async () => {
         firstName: 'Test',
         lastName: 'User',
         plan: 'minimal',
-        ownedTeams: [],
-      memberOfTeams: [],
+        ownedTeams: { create: [] },
+        memberOfTeams: { create: [] }
       },
     });
     
