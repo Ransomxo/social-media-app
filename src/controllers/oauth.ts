@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { OAuthService } from '../services/oauth';
 import { SocialPlatform } from '../types/social-media/oauth';

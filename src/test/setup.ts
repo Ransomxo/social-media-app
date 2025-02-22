@@ -45,6 +45,9 @@ beforeAll(async () => {
         teamMembers: [],
       },
     });
+    
+    // Wait a bit to ensure database consistency
+    await new Promise(resolve => setTimeout(resolve, 500));
     testUser = { id: user.id, email: user.email };
     console.log('Created shared test user:', { id: user.id, email: user.email });
   } catch (error) {
@@ -53,12 +56,15 @@ beforeAll(async () => {
   }
 });
 
-// Clean up posts between tests, but keep test user
+// Clean up all data between tests
 afterEach(async () => {
   try {
-    await prisma.post.deleteMany();
+    await prisma.$transaction([
+      prisma.post.deleteMany(),
+      prisma.user.deleteMany()
+    ]);
   } catch (error) {
-    console.error('Error cleaning up posts:', error);
+    console.error('Error cleaning up test data:', error);
   }
 });
 
@@ -79,6 +85,9 @@ beforeEach(async () => {
         teamMembers: [],
       },
     });
+    
+    // Wait a bit to ensure database consistency
+    await new Promise(resolve => setTimeout(resolve, 500));
     testUser = { id: user.id, email: user.email };
     console.log('Created new test user for test:', { id: user.id, email: user.email });
   } catch (error) {

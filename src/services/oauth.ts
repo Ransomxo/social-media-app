@@ -1,6 +1,5 @@
-import { SocialToken } from '@prisma/client';
 import prisma from '../lib/prisma';
-import { OAuthToken, SocialPlatform } from '../types/social-media/oauth';
+import { OAuthToken, SocialPlatform, SocialTokenResponse } from '../types/social-media/oauth';
 import { oauthConfigs } from '../config/oauth';
 import { ValidationError } from '../utils/errors/AppError';
 
@@ -37,8 +36,8 @@ export class OAuthService {
     userId: string,
     platform: SocialPlatform,
     token: OAuthToken
-  ): Promise<SocialToken> {
-    return prisma.socialToken.upsert({
+  ): Promise<SocialTokenResponse> {
+    const result = await prisma.socialToken.upsert({
       where: {
         userId_platform: {
           userId,
@@ -58,12 +57,22 @@ export class OAuthService {
         expiresAt: token.expiresAt
       }
     });
+    
+    return {
+      ...result,
+      platform: result.platform as SocialPlatform
+    };
   }
 
-  static async getUserSocialTokens(userId: string): Promise<SocialToken[]> {
-    return prisma.socialToken.findMany({
+  static async getUserSocialTokens(userId: string): Promise<SocialTokenResponse[]> {
+    const tokens = await prisma.socialToken.findMany({
       where: { userId }
     });
+    
+    return tokens.map(token => ({
+      ...token,
+      platform: token.platform as SocialPlatform
+    }));
   }
 
   static async deleteSocialToken(userId: string, platform: SocialPlatform): Promise<void> {

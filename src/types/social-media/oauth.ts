@@ -1,5 +1,3 @@
-import { SocialToken } from '@prisma/client';
-
 export type SocialPlatform = 'facebook' | 'twitter' | 'instagram' | 'linkedin';
 
 export interface OAuthConfig {
@@ -15,6 +13,13 @@ export interface OAuthToken {
   expiresAt?: Date;
 }
 
-export interface SocialTokenResponse extends SocialToken {
+export interface SocialTokenResponse {
+  id: string;
   platform: SocialPlatform;
+  accessToken: string;
+  refreshToken?: string | null;
+  expiresAt?: Date | null;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
