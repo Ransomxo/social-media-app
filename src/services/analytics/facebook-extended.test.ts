@@ -11,6 +11,10 @@ describe('FacebookExtendedAnalyticsAPI', () => {
   const mockSince = '2025-01-01';
   const mockUntil = '2025-02-01';
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   // Mock page insights response
   const mockPageInsights = {
     data: [
