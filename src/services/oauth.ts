@@ -5,8 +5,19 @@ import { ValidationError } from '../utils/errors/AppError';
 
 const prisma = new PrismaClient();
 
+interface DBSocialToken {
+  id: string;
+  platform: string;
+  accessToken: string;
+  refreshToken: string | null;
+  expiresAt: Date | null;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export class OAuthService {
-  private static mapSocialTokenToResponse(token: any): SocialTokenResponse {
+  private static mapSocialTokenToResponse(token: DBSocialToken): SocialTokenResponse {
     return {
       id: token.id,
       platform: token.platform as SocialPlatform,
