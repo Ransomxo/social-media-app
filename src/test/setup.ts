@@ -29,6 +29,10 @@ beforeAll(async () => {
       prisma.user.deleteMany()
     ]);
 
+    // Verify database connection
+    const dbTest = await prisma.$queryRaw`SELECT 1 as test`;
+    console.log('Database connection test:', dbTest);
+
     // Create a shared test user with a unique email
     const timestamp = Date.now();
     const hashedPassword = await UserModel.hashPassword('password123');
@@ -51,10 +55,15 @@ beforeAll(async () => {
   }
 });
 
-// Clean up posts between tests
+// Clean up posts between tests, but keep users
 afterEach(async () => {
   try {
     await prisma.post.deleteMany();
+    // Log current users for debugging
+    const users = await prisma.user.findMany({
+      select: { id: true, email: true }
+    });
+    console.log('Current users after test:', users);
   } catch (error) {
     console.error('Error cleaning up test data:', error);
   }
