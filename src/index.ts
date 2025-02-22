@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 import express from 'express';
-import { User } from './models/User';
 import dotenv from 'dotenv';
 import { AppDataSource } from './config/database';
 import { TestDataSource } from './config/database.test';
@@ -26,7 +25,7 @@ app.use('/api/auth', authRoutes);
 app.use(errorHandler);
 
 // Database initialization and server start
-const initializeApp = async () => {
+export const initializeApp = async () => {
   try {
     const dataSource = process.env.NODE_ENV === 'test' ? TestDataSource : AppDataSource;
     if (!dataSource.isInitialized) {
