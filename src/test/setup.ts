@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import dotenv from 'dotenv';
+import { UserModel } from '../models/User';
 
 // Load test environment variables
 dotenv.config({ path: '.env.test' });

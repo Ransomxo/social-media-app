@@ -1,8 +1,7 @@
 import request from 'supertest';
 import app from '../../index';
-import { prisma } from '../../test/setup';
+import { prisma, testUser } from '../../test/setup';
 import jwt from 'jsonwebtoken';
-import { UserModel } from '../../models/User';
 
 describe('Social Media Analytics Endpoints', () => {
   let authToken: string;
