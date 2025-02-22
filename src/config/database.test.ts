@@ -3,14 +3,7 @@ import { User } from '../models/User';
 
 export const TestDataSource = new DataSource({
   type: 'postgres',
-  host: 'ep-royal-queen-a5munids-pooler.us-east-2.aws.neon.tech',
-  port: 5432,
-  username: 'neondb_owner',
-  password: 'npg_RZIM5o6xFIhC',
-  database: 'neondb',
-  ssl: {
-    rejectUnauthorized: false
-  },
+  url: 'postgresql://neondb_owner:npg_RZlM5o6xFIhC@ep-royal-queen-a5munids-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require',
   synchronize: true,
   logging: false,
   entities: [User],
