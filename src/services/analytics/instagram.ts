@@ -74,8 +74,8 @@ export class InstagramAnalyticsAPI {
 
       return {
         ...metrics,
-        followers: profileResponse.data.followers_count,
-        posts: profileResponse.data.media_count
+        followers: profileResponse.data.followers_count || 0,
+        posts: profileResponse.data.media_count || 0
       };
     } catch (error) {
       return this.handleError(error);

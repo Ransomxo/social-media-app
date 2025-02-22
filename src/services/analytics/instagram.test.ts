@@ -35,10 +35,8 @@ describe('InstagramAnalyticsAPI', () => {
 
   // Mock profile info response
   const mockProfileInfo = {
-    data: {
-      followers_count: 5000,
-      media_count: 100
-    }
+    followers_count: 5000,
+    media_count: 100
   };
 
   // Mock media list response
