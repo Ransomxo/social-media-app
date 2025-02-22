@@ -7,26 +7,7 @@ import { ValidationError } from '../../utils/errors/AppError';
 import { BaseAnalyticsResponse, BaseAnalyticsPost } from '../../types/social-media/analytics/base';
 
 export class ReportGenerator {
-  public static async generateReport(
-    userId: string,
-    accessTokens: { [platform: string]: string },
-    config: EmailReportConfig,
-    startDate: string,
-    endDate: string
-  ): Promise<EmailReportTemplate> {
-    return new ReportGenerator().generateReport(userId, accessTokens, config, startDate, endDate);
-  }
-
-  private static readonly platformAPIs: {
-    [key: string]: {
-      getAnalytics(
-        userId: string,
-        accessToken: string,
-        startDate?: string,
-        endDate?: string
-      ): Promise<BaseAnalyticsResponse>;
-    };
-  } = {
+  private static readonly platformAPIs: Record<string, typeof FacebookAnalyticsAPI | typeof TwitterAnalyticsAPI | typeof InstagramAnalyticsAPI | typeof LinkedInAnalyticsAPI> = {
     facebook: FacebookAnalyticsAPI,
     twitter: TwitterAnalyticsAPI,
     instagram: InstagramAnalyticsAPI,
@@ -53,7 +34,7 @@ export class ReportGenerator {
           throw new ValidationError(`Missing access token for platform: ${platform}`);
         }
 
-        const api = this.platformAPIs[platform];
+        const api = this.platformAPIs[platform] as typeof FacebookAnalyticsAPI;
         const analytics = await api.getAnalytics(
           userId,
           accessTokens[platform],
