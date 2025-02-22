@@ -1,8 +1,5 @@
-import 'reflect-metadata';
 import express from 'express';
 import dotenv from 'dotenv';
-import { AppDataSource } from './config/database';
-import { TestDataSource } from './config/database.test';
 import { errorHandler } from './middleware/errorHandler';
 import authRoutes from './routes/auth';
 
@@ -24,21 +21,16 @@ app.use('/api/auth', authRoutes);
 // Error handling
 app.use(errorHandler);
 
-// Database initialization and server start
+// Server start
 export const initializeApp = async () => {
   try {
-    const dataSource = process.env.NODE_ENV === 'test' ? TestDataSource : AppDataSource;
-    if (!dataSource.isInitialized) {
-      await dataSource.initialize();
-    }
     if (require.main === module) {
       app.listen(port, () => {
         console.log(`Server is running on port ${port}`);
-        console.log('Database connection established');
       });
     }
   } catch (error) {
-    console.error('Error connecting to database:', error);
+    console.error('Error starting server:', error);
     process.exit(1);
   }
 };

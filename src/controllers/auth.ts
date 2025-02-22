@@ -1,11 +1,9 @@
-import 'reflect-metadata';
 import { Request, Response, NextFunction } from 'express';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import { JwtPayload } from '../types/jwt';
-import { AppDataSource } from '../config/database';
-import { User } from '../models/User';
+import prisma from '../lib/prisma';
+import { UserModel } from '../models/User';
 import { ValidationError, UnauthorizedError } from '../utils/errors/AppError';
-import { validate } from 'class-validator';
 
 export const register = async (
   req: Request,
@@ -15,23 +13,22 @@ export const register = async (
   try {
     const { email, password, firstName, lastName } = req.body;
 
-    const userRepository = AppDataSource.getRepository(User);
-    const existingUser = await userRepository.findOne({ where: { email } });
-
+    const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       throw new ValidationError('Email already registered');
     }
 
-    const user = new User();
-    Object.assign(user, { email, password, firstName, lastName });
-
-    const errors = await validate(user);
-    if (errors.length > 0) {
-      throw new ValidationError('Invalid input data');
-    }
-
-    await user.hashPassword();
-    await userRepository.save(user);
+    const hashedPassword = await UserModel.hashPassword(password);
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        firstName,
+        lastName,
+        plan: 'minimal',
+        teamMembers: [],
+      },
+    });
 
     const token = jwt.sign({ id: user.id } as JwtPayload, process.env.JWT_SECRET!, {
       expiresIn: process.env.JWT_EXPIRATION || '24h'
@@ -60,10 +57,9 @@ export const login = async (
 ): Promise<void> => {
   try {
     const { email, password } = req.body;
-    const userRepository = AppDataSource.getRepository(User);
-    const user = await userRepository.findOne({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email } });
 
-    if (!user || !(await user.validatePassword(password))) {
+    if (!user || !(await UserModel.validatePassword(user.password, password))) {
       throw new UnauthorizedError('Invalid email or password');
     }
 

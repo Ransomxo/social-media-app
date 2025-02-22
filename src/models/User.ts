@@ -1,50 +1,14 @@
-import 'reflect-metadata';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { IsEmail, MinLength } from 'class-validator';
+import { User as PrismaUser } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
-@Entity('users')
-export class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+export interface User extends PrismaUser {}
 
-  @Column({ unique: true })
-  @IsEmail()
-  email: string;
-
-  @Column()
-  @MinLength(8)
-  password: string;
-
-  @Column()
-  firstName: string;
-
-  @Column()
-  lastName: string;
-
-  @Column({ type: 'varchar', default: 'minimal' })
-  plan: 'minimal' | 'team';
-
-  @Column('text', { array: true, default: [] })
-  teamMembers: string[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  async hashPassword(): Promise<void> {
-    this.password = await bcrypt.hash(this.password, 10);
+export class UserModel {
+  static async hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 10);
   }
 
-  async validatePassword(password: string): Promise<boolean> {
-    return bcrypt.compare(password, this.password);
+  static async validatePassword(hashedPassword: string, password: string): Promise<boolean> {
+    return bcrypt.compare(password, hashedPassword);
   }
 }

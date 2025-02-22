@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { JwtPayload } from '../types/jwt';
 import { UnauthorizedError } from '../utils/errors/AppError';
-import { AppDataSource } from '../config/database';
+import prisma from '../lib/prisma';
 import { User } from '../models/User';
 
 export interface AuthRequest extends Request {
@@ -21,8 +21,7 @@ export const authMiddleware = async (
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
-    const userRepository = AppDataSource.getRepository(User);
-    const user = await userRepository.findOne({ where: { id: decoded.id } });
+    const user = await prisma.user.findUnique({ where: { id: decoded.id } });
 
     if (!user) {
       throw new UnauthorizedError('User not found');
