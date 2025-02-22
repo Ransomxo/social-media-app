@@ -88,7 +88,10 @@ describe('TwitterAPI', () => {
       expect(result).toEqual(mockResponse.data);
       expect(mockedAxios.post).toHaveBeenCalledWith(
         'https://api.twitter.com/2/tweets',
-        { text: mockPost.content },
+        {
+          text: mockPost.content,
+          media: { media_ids: ['1234567890'] }
+        },
         expect.any(Object)
       );
     });
