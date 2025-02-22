@@ -144,14 +144,16 @@ export class TwitterAnalyticsAPI {
         }
       }));
 
+      const profile: TwitterProfile = {
+        followers: userMetrics.followers,
+        following: userMetrics.engagement,
+        tweets: userMetrics.tweets,
+        engagement_rate: this.calculateProfileEngagementRate(userMetrics),
+        impressions: userMetrics.impressions
+      };
+
       return {
-        profile: {
-          followers: userMetrics.followers,
-          following: userMetrics.engagement,
-          tweets: userMetrics.tweets,
-          engagement_rate: this.calculateProfileEngagementRate(userMetrics),
-          impressions: userMetrics.impressions
-        },
+        profile,
         posts,
         period: {
           start: startDate,

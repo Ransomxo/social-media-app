@@ -1,32 +1,22 @@
-import { CreatePostDto } from '../post';
+import { BaseProfile, BasePost, BaseAnalyticsResponse } from './base';
 
-export interface TwitterAnalyticsResponse {
-  profile: {
-    followers: number;
-    following: number;
-    tweets: number;
-    engagement_rate: number;
-    impressions: number;
-  };
-  tweets: Array<{
-    id: string;
-    created_at: string;
-    text: string;
-    metrics: {
-      impressions: number;
-      likes: number;
-      retweets: number;
-      replies: number;
-      engagement_rate: number;
-      url_clicks?: number;
-      profile_clicks?: number;
-      hashtag_clicks?: number;
-    };
-  }>;
-  period: {
-    start: string;
-    end: string;
-  };
+export interface TwitterProfile extends BaseProfile {
+  following: number;
+  tweets: number;
+}
+
+export interface TwitterPost extends BasePost {
+  text: string;
+  retweets: number;
+  replies: number;
+  url_clicks?: number;
+  profile_clicks?: number;
+  hashtag_clicks?: number;
+}
+
+export interface TwitterAnalyticsResponse extends BaseAnalyticsResponse {
+  profile: TwitterProfile;
+  posts: TwitterPost[];
 }
 
 export interface TwitterMetricType {
