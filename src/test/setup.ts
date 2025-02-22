@@ -31,11 +31,13 @@ beforeAll(async () => {
     const dbTest = await prisma.$queryRaw`SELECT 1 as test`;
     console.log('Database connection test:', dbTest);
 
-    // Create initial test user
+    // Create initial test user with unique email
+    const timestamp = Date.now();
+    const randomId = Math.random().toString(36).substring(7);
     const hashedPassword = await UserModel.hashPassword('password123');
     const user = await prisma.user.create({
       data: {
-        email: `test-user-initial@example.com`,
+        email: `test-user-${timestamp}-${randomId}@example.com`,
         password: hashedPassword,
         firstName: 'Test',
         lastName: 'User',
