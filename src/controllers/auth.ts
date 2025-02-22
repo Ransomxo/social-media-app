@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { Request, Response, NextFunction } from 'express';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import { JwtPayload } from '../types/jwt';
