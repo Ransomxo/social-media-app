@@ -183,8 +183,21 @@ describe('FacebookExtendedAnalyticsAPI', () => {
     });
 
     it('should use default date range when not provided', async () => {
-      // Mock minimal successful responses
-      mockedAxios.get.mockResolvedValue({ data: { data: [] } });
+      // Mock successful responses for default date range test
+      mockedAxios.get
+        // Base analytics mocks
+        .mockResolvedValueOnce({ data: mockPageInsights }) // Page insights
+        .mockResolvedValueOnce({ data: mockPostsData }) // Posts list
+        .mockResolvedValueOnce({ data: mockPostInsightsData }) // Post insights
+        // Extended analytics mocks
+        .mockResolvedValueOnce({ data: mockDemographics }) // Demographics
+        .mockResolvedValueOnce({ data: mockDemographics }) // Location
+        .mockResolvedValueOnce({ data: mockDemographics }) // Language
+        .mockResolvedValueOnce({ data: mockPostsData }) // Posts for content performance
+        .mockResolvedValueOnce({ data: mockPostInsightsData }) // Post insights for content performance
+        .mockResolvedValueOnce({ data: mockInsights }) // Fan growth
+        .mockResolvedValueOnce({ data: mockInsights }) // Engagement
+        .mockResolvedValueOnce({ data: mockInsights }); // Reach
 
       const result = await FacebookExtendedAnalyticsAPI.getExtendedAnalytics(
         mockPageId,
