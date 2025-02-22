@@ -31,7 +31,7 @@ export const register = async (
     await user.hashPassword();
     await userRepository.save(user);
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
+    const token = jwt.sign({ id: user.id } as { id: string }, process.env.JWT_SECRET!, {
       expiresIn: process.env.JWT_EXPIRATION,
     });
 
@@ -65,7 +65,7 @@ export const login = async (
       throw new UnauthorizedError('Invalid email or password');
     }
 
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET!, {
+    const token = jwt.sign({ id: user.id } as { id: string }, process.env.JWT_SECRET!, {
       expiresIn: process.env.JWT_EXPIRATION,
     });
 
