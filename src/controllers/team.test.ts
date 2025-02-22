@@ -20,7 +20,10 @@ describe('TeamController', () => {
         password: 'hashed_password',
         createdAt: new Date(),
         updatedAt: new Date(),
-        teamMembers: []
+        ownedTeams: [],
+        memberOfTeams: [],
+        posts: [],
+        socialTokens: []
       },
       params: {},
       body: {}
