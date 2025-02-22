@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { TeamController } from '../controllers/team';
-import { authenticateToken } from '../middleware/auth';
+import { authMiddleware } from '../middleware/auth';
 
 const router = Router();
 
-router.use(authenticateToken);
+router.use(authMiddleware);
 
 router.post('/', TeamController.createTeam);
 router.get('/', TeamController.getTeams);

@@ -2,9 +2,10 @@ import { Request, Response, NextFunction } from 'express';
 import { prisma } from '../lib/prisma';
 import { CreateTeamDto, UpdateTeamDto, InviteTeamMemberDto } from '../types/team';
 import { ValidationError, NotFoundError, ForbiddenError } from '../utils/errors/AppError';
+import { AuthRequest } from '../middleware/auth';
 
 export class TeamController {
-  static async createTeam(req: Request, res: Response, next: NextFunction) {
+  static async createTeam(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const userId = req.user?.id;
       const { name }: CreateTeamDto = req.body;
@@ -59,7 +60,7 @@ export class TeamController {
     }
   }
 
-  static async getTeams(req: Request, res: Response, next: NextFunction) {
+  static async getTeams(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const userId = req.user?.id;
 
@@ -91,7 +92,7 @@ export class TeamController {
     }
   }
 
-  static async updateTeam(req: Request, res: Response, next: NextFunction) {
+  static async updateTeam(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const userId = req.user?.id;
       const teamId = req.params.teamId;
@@ -134,7 +135,7 @@ export class TeamController {
     }
   }
 
-  static async inviteTeamMember(req: Request, res: Response, next: NextFunction) {
+  static async inviteTeamMember(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const userId = req.user?.id;
       const teamId = req.params.teamId;
@@ -213,7 +214,7 @@ export class TeamController {
     }
   }
 
-  static async removeTeamMember(req: Request, res: Response, next: NextFunction) {
+  static async removeTeamMember(req: AuthRequest, res: Response, next: NextFunction) {
     try {
       const userId = req.user?.id;
       const teamId = req.params.teamId;
