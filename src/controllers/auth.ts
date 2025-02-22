@@ -13,6 +13,17 @@ export const register = async (
   try {
     const { email, password, firstName, lastName } = req.body;
 
+    // Validate input
+    if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      throw new ValidationError('Invalid email format');
+    }
+    if (!password || password.length < 8) {
+      throw new ValidationError('Password must be at least 8 characters long');
+    }
+    if (!firstName || !lastName) {
+      throw new ValidationError('First name and last name are required');
+    }
+
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       throw new ValidationError('Email already registered');
