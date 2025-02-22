@@ -4,8 +4,16 @@ import { oauthConfigs } from '../config/oauth';
 import { ValidationError } from '../utils/errors/AppError';
 import prisma from '../lib/prisma';
 
-type SocialToken = Prisma.SocialTokenGetPayload<{}>;
-type DBSocialToken = SocialToken;
+type DBSocialToken = {
+  id: string;
+  platform: string;
+  accessToken: string;
+  refreshToken: string | null;
+  expiresAt: Date | null;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 
 
