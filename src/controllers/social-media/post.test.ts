@@ -22,7 +22,7 @@ describe('Post Scheduling Endpoints', () => {
       },
     });
     userId = user.id;
-    authToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET!);
+    authToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'test-secret');
   });
 
   afterAll(async () => {
