@@ -21,6 +21,7 @@ app.get('/', (req: express.Request, res: express.Response): void => {
 app.use('/api/auth', authRoutes);
 app.use('/api/social-media', analyticsRoutes);
 app.use('/api/posts', postRoutes);
+app.use('/api/oauth', oauthRoutes);
 
 // Error handling
 app.use(errorHandler);
