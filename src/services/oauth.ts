@@ -2,9 +2,7 @@ import { PrismaClient } from '@prisma/client';
 import { OAuthToken, SocialPlatform, SocialTokenResponse } from '../types/social-media/oauth';
 import { oauthConfigs } from '../config/oauth';
 import { ValidationError } from '../utils/errors/AppError';
-
-// Define the Prisma client with proper typing
-const prisma = new PrismaClient();
+import prisma from '../lib/prisma';
 
 type DBSocialToken = {
   id: string;
