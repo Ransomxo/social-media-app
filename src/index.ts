@@ -6,7 +6,7 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.get('/', (req: express.Request, res: express.Response) => {
+app.get('/', (req: express.Request, res: express.Response): void => {
   res.json({ message: 'Welcome to the Social Media Analytics API' });
 });
 
