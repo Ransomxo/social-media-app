@@ -40,7 +40,12 @@ export const createPost = async (
         platforms: postData.platforms,
         scheduledAt: new Date(postData.scheduledAt),
         status: 'scheduled',
-        userId: req.user.id,
+        userId: req.user!.id,
+        user: {
+          connect: {
+            id: req.user!.id
+          }
+        }
       },
     });
 
