@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import request from 'supertest';
 import { TestDataSource } from '../config/database.test';
 import app from '../index';
