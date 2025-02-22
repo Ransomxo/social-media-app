@@ -1,6 +1,7 @@
 import { FacebookGraphAPI } from './api';
 import axios from 'axios';
 import { ValidationError } from '../../../utils/errors/AppError';
+import { Platform } from '../../../services/post';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -73,7 +74,7 @@ describe('FacebookGraphAPI', () => {
       content: 'Test post',
       scheduledAt: new Date('2025-03-01T12:00:00Z'),
       media: 'https://example.com/image.jpg',
-      platforms: ['facebook']
+      platforms: ['facebook' as Platform]
     };
 
     it('should create a post successfully', async () => {
