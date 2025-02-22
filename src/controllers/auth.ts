@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import { JwtPayload } from '../types/jwt';
 import { AppDataSource } from '../config/database';
 import { User } from '../models/User';
@@ -33,6 +33,8 @@ export const register = async (
     await userRepository.save(user);
 
     const token = jwt.sign({ id: user.id } as JwtPayload, process.env.JWT_SECRET!, {
+      expiresIn: process.env.JWT_EXPIRATION || '24h'
+    } as SignOptions);
       expiresIn: process.env.JWT_EXPIRATION,
     });
 
@@ -67,6 +69,8 @@ export const login = async (
     }
 
     const token = jwt.sign({ id: user.id } as JwtPayload, process.env.JWT_SECRET!, {
+      expiresIn: process.env.JWT_EXPIRATION || '24h'
+    } as SignOptions);
       expiresIn: process.env.JWT_EXPIRATION,
     });
 
