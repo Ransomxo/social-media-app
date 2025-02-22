@@ -19,8 +19,6 @@ const prisma = new PrismaClient({
 let testUser: { id: string; email: string };
 
 // Initialize test environment
-let testUserData: { id: string; email: string };
-
 beforeAll(async () => {
   try {
     // Clean up existing data
@@ -33,21 +31,11 @@ beforeAll(async () => {
     const dbTest = await prisma.$queryRaw`SELECT 1 as test`;
     console.log('Database connection test:', dbTest);
 
-    // Create a shared test user with a unique email
-    const timestamp = Date.now();
+    // Create initial test user
     const hashedPassword = await UserModel.hashPassword('password123');
-    // Clean up any existing test users
-    await prisma.user.deleteMany({
-      where: {
-        email: {
-          contains: 'test-user-'
-        }
-      }
-    });
-
     const user = await prisma.user.create({
       data: {
-        email: `test-user-${timestamp}@example.com`,
+        email: `test-user-initial@example.com`,
         password: hashedPassword,
         firstName: 'Test',
         lastName: 'User',
@@ -55,8 +43,7 @@ beforeAll(async () => {
         teamMembers: [],
       },
     });
-    testUserData = { id: user.id, email: user.email };
-    testUser = testUserData; // Set the exported testUser
+    testUser = { id: user.id, email: user.email };
     console.log('Created shared test user:', { id: user.id, email: user.email });
   } catch (error) {
     console.error('Error setting up test environment:', error);
