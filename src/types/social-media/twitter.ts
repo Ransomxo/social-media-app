@@ -22,12 +22,14 @@ export interface TwitterPostResponse {
   };
 }
 
+export interface TwitterMediaOptions {
+  media_ids: string[];
+  tagged_user_ids?: string[];
+}
+
 export interface TwitterPostOptions extends Omit<CreatePostDto, 'platforms' | 'media'> {
   platforms: ['twitter'];
-  media?: {
-    media_ids: string[];
-    tagged_user_ids?: string[];
-  };
+  media?: TwitterMediaOptions;
   reply?: {
     in_reply_to_tweet_id: string;
   };

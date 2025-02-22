@@ -166,9 +166,9 @@ describe('TwitterAPI', () => {
     });
 
     it('should require scheduledAt for scheduling', async () => {
-      const postWithoutSchedule: Partial<TwitterPostOptions> = {
+      const postWithoutSchedule = {
         content: 'Test tweet',
-        platforms: ['twitter']
+        platforms: ['twitter'] as ['twitter']
       };
 
       await expect(
