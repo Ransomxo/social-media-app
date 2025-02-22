@@ -153,7 +153,7 @@ describe('FacebookAnalyticsAPI', () => {
     });
 
     it('should handle API errors gracefully', async () => {
-      const mockError = new Error('API Error') as any;
+      const mockError = new Error('Invalid access token') as any;
       mockError.isAxiosError = true;
       mockError.response = {
         data: {
