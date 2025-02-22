@@ -17,11 +17,39 @@ model User {
   firstName     String
   lastName      String
   plan          String         @default("minimal")
-  teamMembers   String[]       @default([])
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   posts         Post[]
   socialTokens  SocialToken[]
+  ownedTeams    Team[]        @relation("TeamOwner")
+  memberOfTeams TeamMember[]
+}
+
+model Team {
+  id          String       @id @default(uuid())
+  name        String
+  ownerId     String
+  owner       User         @relation("TeamOwner", fields: [ownerId], references: [id])
+  members     TeamMember[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([ownerId])
+}
+
+model TeamMember {
+  id        String   @id @default(uuid())
+  userId    String
+  teamId    String
+  role      String   @default("member") // member, admin
+  user      User     @relation(fields: [userId], references: [id])
+  team      Team     @relation(fields: [teamId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, teamId])
+  @@index([userId])
+  @@index([teamId])
 }
 
 model SocialToken {
