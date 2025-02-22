@@ -9,9 +9,9 @@ export class FacebookGraphAPI {
   private static async handleError(error: any): Promise<never> {
     if (axios.isAxiosError(error) && error.response?.data) {
       const fbError = error.response.data.error as FacebookError;
-      throw new ValidationError(`Facebook API Error: ${fbError.message}`);
+      return Promise.reject(new ValidationError(`Facebook API Error: ${fbError.message}`));
     }
-    throw error;
+    return Promise.reject(error);
   }
 
   static async exchangeCodeForToken(code: string, redirectUri: string, clientId: string, clientSecret: string): Promise<FacebookTokenExchangeResponse> {
