@@ -45,10 +45,14 @@ export class ReportGenerator {
         // Filter metrics based on config
         metrics[platform] = {
           profile: this.filterMetrics(analytics.profile, config.metrics.profile),
-          posts: analytics.posts.map((post: BasePost) => ({
+          posts: analytics.posts.map((post: any) => ({
             id: post.id,
-            created_at: post.created_at,
-            metrics: this.filterMetrics(post.metrics, config.metrics.posts)
+            created_at: post.created_at || post.created_time || post.timestamp,
+            metrics: this.filterMetrics(post.metrics || post.insights || {
+              impressions: post.impressions || 0,
+              likes: post.likes || post.reactions || 0,
+              engagement_rate: post.engagement_rate || 0
+            }, config.metrics.posts)
           }))
         };
       }
