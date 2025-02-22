@@ -77,11 +77,9 @@ describe('InstagramAnalyticsAPI', () => {
 
   // Mock media info response
   const mockMediaInfo = {
-    data: {
-      like_count: 50,
-      comments_count: 10,
-      shares_count: 5
-    }
+    like_count: 50,
+    comments_count: 10,
+    shares_count: 5
   };
 
   beforeEach(() => {

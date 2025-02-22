@@ -126,9 +126,9 @@ export class InstagramAnalyticsAPI {
 
       return {
         ...metrics,
-        likes: mediaResponse.data.like_count,
-        comments: mediaResponse.data.comments_count,
-        shares: mediaResponse.data.shares_count
+        likes: mediaResponse.data.like_count || 0,
+        comments: mediaResponse.data.comments_count || 0,
+        shares: mediaResponse.data.shares_count || 0
       };
     } catch (error) {
       return this.handleError(error);
