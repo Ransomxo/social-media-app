@@ -11,7 +11,7 @@ export class TeamController {
       const { name }: CreateTeamDto = req.body;
 
       if (!name) {
-        throw new ValidationError('Team name is required');
+        throw new ValidationError('Team name is required', 400);
       }
 
       // Check user's plan limits
@@ -21,11 +21,11 @@ export class TeamController {
       });
 
       if (!user) {
-        throw new NotFoundError('User not found');
+        throw new NotFoundError('User not found', 404);
       }
 
       if (user.plan === 'minimal' && user.ownedTeams.length >= 1) {
-        throw new ForbiddenError('Minimal plan users can only create one team');
+        throw new ForbiddenError('Minimal plan users can only create one team', 403);
       }
 
       const team = await prisma.team.create({
@@ -108,11 +108,11 @@ export class TeamController {
       });
 
       if (!team) {
-        throw new NotFoundError('Team not found');
+        throw new NotFoundError('Team not found', 404);
       }
 
       if (team.ownerId !== userId) {
-        throw new ForbiddenError('Only team owner can update team details');
+        throw new ForbiddenError('Only team owner can update team details', 403);
       }
 
       const updatedTeam = await prisma.team.update({
@@ -146,7 +146,7 @@ export class TeamController {
       const { email, role = 'member' }: InviteTeamMemberDto = req.body;
 
       if (!email) {
-        throw new ValidationError('Email is required');
+        throw new ValidationError('Email is required', 400);
       }
 
       const team = await prisma.team.findUnique({
@@ -164,20 +164,20 @@ export class TeamController {
       });
 
       if (!team) {
-        throw new NotFoundError('Team not found');
+        throw new NotFoundError('Team not found', 404);
       }
 
       if (team.ownerId !== userId) {
-        throw new ForbiddenError('Only team owner can invite members');
+        throw new ForbiddenError('Only team owner can invite members', 403);
       }
 
       // Check plan limits
       if (team.owner.plan === 'minimal' && team.members.length >= 1) {
-        throw new ForbiddenError('Minimal plan teams are limited to 1 member');
+        throw new ForbiddenError('Minimal plan teams are limited to 1 member', 403);
       }
 
       if (team.owner.plan === 'team' && team.members.length >= 3) {
-        throw new ForbiddenError('Team plan teams are limited to 3 members');
+        throw new ForbiddenError('Team plan teams are limited to 3 members', 403);
       }
 
       // Find or create user
@@ -186,13 +186,13 @@ export class TeamController {
       });
 
       if (!invitedUser) {
-        throw new NotFoundError('User not found');
+        throw new NotFoundError('User not found', 404);
       }
 
       // Check if user is already a member
       const existingMember = team.members.find(member => member.userId === invitedUser.id);
       if (existingMember) {
-        throw new ValidationError('User is already a team member');
+        throw new ValidationError('User is already a team member', 400);
       }
 
       const teamMember = await prisma.teamMember.create({
@@ -230,11 +230,11 @@ export class TeamController {
       });
 
       if (!team) {
-        throw new NotFoundError('Team not found');
+        throw new NotFoundError('Team not found', 404);
       }
 
       if (team.ownerId !== userId) {
-        throw new ForbiddenError('Only team owner can remove members');
+        throw new ForbiddenError('Only team owner can remove members', 403);
       }
 
       const member = await prisma.teamMember.findUnique({
@@ -242,7 +242,7 @@ export class TeamController {
       });
 
       if (!member || member.teamId !== teamId) {
-        throw new NotFoundError('Team member not found');
+        throw new NotFoundError('Team member not found', 404);
       }
 
       await prisma.teamMember.delete({
