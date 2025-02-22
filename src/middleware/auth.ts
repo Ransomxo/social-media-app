@@ -34,6 +34,9 @@ export const authMiddleware = async (
     console.log('Token decoded:', { userId: decoded.id });
     
     console.log('Looking up user with id:', decoded.id);
+    // Add a small delay to ensure database consistency
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
     const user = await prisma.user.findUnique({ 
       where: { id: decoded.id },
       select: {
