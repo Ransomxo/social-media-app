@@ -18,19 +18,61 @@ describe('FacebookExtendedAnalyticsAPI', () => {
 
     it('should fetch extended analytics data successfully', async () => {
       // Mock base analytics response
-      const mockBaseAnalytics = {
-        page: {
-          followers: 5000,
-          engagement_rate: 10,
-          reach: 1000,
-          impressions: 1000,
-          page_views: 2000
-        },
-        posts: [],
-        period: {
-          start: mockSince,
-          end: mockUntil
-        }
+      const mockPageInsights = {
+        data: [
+          {
+            name: 'page_impressions',
+            period: 'day',
+            values: [{ value: 1000, end_time: '2025-02-01' }]
+          },
+          {
+            name: 'page_engaged_users',
+            period: 'day',
+            values: [{ value: 100, end_time: '2025-02-01' }]
+          },
+          {
+            name: 'page_fans',
+            period: 'day',
+            values: [{ value: 5000, end_time: '2025-02-01' }]
+          },
+          {
+            name: 'page_views_total',
+            period: 'day',
+            values: [{ value: 2000, end_time: '2025-02-01' }]
+          }
+        ]
+      };
+
+      // Mock posts response
+      const mockPosts = {
+        data: [
+          {
+            id: 'post_123',
+            created_time: '2025-01-15T12:00:00Z',
+            message: 'Test post'
+          }
+        ]
+      };
+
+      // Mock post insights response
+      const mockPostInsights = {
+        data: [
+          {
+            name: 'post_impressions',
+            period: 'lifetime',
+            values: [{ value: 500, end_time: '2025-02-01' }]
+          },
+          {
+            name: 'post_engaged_users',
+            period: 'lifetime',
+            values: [{ value: 50, end_time: '2025-02-01' }]
+          },
+          {
+            name: 'post_reactions_by_type_total',
+            period: 'lifetime',
+            values: [{ value: 30, end_time: '2025-02-01' }]
+          }
+        ]
       };
 
       // Mock demographics response
@@ -74,11 +116,16 @@ describe('FacebookExtendedAnalyticsAPI', () => {
       };
 
       mockedAxios.get
+        // Base analytics mocks
+        .mockResolvedValueOnce({ data: mockPageInsights }) // Page insights
+        .mockResolvedValueOnce({ data: mockPosts }) // Posts list
+        .mockResolvedValueOnce({ data: mockPostInsights }) // Post insights
+        // Extended analytics mocks
         .mockResolvedValueOnce({ data: mockDemographics }) // Demographics
         .mockResolvedValueOnce({ data: mockDemographics }) // Location
         .mockResolvedValueOnce({ data: mockDemographics }) // Language
-        .mockResolvedValueOnce({ data: mockPosts }) // Posts
-        .mockResolvedValueOnce({ data: mockInsights }) // Post insights
+        .mockResolvedValueOnce({ data: mockPosts }) // Posts for content performance
+        .mockResolvedValueOnce({ data: mockPostInsights }) // Post insights for content performance
         .mockResolvedValueOnce({ data: mockInsights }) // Fan growth
         .mockResolvedValueOnce({ data: mockInsights }) // Engagement
         .mockResolvedValueOnce({ data: mockInsights }); // Reach
