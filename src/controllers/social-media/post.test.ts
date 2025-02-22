@@ -46,7 +46,7 @@ describe('Post Scheduling Endpoints', () => {
           content: 'Test post content',
           platforms: ['facebook', 'twitter'],
           scheduledAt: futureDate.toISOString(),
-          userId: user.id,
+          userId: userId,
         });
 
       expect(res.status).toBe(201);

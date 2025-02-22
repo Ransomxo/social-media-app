@@ -40,13 +40,11 @@ export const createPost = async (
         platforms: postData.platforms,
         scheduledAt: new Date(postData.scheduledAt),
         status: 'scheduled',
-        userId: req.user!.id,
-        user: {
-          connect: {
-            id: req.user!.id
-          }
-        }
+        userId: req.user!.id
       },
+      include: {
+        user: true
+      }
     });
 
     res.status(201).json(post);
