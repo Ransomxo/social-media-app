@@ -2,8 +2,8 @@ import { Post } from '@prisma/client';
 import prisma from '../lib/prisma';
 import { ValidationError } from '../utils/errors/AppError';
 
-const SUPPORTED_PLATFORMS = ['facebook', 'twitter', 'instagram', 'linkedin'] as const;
-type Platform = typeof SUPPORTED_PLATFORMS[number];
+export const SUPPORTED_PLATFORMS = ['facebook', 'twitter', 'instagram', 'linkedin'] as const;
+export type Platform = typeof SUPPORTED_PLATFORMS[number];
 
 export interface SchedulePostOptions {
   content: string;

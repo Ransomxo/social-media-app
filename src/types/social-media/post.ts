@@ -1,7 +1,11 @@
+import { SUPPORTED_PLATFORMS } from '../../services/post';
+
+export type Platform = typeof SUPPORTED_PLATFORMS[number];
+
 export interface CreatePostDto {
   content: string;
   media?: string;
-  platforms: string[];
+  platforms: Platform[];
   scheduledAt: Date;
 }
 

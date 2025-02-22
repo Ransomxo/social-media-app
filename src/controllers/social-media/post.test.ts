@@ -27,7 +27,7 @@ describe('Post Scheduling Endpoints', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           content: 'Test post content',
-          platforms: ['facebook', 'twitter'],
+          platforms: ['facebook', 'twitter'] as const,
           scheduledAt: futureDate.toISOString(),
           // userId is handled by auth middleware
         });
@@ -48,7 +48,7 @@ describe('Post Scheduling Endpoints', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           content: 'Test post content',
-          platforms: ['facebook'],
+          platforms: ['facebook'] as const,
           scheduledAt: pastDate.toISOString(),
         });
 
