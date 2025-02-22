@@ -4,6 +4,7 @@ import { errorHandler } from './middleware/errorHandler';
 import authRoutes from './routes/auth';
 import analyticsRoutes from './routes/social-media/analytics';
 import postRoutes from './routes/social-media/post';
+import oauthRoutes from './routes/oauth';
 
 dotenv.config();
 
