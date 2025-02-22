@@ -36,10 +36,6 @@ export interface TwitterPostOptions extends Omit<CreatePostDto, 'platforms' | 'm
   quote?: {
     quote_tweet_id: string;
   };
-  media?: {
-    media_ids: string[];
-    tagged_user_ids?: string[];
-  };
   poll?: {
     duration_minutes: number;
     options: string[];
