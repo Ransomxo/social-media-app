@@ -6,8 +6,18 @@ import { LinkedInAnalyticsAPI } from '../analytics/linkedin';
 import { ValidationError } from '../../utils/errors/AppError';
 
 export class ReportGenerator {
+import { BaseAnalyticsResponse } from '../../types/social-media/analytics/base';
+
+export class ReportGenerator {
   private static readonly platformAPIs: {
-    [key: string]: typeof FacebookAnalyticsAPI | typeof TwitterAnalyticsAPI | typeof InstagramAnalyticsAPI | typeof LinkedInAnalyticsAPI;
+    [key: string]: {
+      getAnalytics(
+        userId: string,
+        accessToken: string,
+        startDate?: string,
+        endDate?: string
+      ): Promise<BaseAnalyticsResponse>;
+    };
   } = {
     facebook: FacebookAnalyticsAPI,
     twitter: TwitterAnalyticsAPI,
@@ -46,7 +56,7 @@ export class ReportGenerator {
         // Filter metrics based on config
         metrics[platform] = {
           profile: this.filterMetrics(analytics.profile, config.metrics.profile),
-          posts: analytics.posts.map((post: { id: string; created_at: string; metrics: Record<string, number> }) => ({
+          posts: analytics.posts.map((post: BaseAnalyticsPost) => ({
             id: post.id,
             created_at: post.created_at,
             metrics: this.filterMetrics(post.metrics, config.metrics.posts)
