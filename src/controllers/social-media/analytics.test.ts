@@ -27,7 +27,7 @@ describe('Social Media Analytics Endpoints', () => {
       },
     });
     userId = user.id;
-    authToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'test-secret');
+    authToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'test-secret', { expiresIn: '1h' });
   });
 
   afterAll(async () => {
