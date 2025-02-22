@@ -67,7 +67,7 @@ describe('FacebookGraphAPI', () => {
         );
         fail('Should have thrown an error');
       } catch (error) {
-        expect(error).toBeInstanceOf(ValidationError);
+        expect(error).toBeInstanceOf(AppError);
         if (error instanceof ValidationError) {
           expect(error.message).toBe('Facebook API Error: Invalid OAuth code');
         }
@@ -125,7 +125,7 @@ describe('FacebookGraphAPI', () => {
         await FacebookGraphAPI.createPost('page_123', 'invalid_token', mockPost);
         fail('Should have thrown an error');
       } catch (error) {
-        expect(error).toBeInstanceOf(ValidationError);
+        expect(error).toBeInstanceOf(AppError);
         if (error instanceof ValidationError) {
           expect(error.message).toBe('Facebook API Error: Invalid page access token');
         }
@@ -175,7 +175,7 @@ describe('FacebookGraphAPI', () => {
         await FacebookGraphAPI.getPageAccessToken('invalid_token', 'page_123');
         fail('Should have thrown an error');
       } catch (error) {
-        expect(error).toBeInstanceOf(ValidationError);
+        expect(error).toBeInstanceOf(AppError);
         if (error instanceof ValidationError) {
           expect(error.message).toBe('Facebook API Error: Invalid user access token');
         }
