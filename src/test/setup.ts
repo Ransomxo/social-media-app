@@ -10,8 +10,10 @@ process.env.NODE_ENV = 'test';
 process.env.JWT_SECRET = 'test-secret-key';
 process.env.PORT = '3001';
 
-// Create a new Prisma client for tests
-const prisma = new PrismaClient();
+// Create a new Prisma client for tests with debug logging
+const prisma = new PrismaClient({
+  log: ['query', 'info', 'warn', 'error'],
+});
 
 // Create shared test user
 let testUser: { id: string; email: string };

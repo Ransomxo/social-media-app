@@ -33,11 +33,30 @@ export const authMiddleware = async (
     const decoded = jwt.verify(token, secret) as JwtPayload;
     console.log('Token decoded:', { userId: decoded.id });
     
-    const user = await prisma.user.findUnique({ where: { id: decoded.id } });
+    console.log('Looking up user with id:', decoded.id);
+    const user = await prisma.user.findUnique({ 
+      where: { id: decoded.id },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        plan: true,
+        teamMembers: true
+      }
+    });
+    
     if (!user) {
       console.log('Auth failed: User not found:', decoded.id);
+      // Try to find any users in the database to verify connection
+      const allUsers = await prisma.user.findMany({
+        select: { id: true, email: true }
+      });
+      console.log('Current users in database:', allUsers);
       return next(new UnauthorizedError('User not found'));
     }
+    
+    console.log('Auth successful for user:', user.id);
 
     req.user = user;
     console.log('Auth successful for user:', user.id);
