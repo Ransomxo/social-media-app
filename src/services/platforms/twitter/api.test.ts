@@ -68,7 +68,7 @@ describe('TwitterAPI', () => {
     const mockPost: TwitterPostOptions = {
       content: 'Test tweet',
       scheduledAt: new Date('2025-03-01T12:00:00Z'),
-      media: 'https://example.com/image.jpg',
+      media: { media_ids: ['1234567890'] },
       platforms: ['twitter']
     };
 
