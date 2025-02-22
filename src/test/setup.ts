@@ -68,15 +68,22 @@ beforeAll(async () => {
 afterEach(async () => {
   try {
     await prisma.post.deleteMany();
-    // Verify test user still exists
+  } catch (error) {
+    console.error('Error cleaning up posts:', error);
+  }
+});
+
+// Ensure test user exists before each test
+beforeEach(async () => {
+  try {
     const user = await prisma.user.findUnique({
       where: { id: testUser.id },
       select: { id: true, email: true }
     });
     if (!user) {
-      console.error('Test user not found after test, recreating...');
+      console.log('Recreating test user before test...');
       const hashedPassword = await UserModel.hashPassword('password123');
-      const newUser = await prisma.user.create({
+      await prisma.user.create({
         data: {
           id: testUser.id,
           email: testUser.email,
@@ -87,10 +94,10 @@ afterEach(async () => {
           teamMembers: [],
         },
       });
-      console.log('Recreated test user:', { id: newUser.id, email: newUser.email });
     }
   } catch (error) {
-    console.error('Error in afterEach:', error);
+    console.error('Error ensuring test user exists:', error);
+    throw error;
   }
 });
 
