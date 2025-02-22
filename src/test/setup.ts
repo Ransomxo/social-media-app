@@ -4,8 +4,10 @@ import dotenv from 'dotenv';
 // Load test environment variables
 dotenv.config({ path: '.env.test' });
 
-// Ensure JWT secret is set for tests
+// Ensure consistent test environment
+process.env.NODE_ENV = 'test';
 process.env.JWT_SECRET = 'test-secret-key';
+process.env.PORT = '3001';
 
 // Create a new Prisma client for tests
 const prisma = new PrismaClient();
