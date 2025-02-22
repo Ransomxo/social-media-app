@@ -22,7 +22,10 @@ export interface TwitterPostResponse {
   };
 }
 
-export interface TwitterPostOptions extends CreatePostDto {
+export interface TwitterPostOptions {
+  content: string;
+  scheduledAt?: Date;
+  media?: string;
   reply?: {
     in_reply_to_tweet_id: string;
   };
