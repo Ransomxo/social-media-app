@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app from '../../index';
-import prisma from '../../lib/prisma';
+import { prisma } from '../../test/setup';
 import jwt from 'jsonwebtoken';
 import { UserModel } from '../../models/User';
 
