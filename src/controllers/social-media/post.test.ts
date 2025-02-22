@@ -5,10 +5,9 @@ import jwt from 'jsonwebtoken';
 
 describe('Post Scheduling Endpoints', () => {
   let authToken: string;
-  let userId: string;
 
   beforeEach(async () => {
-    userId = testUser.id;
+    // Token is generated after test user is created in global beforeEach
     authToken = jwt.sign({ id: testUser.id }, process.env.JWT_SECRET || 'test-secret-key', { expiresIn: '1h' });
     console.log('Test token generated:', { userId: testUser.id });
   });
