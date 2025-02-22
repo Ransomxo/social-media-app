@@ -169,8 +169,7 @@ describe('TwitterAPI', () => {
       const postWithoutSchedule = {
         content: 'Test tweet',
         platforms: ['twitter'] as ['twitter']
-      } as any // Using type assertion for testing error case
-      };
+      } as any; // Using type assertion for testing error case
 
       await expect(
         TwitterAPI.schedulePost('access_token', postWithoutSchedule)
