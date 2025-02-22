@@ -45,7 +45,7 @@ describe('TeamController', () => {
 
       jest.spyOn(prisma.user, 'findUnique').mockResolvedValue({
         ...mockRequest.user,
-        ownedTeams: []
+        teams: []
       } as any);
       jest.spyOn(prisma.team, 'create').mockResolvedValue(mockTeam as any);
 
@@ -76,7 +76,7 @@ describe('TeamController', () => {
       mockRequest.body = { name: 'Test Team' };
       jest.spyOn(prisma.user, 'findUnique').mockResolvedValue({
         ...mockRequest.user,
-        ownedTeams: [{ id: 'existing-team' }]
+        teams: [{ id: 'existing-team' }]
       } as any);
 
       await TeamController.createTeam(
