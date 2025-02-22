@@ -1,11 +1,11 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Platform } from '@prisma/client';
 import { OAuthToken, SocialPlatform, SocialTokenResponse } from '../types/social-media/oauth';
 import { oauthConfigs } from '../config/oauth';
 import { ValidationError } from '../utils/errors/AppError';
 
-type SocialTokenRecord = {
+type DBSocialToken = {
   id: string;
-  platform: string;
+  platform: Platform;
   accessToken: string;
   refreshToken: string | null;
   expiresAt: Date | null;
@@ -14,10 +14,12 @@ type SocialTokenRecord = {
   updatedAt: Date;
 };
 
+
+
 const prisma = new PrismaClient();
 
 export class OAuthService {
-  private static mapSocialTokenToResponse(token: SocialTokenRecord): SocialTokenResponse {
+  private static mapSocialTokenToResponse(token: DBSocialToken): SocialTokenResponse {
     return {
       id: token.id,
       platform: token.platform as SocialPlatform,
@@ -92,7 +94,7 @@ export class OAuthService {
       where: { userId }
     });
     
-    return tokens.map(token => this.mapSocialTokenToResponse(token));
+    return tokens.map((token: DBSocialToken) => this.mapSocialTokenToResponse(token));
   }
 
   static async deleteSocialToken(userId: string, platform: SocialPlatform): Promise<void> {

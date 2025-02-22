@@ -5,7 +5,7 @@ import { SocialPlatform } from '../types/social-media/oauth';
 import { ValidationError } from '../utils/errors/AppError';
 
 export const getAuthorizationUrl = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -61,7 +61,7 @@ export const listConnections = async (
 };
 
 export const deleteSocialToken = async (
-  req: Request,
+  req: AuthRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
