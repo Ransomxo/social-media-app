@@ -15,9 +15,10 @@ describe('Post Scheduling Endpoints', () => {
 
     // Create a test user
     const hashedPassword = await UserModel.hashPassword('password123');
+    // Create test user
     const user = await prisma.user.create({
       data: {
-        email: 'test-post@example.com',
+        email: `test-post-${Date.now()}@example.com`,
         password: hashedPassword,
         firstName: 'Test',
         lastName: 'User',
