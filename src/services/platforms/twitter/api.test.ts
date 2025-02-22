@@ -168,8 +168,8 @@ describe('TwitterAPI', () => {
     it('should require scheduledAt for scheduling', async () => {
       const postWithoutSchedule = {
         content: 'Test tweet',
-        platforms: ['twitter'] as ['twitter'],
-        scheduledAt: undefined
+        platforms: ['twitter'] as ['twitter']
+      } as any // Using type assertion for testing error case
       };
 
       await expect(
