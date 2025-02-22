@@ -17,6 +17,12 @@ export class TwitterAnalyticsAPI {
       if (twitterError.errors?.[0]?.message) {
         throw new ValidationError(twitterError.errors[0].message);
       }
+      if (twitterError.message) {
+        throw new ValidationError(twitterError.message);
+      }
+    }
+    if (error instanceof Error) {
+      throw new ValidationError(error.message);
     }
     throw new ValidationError('An unknown error occurred while calling the Twitter Analytics API');
   }
