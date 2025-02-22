@@ -1,15 +1,13 @@
 import 'reflect-metadata';
 import request from 'supertest';
 import { TestDataSource } from '../config/database.test';
-import app from '../index';
+import app, { initializeApp } from '../index';
 import { User } from '../models/User';
 
 describe('Authentication Endpoints', () => {
   beforeAll(async () => {
     try {
-      if (!TestDataSource.isInitialized) {
-        await TestDataSource.initialize();
-      }
+      await initializeApp();
       const userRepository = TestDataSource.getRepository(User);
       await userRepository.clear();
     } catch (error) {
