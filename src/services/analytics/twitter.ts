@@ -14,7 +14,7 @@ export class TwitterAnalyticsAPI {
   protected static handleError(error: unknown): never {
     if (axios.isAxiosError(error) && error.response?.data) {
       const twitterError = error.response.data as TwitterError;
-      if (twitterError.errors?.[0]?.message) {
+      if (Array.isArray(twitterError.errors) && twitterError.errors.length > 0 && twitterError.errors[0].message) {
         throw new ValidationError(twitterError.errors[0].message);
       }
       if (twitterError.message) {
@@ -134,6 +134,16 @@ export class TwitterAnalyticsAPI {
         })
       );
 
+      const posts = tweetsWithMetrics.map(tweet => ({
+        id: tweet.id,
+        created_at: tweet.created_at,
+        metrics: {
+          impressions: tweet.metrics.impressions,
+          likes: tweet.metrics.likes,
+          engagement_rate: tweet.metrics.engagement_rate
+        }
+      }));
+
       return {
         profile: {
           followers: userMetrics.followers,
@@ -142,7 +152,7 @@ export class TwitterAnalyticsAPI {
           engagement_rate: this.calculateProfileEngagementRate(userMetrics),
           impressions: userMetrics.impressions
         },
-        tweets: tweetsWithMetrics,
+        posts,
         period: {
           start: startDate,
           end: endDate
