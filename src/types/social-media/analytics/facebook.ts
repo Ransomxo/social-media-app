@@ -26,8 +26,10 @@ export interface FacebookPostInsights {
   };
 }
 
-export interface FacebookAnalyticsResponse {
-  page: {
+import { BaseAnalyticsResponse } from './base';
+
+export interface FacebookAnalyticsResponse extends BaseAnalyticsResponse {
+  profile: {
     followers: number;
     engagement_rate: number;
     reach: number;

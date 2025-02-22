@@ -4,7 +4,7 @@ import { TwitterAnalyticsAPI } from '../analytics/twitter';
 import { InstagramAnalyticsAPI } from '../analytics/instagram';
 import { LinkedInAnalyticsAPI } from '../analytics/linkedin';
 import { ValidationError } from '../../utils/errors/AppError';
-import { BaseAnalyticsResponse, BaseAnalyticsPost } from '../../types/social-media/analytics/base';
+import { BaseAnalyticsResponse, BasePost } from '../../types/social-media/analytics/base';
 
 export class ReportGenerator {
   private static readonly platformAPIs: Record<string, typeof FacebookAnalyticsAPI | typeof TwitterAnalyticsAPI | typeof InstagramAnalyticsAPI | typeof LinkedInAnalyticsAPI> = {
@@ -45,7 +45,7 @@ export class ReportGenerator {
         // Filter metrics based on config
         metrics[platform] = {
           profile: this.filterMetrics(analytics.profile, config.metrics.profile),
-          posts: analytics.posts.map((post: BaseAnalyticsPost) => ({
+          posts: analytics.posts.map((post: BasePost) => ({
             id: post.id,
             created_at: post.created_at,
             metrics: this.filterMetrics(post.metrics, config.metrics.posts)
