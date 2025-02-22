@@ -1,7 +1,9 @@
-import prisma from '../lib/prisma';
+import { PrismaClient, Platform } from '@prisma/client';
 import { OAuthToken, SocialPlatform, SocialTokenResponse } from '../types/social-media/oauth';
 import { oauthConfigs } from '../config/oauth';
 import { ValidationError } from '../utils/errors/AppError';
+
+const prisma = new PrismaClient();
 
 export class OAuthService {
   static async getAuthorizationUrl(platform: SocialPlatform): Promise<string> {
@@ -69,7 +71,16 @@ export class OAuthService {
       where: { userId }
     });
     
-    return tokens.map(token => ({
+    return tokens.map((token: { 
+      id: string;
+      platform: string;
+      accessToken: string;
+      refreshToken: string | null;
+      expiresAt: Date | null;
+      userId: string;
+      createdAt: Date;
+      updatedAt: Date;
+    }) => ({
       ...token,
       platform: token.platform as SocialPlatform
     }));
