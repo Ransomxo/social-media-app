@@ -159,7 +159,18 @@ describe('FacebookExtendedAnalyticsAPI', () => {
           }
         }
       };
-      mockedAxios.get.mockRejectedValueOnce(mockError);
+      mockedAxios.get
+        .mockRejectedValueOnce(mockError) // Page insights
+        .mockRejectedValueOnce(mockError) // Posts list
+        .mockRejectedValueOnce(mockError) // Post insights
+        .mockRejectedValueOnce(mockError) // Demographics
+        .mockRejectedValueOnce(mockError) // Location
+        .mockRejectedValueOnce(mockError) // Language
+        .mockRejectedValueOnce(mockError) // Posts for content performance
+        .mockRejectedValueOnce(mockError) // Post insights for content performance
+        .mockRejectedValueOnce(mockError) // Fan growth
+        .mockRejectedValueOnce(mockError) // Engagement
+        .mockRejectedValueOnce(mockError); // Reach
 
       await expect(
         FacebookExtendedAnalyticsAPI.getExtendedAnalytics(
