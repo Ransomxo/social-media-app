@@ -166,7 +166,7 @@ describe('FacebookAnalyticsAPI', () => {
 
       await expect(
         FacebookAnalyticsAPI.getAnalytics(mockPageId, 'invalid_token', mockSince, mockUntil)
-      ).rejects.toThrow('Facebook Analytics API Error: Invalid access token');
+      ).rejects.toThrow('Invalid access token');
     });
 
     it('should use default date range when not provided', async () => {
