@@ -67,7 +67,7 @@ export class OAuthService {
       }
     });
     
-    return OAuthService.mapSocialTokenToResponse(result);
+    return this.mapSocialTokenToResponse(result);
   }
 
   static async getUserSocialTokens(userId: string): Promise<SocialTokenResponse[]> {
@@ -75,7 +75,7 @@ export class OAuthService {
       where: { userId }
     });
     
-    return tokens.map(OAuthService.mapSocialTokenToResponse);
+    return tokens.map(token => this.mapSocialTokenToResponse(token));
   }
 
   static async deleteSocialToken(userId: string, platform: SocialPlatform): Promise<void> {
