@@ -27,7 +27,7 @@ export class User {
   @Column()
   lastName: string;
 
-  @Column({ default: 'minimal' })
+  @Column({ type: 'varchar', default: 'minimal' })
   plan: 'minimal' | 'team';
 
   @Column('text', { array: true, default: [] })

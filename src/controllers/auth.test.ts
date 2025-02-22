@@ -5,11 +5,15 @@ import { User } from '../models/User';
 
 describe('Authentication Endpoints', () => {
   beforeAll(async () => {
-    await AppDataSource.initialize();
+    if (!AppDataSource.isInitialized) {
+      await AppDataSource.initialize();
+    }
   });
 
   afterAll(async () => {
-    await AppDataSource.destroy();
+    if (AppDataSource.isInitialized) {
+      await AppDataSource.destroy();
+    }
   });
 
   beforeEach(async () => {
