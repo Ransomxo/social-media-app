@@ -1,13 +1,15 @@
 import axios from 'axios';
-import { ValidationError } from '../../utils/errors/AppError';
-import {
+import { 
   FacebookAnalyticsResponse,
+  FacebookProfile,
+  FacebookPost,
   FacebookInsightsMetric,
   FacebookMetricType,
   FacebookPageInsights,
   FacebookPostInsights,
   FacebookPostMetricType
 } from '../../types/social-media/analytics/facebook';
+import { ValidationError } from '../../utils/errors/AppError';
 
 const FACEBOOK_API_VERSION = 'v18.0';
 const FACEBOOK_API_URL = `https://graph.facebook.com/${FACEBOOK_API_VERSION}`;
