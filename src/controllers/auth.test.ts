@@ -1,23 +1,19 @@
 import request from 'supertest';
-import { AppDataSource } from '../config/database';
+import { TestDataSource } from '../config/database.test';
 import app from '../index';
 import { User } from '../models/User';
 
 describe('Authentication Endpoints', () => {
   beforeAll(async () => {
-    if (!AppDataSource.isInitialized) {
-      await AppDataSource.initialize();
-    }
+    await TestDataSource.initialize();
   });
 
   afterAll(async () => {
-    if (AppDataSource.isInitialized) {
-      await AppDataSource.destroy();
-    }
+    await TestDataSource.destroy();
   });
 
   beforeEach(async () => {
-    const userRepository = AppDataSource.getRepository(User);
+    const userRepository = TestDataSource.getRepository(User);
     await userRepository.clear();
   });
 
@@ -54,7 +50,7 @@ describe('Authentication Endpoints', () => {
 
   describe('POST /api/auth/login', () => {
     beforeEach(async () => {
-      const userRepository = AppDataSource.getRepository(User);
+      const userRepository = TestDataSource.getRepository(User);
       const user = new User();
       Object.assign(user, {
         email: 'test@example.com',

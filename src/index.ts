@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import express from 'express';
 import dotenv from 'dotenv';
 import { AppDataSource } from './config/database';
+import { TestDataSource } from './config/database.test';
 import { errorHandler } from './middleware/errorHandler';
 import authRoutes from './routes/auth';
 
@@ -25,7 +26,7 @@ app.use(errorHandler);
 
 // Database initialization and server start
 if (require.main === module) {
-  AppDataSource.initialize()
+  (process.env.NODE_ENV === 'test' ? TestDataSource : AppDataSource).initialize()
     .then(() => {
       app.listen(port, () => {
         console.log(`Server is running on port ${port}`);
