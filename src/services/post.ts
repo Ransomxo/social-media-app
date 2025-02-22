@@ -13,6 +13,11 @@ export interface SchedulePostOptions {
   userId: string;
 }
 
+import { FacebookService } from './platforms/facebook';
+import { TwitterService } from './platforms/twitter';
+import { InstagramService } from './platforms/instagram';
+import { LinkedInService } from './platforms/linkedin';
+
 export class PostService {
   static validatePlatforms(platforms: string[]): Platform[] {
     const validPlatforms = platforms.filter((platform): platform is Platform => 
@@ -37,14 +42,35 @@ export class PostService {
     // Validate platforms
     const validatedPlatforms = this.validatePlatforms(platforms);
 
-    // Create post
+    // Schedule on each platform
+    const platformResults = await Promise.allSettled(
+      validatedPlatforms.map(async platform => {
+        switch (platform) {
+          case 'facebook':
+            return FacebookService.schedulePost(userId, { content, platforms, scheduledAt, media });
+          case 'twitter':
+            return TwitterService.schedulePost(userId, { content, platforms, scheduledAt, media });
+          case 'instagram':
+            return InstagramService.schedulePost(userId, { content, platforms, scheduledAt, media });
+          case 'linkedin':
+            return LinkedInService.schedulePost(userId, { content, platforms, scheduledAt, media });
+          default:
+            throw new ValidationError(`Unsupported platform: ${platform}`);
+        }
+      })
+    );
+
+    // Check for failures
+    const failures = platformResults.filter(result => result.status === 'rejected');
+
+    // Create post with appropriate status
     const post = await prisma.post.create({
       data: {
         content,
         platforms: validatedPlatforms,
         scheduledAt,
         media: media || null,
-        status: 'scheduled',
+        status: failures.length > 0 ? 'failed' : 'scheduled',
         userId
       }
     });
