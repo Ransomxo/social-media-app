@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { errorHandler } from './middleware/errorHandler';
 import authRoutes from './routes/auth';
 import analyticsRoutes from './routes/social-media/analytics';
+import postRoutes from './routes/social-media/post';
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.get('/', (req: express.Request, res: express.Response): void => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/social-media', analyticsRoutes);
+app.use('/api/posts', postRoutes);
 
 // Error handling
 app.use(errorHandler);

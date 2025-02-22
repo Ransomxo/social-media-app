@@ -20,4 +20,21 @@ model User {
   teamMembers String[] @default([])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  posts       Post[]
+}
+
+model Post {
+  id          String   @id @default(uuid())
+  content     String
+  media       String?  // URL to media file
+  platforms   String[] // Array of platform identifiers
+  scheduledAt DateTime
+  status      String   @default("scheduled") // scheduled, published, failed
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+  @@index([scheduledAt])
 }
