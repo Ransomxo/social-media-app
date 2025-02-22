@@ -1,4 +1,6 @@
-export interface LinkedInAnalyticsResponse {
+import { BaseAnalyticsResponse } from './base';
+
+export interface LinkedInAnalyticsResponse extends BaseAnalyticsResponse {
   profile: {
     followers: number;
     connections: number;
