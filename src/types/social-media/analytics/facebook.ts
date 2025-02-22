@@ -26,13 +26,12 @@ export interface FacebookPostInsights {
   };
 }
 
-import { BaseAnalyticsResponse } from './base';
-
 import { BaseProfile, BasePost, BaseAnalyticsResponse } from './base';
 
 export interface FacebookProfile extends BaseProfile {
   reach: number;
   impressions: number;
+  page_views: number;
 }
 
 export interface FacebookPost extends BasePost {

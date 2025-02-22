@@ -132,14 +132,16 @@ export class FacebookAnalyticsAPI {
         })
       );
 
+      const profile: FacebookProfile = {
+        followers: this.extractMetricValue(pageInsights, 'page_fans'),
+        engagement_rate: this.calculatePageEngagementRate(pageInsights),
+        reach: this.extractMetricValue(pageInsights, 'page_impressions'),
+        impressions: this.extractMetricValue(pageInsights, 'page_impressions'),
+        page_views: this.extractMetricValue(pageInsights, 'page_views_total')
+      };
+
       return {
-        profile: {
-          followers: this.extractMetricValue(pageInsights, 'page_fans'),
-          engagement_rate: this.calculatePageEngagementRate(pageInsights),
-          reach: this.extractMetricValue(pageInsights, 'page_impressions'),
-          impressions: this.extractMetricValue(pageInsights, 'page_impressions'),
-          page_views: this.extractMetricValue(pageInsights, 'page_views_total')
-        },
+        profile,
         posts: postsWithInsights,
         period: {
           start: since || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
