@@ -1,4 +1,4 @@
-import { PrismaClient, Platform } from '@prisma/client';
+import { PrismaClient, Platform, SocialToken } from '@prisma/client';
 import { OAuthToken, SocialPlatform, SocialTokenResponse } from '../types/social-media/oauth';
 import { oauthConfigs } from '../config/oauth';
 import { ValidationError } from '../utils/errors/AppError';
@@ -6,6 +6,12 @@ import { ValidationError } from '../utils/errors/AppError';
 const prisma = new PrismaClient();
 
 export class OAuthService {
+  private static mapSocialTokenToResponse(token: SocialToken): SocialTokenResponse {
+    return {
+      ...token,
+      platform: token.platform as SocialPlatform
+    };
+  }
   static async getAuthorizationUrl(platform: SocialPlatform): Promise<string> {
     const config = oauthConfigs[platform];
     if (!config) {
@@ -43,6 +49,24 @@ export class OAuthService {
       where: {
         userId_platform: {
           userId,
+          platform: platform as Platform
+        }
+      },
+      update: {
+        accessToken: token.accessToken,
+        refreshToken: token.refreshToken,
+        expiresAt: token.expiresAt
+      },
+      create: {
+        userId,
+        platform: platform as Platform,
+        accessToken: token.accessToken,
+        refreshToken: token.refreshToken,
+        expiresAt: token.expiresAt
+      }
+    });
+    
+    return OAuthService.mapSocialTokenToResponse(result);
           platform
         }
       },
@@ -71,19 +95,7 @@ export class OAuthService {
       where: { userId }
     });
     
-    return tokens.map((token: { 
-      id: string;
-      platform: string;
-      accessToken: string;
-      refreshToken: string | null;
-      expiresAt: Date | null;
-      userId: string;
-      createdAt: Date;
-      updatedAt: Date;
-    }) => ({
-      ...token,
-      platform: token.platform as SocialPlatform
-    }));
+    return tokens.map(OAuthService.mapSocialTokenToResponse);
   }
 
   static async deleteSocialToken(userId: string, platform: SocialPlatform): Promise<void> {
