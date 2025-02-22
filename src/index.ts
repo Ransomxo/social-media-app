@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { errorHandler } from './middleware/errorHandler';
 import authRoutes from './routes/auth';
-import analyticsRoutes from './routes/social-media/analytics.js';
+import analyticsRoutes from './routes/social-media/analytics';
 
 dotenv.config();
 
