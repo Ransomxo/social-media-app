@@ -1,14 +1,11 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { OAuthToken, SocialPlatform, SocialTokenResponse } from '../types/social-media/oauth';
 import { oauthConfigs } from '../config/oauth';
 import { ValidationError } from '../utils/errors/AppError';
 
-// Define the model name for type safety
-const SocialTokenModel = 'socialToken' as const;
-
 type DBSocialToken = {
   id: string;
-  platform: Platform;
+  platform: SocialPlatform;
   accessToken: string;
   refreshToken: string | null;
   expiresAt: Date | null;
@@ -68,7 +65,7 @@ export class OAuthService {
     platform: SocialPlatform,
     token: OAuthToken
   ): Promise<SocialTokenResponse> {
-    const result = await prisma[SocialTokenModel].upsert({
+    const result = await (prisma as any).socialToken.upsert({
       where: {
         userId_platform: {
           userId,
@@ -82,7 +79,7 @@ export class OAuthService {
       },
       create: {
         userId,
-        platform: platform as Platform,
+        platform,
         accessToken: token.accessToken,
         refreshToken: token.refreshToken,
         expiresAt: token.expiresAt
@@ -93,7 +90,7 @@ export class OAuthService {
   }
 
   static async getUserSocialTokens(userId: string): Promise<SocialTokenResponse[]> {
-    const tokens = await prisma[SocialTokenModel].findMany({
+    const tokens = await (prisma as any).socialToken.findMany({
       where: { userId }
     });
     
@@ -101,7 +98,7 @@ export class OAuthService {
   }
 
   static async deleteSocialToken(userId: string, platform: SocialPlatform): Promise<void> {
-    await prisma[SocialTokenModel].delete({
+    await (prisma as any).socialToken.delete({
       where: {
         userId_platform: {
           userId,
