@@ -33,10 +33,12 @@ export class TeamController {
           name,
           ownerId: userId,
           members: {
-            create: {
-              userId,
+            create: [{
+              user: {
+                connect: { id: userId }
+              },
               role: 'admin'
-            }
+            }]
           }
         },
         include: {
