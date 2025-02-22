@@ -1,7 +1,7 @@
 import { TwitterAPI } from './api';
 import axios from 'axios';
 import { AppError, ValidationError } from '../../../utils/errors/AppError';
-import { Platform } from '../../../services/post';
+import { TwitterPostOptions } from '../../../types/social-media/twitter';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -65,11 +65,11 @@ describe('TwitterAPI', () => {
   });
 
   describe('createPost', () => {
-    const mockPost = {
+    const mockPost: TwitterPostOptions = {
       content: 'Test tweet',
       scheduledAt: new Date('2025-03-01T12:00:00Z'),
       media: 'https://example.com/image.jpg',
-      platforms: ['twitter' as Platform]
+      platforms: ['twitter']
     };
 
     it('should create a tweet successfully', async () => {
@@ -115,10 +115,10 @@ describe('TwitterAPI', () => {
   });
 
   describe('schedulePost', () => {
-    const mockPost = {
+    const mockPost: TwitterPostOptions = {
       content: 'Scheduled tweet',
       scheduledAt: new Date('2025-03-01T12:00:00Z'),
-      platforms: ['twitter' as Platform]
+      platforms: ['twitter']
     };
 
     it('should schedule a tweet successfully', async () => {
@@ -166,9 +166,9 @@ describe('TwitterAPI', () => {
     });
 
     it('should require scheduledAt for scheduling', async () => {
-      const postWithoutSchedule = {
+      const postWithoutSchedule: Partial<TwitterPostOptions> = {
         content: 'Test tweet',
-        platforms: ['twitter' as Platform]
+        platforms: ['twitter']
       };
 
       await expect(

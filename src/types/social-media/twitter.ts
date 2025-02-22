@@ -22,10 +22,8 @@ export interface TwitterPostResponse {
   };
 }
 
-export interface TwitterPostOptions {
-  content: string;
-  scheduledAt?: Date;
-  media?: string;
+export interface TwitterPostOptions extends Omit<CreatePostDto, 'platforms'> {
+  platforms: ['twitter'];
   reply?: {
     in_reply_to_tweet_id: string;
   };
