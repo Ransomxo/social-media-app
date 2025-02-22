@@ -8,10 +8,7 @@ export const TestDataSource = new DataSource({
   username: 'neondb_owner',
   password: 'npg_RZIM5o6xFIhC',
   database: 'neondb',
-  ssl: {
-    require: true,
-    rejectUnauthorized: true
-  },
+  ssl: true,
   synchronize: true,
   logging: false,
   entities: [User],

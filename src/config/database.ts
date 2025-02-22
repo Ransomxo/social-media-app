@@ -10,10 +10,7 @@ export const AppDataSource = new DataSource({
   username: 'neondb_owner',
   password: 'npg_RZIM5o6xFIhC',
   database: 'neondb',
-  ssl: {
-    require: true,
-    rejectUnauthorized: true
-  },
+  ssl: true,
   synchronize: process.env.NODE_ENV === 'development',
   logging: process.env.NODE_ENV === 'development',
   entities: ['src/models/**/*.ts'],
