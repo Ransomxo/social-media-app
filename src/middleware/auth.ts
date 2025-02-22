@@ -39,10 +39,13 @@ export const authMiddleware = async (
       select: {
         id: true,
         email: true,
+        password: true,
         firstName: true,
         lastName: true,
         plan: true,
-        teamMembers: true
+        teamMembers: true,
+        createdAt: true,
+        updatedAt: true
       }
     });
     
