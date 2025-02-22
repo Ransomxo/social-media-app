@@ -49,24 +49,12 @@ export class TwitterAPI {
   static async createPost(accessToken: string, options: TwitterPostOptions): Promise<TwitterPostResponse> {
     try {
       const payload: Record<string, any> = {
-        text: options.content
+        text: options.content,
+        ...options.media && { media: options.media },
+        ...options.reply && { reply: options.reply },
+        ...options.quote && { quote: options.quote },
+        ...options.poll && { poll: options.poll }
       };
-
-      if (options.media?.media_ids) {
-        payload.media = options.media;
-      }
-
-      if (options.reply) {
-        payload.reply = options.reply;
-      }
-
-      if (options.quote) {
-        payload.quote = options.quote;
-      }
-
-      if (options.poll) {
-        payload.poll = options.poll;
-      }
 
       const response = await axios.post<TwitterPostResponse>(
         `${TWITTER_API_URL}/tweets`,
@@ -92,8 +80,12 @@ export class TwitterAPI {
 
     try {
       const payload = {
-        ...options,
-        scheduled_time: options.scheduledAt.toISOString()
+        text: options.content,
+        scheduled_time: options.scheduledAt.toISOString(),
+        ...options.media && { media: options.media },
+        ...options.reply && { reply: options.reply },
+        ...options.quote && { quote: options.quote },
+        ...options.poll && { poll: options.poll }
       };
 
       const response = await axios.post<TwitterPostResponse>(
