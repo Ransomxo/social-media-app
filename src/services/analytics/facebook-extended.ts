@@ -69,7 +69,11 @@ export class FacebookExtendedAnalyticsAPI extends FacebookAnalyticsAPI {
 
       const postsWithMetrics = await Promise.all(
         posts.data.data.map(async (post: any) => {
-          const insights = await this.getPostInsights(post.id, accessToken);
+          const insights = await this.getPostInsights(
+            post.id,
+            accessToken,
+            ['post_impressions', 'post_engaged_users', 'post_reactions_by_type_total']
+          );
           return {
             id: post.id,
             content: post.message || '',

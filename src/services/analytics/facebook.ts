@@ -13,7 +13,7 @@ const FACEBOOK_API_VERSION = 'v18.0';
 const FACEBOOK_API_URL = `https://graph.facebook.com/${FACEBOOK_API_VERSION}`;
 
 export class FacebookAnalyticsAPI {
-  private static handleError(error: unknown): never {
+  protected static handleError(error: unknown): never {
     if (axios.isAxiosError(error) && error.response?.data?.error) {
       throw new ValidationError(error.response.data.error.message);
     }
@@ -23,7 +23,7 @@ export class FacebookAnalyticsAPI {
     throw new ValidationError('An unknown error occurred while calling the Facebook Analytics API');
   }
 
-  private static async getPageInsights(
+  protected static async getPageInsights(
     pageId: string,
     accessToken: string,
     metrics: FacebookMetricType[],
@@ -52,7 +52,7 @@ export class FacebookAnalyticsAPI {
     }
   }
 
-  private static async getPostInsights(
+  protected static async getPostInsights(
     postId: string,
     accessToken: string,
     metrics: FacebookPostMetricType[]
@@ -148,18 +148,18 @@ export class FacebookAnalyticsAPI {
     }
   }
 
-  private static extractMetricValue(insights: FacebookPageInsights | FacebookPostInsights, metricName: string): number {
+  protected static extractMetricValue(insights: FacebookPageInsights | FacebookPostInsights, metricName: string): number {
     const metric = insights.data.find(m => m.name === metricName);
     return metric?.values[0]?.value || 0;
   }
 
-  private static calculateEngagementRate(insights: FacebookPostInsights): number {
+  protected static calculateEngagementRate(insights: FacebookPostInsights): number {
     const impressions = this.extractMetricValue(insights, 'post_impressions');
     const engagements = this.extractMetricValue(insights, 'post_engaged_users');
     return impressions > 0 ? (engagements / impressions) * 100 : 0;
   }
 
-  private static calculatePageEngagementRate(insights: FacebookPageInsights): number {
+  protected static calculatePageEngagementRate(insights: FacebookPageInsights): number {
     const impressions = this.extractMetricValue(insights, 'page_impressions');
     const engagements = this.extractMetricValue(insights, 'page_engaged_users');
     return impressions > 0 ? (engagements / impressions) * 100 : 0;
