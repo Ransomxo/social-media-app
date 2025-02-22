@@ -6,6 +6,6 @@ export const TestDataSource = new DataSource({
   url: 'postgresql://neondb_owner:npg_RZlM5o6xFIhC@ep-royal-queen-a5munids-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require',
   synchronize: true,
   logging: false,
-  entities: ['src/models/**/*.ts'],
+  entities: [User],
   dropSchema: true
 });

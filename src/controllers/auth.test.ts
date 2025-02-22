@@ -6,7 +6,9 @@ import { User } from '../models/User';
 
 describe('Authentication Endpoints', () => {
   beforeAll(async () => {
-    await TestDataSource.initialize();
+    if (!TestDataSource.isInitialized) {
+      await TestDataSource.initialize();
+    }
   });
 
   afterAll(async () => {

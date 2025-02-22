@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import express from 'express';
+import { User } from './models/User';
 import dotenv from 'dotenv';
 import { AppDataSource } from './config/database';
 import { TestDataSource } from './config/database.test';
