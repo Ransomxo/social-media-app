@@ -17,6 +17,8 @@ const prisma = new PrismaClient();
 let testUser: { id: string; email: string };
 
 // Initialize test environment
+let testUserData: { id: string; email: string };
+
 beforeAll(async () => {
   try {
     // Clean up existing data
@@ -38,7 +40,8 @@ beforeAll(async () => {
         teamMembers: [],
       },
     });
-    testUser = { id: user.id, email: user.email };
+    testUserData = { id: user.id, email: user.email };
+    testUser = testUserData; // Set the exported testUser
     console.log('Created shared test user:', { id: user.id, email: user.email });
   } catch (error) {
     console.error('Error setting up test environment:', error);
