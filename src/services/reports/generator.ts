@@ -6,7 +6,9 @@ import { LinkedInAnalyticsAPI } from '../analytics/linkedin';
 import { ValidationError } from '../../utils/errors/AppError';
 
 export class ReportGenerator {
-  private static readonly platformAPIs = {
+  private static readonly platformAPIs: {
+    [key: string]: typeof FacebookAnalyticsAPI | typeof TwitterAnalyticsAPI | typeof InstagramAnalyticsAPI | typeof LinkedInAnalyticsAPI;
+  } = {
     facebook: FacebookAnalyticsAPI,
     twitter: TwitterAnalyticsAPI,
     instagram: InstagramAnalyticsAPI,
@@ -33,7 +35,8 @@ export class ReportGenerator {
           throw new ValidationError(`Missing access token for platform: ${platform}`);
         }
 
-        const analytics = await this.platformAPIs[platform].getAnalytics(
+        const api = this.platformAPIs[platform];
+        const analytics = await api.getAnalytics(
           userId,
           accessTokens[platform],
           startDate,
@@ -43,7 +46,7 @@ export class ReportGenerator {
         // Filter metrics based on config
         metrics[platform] = {
           profile: this.filterMetrics(analytics.profile, config.metrics.profile),
-          posts: analytics.posts.map(post => ({
+          posts: analytics.posts.map((post: { id: string; created_at: string; metrics: Record<string, number> }) => ({
             id: post.id,
             created_at: post.created_at,
             metrics: this.filterMetrics(post.metrics, config.metrics.posts)
