@@ -35,8 +35,6 @@ export const register = async (
     const token = jwt.sign({ id: user.id } as JwtPayload, process.env.JWT_SECRET!, {
       expiresIn: process.env.JWT_EXPIRATION || '24h'
     } as SignOptions);
-      expiresIn: process.env.JWT_EXPIRATION,
-    });
 
     res.status(201).json({
       message: 'User registered successfully',
@@ -71,8 +69,6 @@ export const login = async (
     const token = jwt.sign({ id: user.id } as JwtPayload, process.env.JWT_SECRET!, {
       expiresIn: process.env.JWT_EXPIRATION || '24h'
     } as SignOptions);
-      expiresIn: process.env.JWT_EXPIRATION,
-    });
 
     res.json({
       message: 'Login successful',

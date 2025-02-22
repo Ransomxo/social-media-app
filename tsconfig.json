@@ -6,6 +6,7 @@
     "rootDir": "./src",
     "strict": true,
     "strictPropertyInitialization": false,
+    "useDefineForClassFields": false,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
