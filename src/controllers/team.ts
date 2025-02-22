@@ -11,23 +11,32 @@ export class TeamController {
       const { name }: CreateTeamDto = req.body;
 
       if (!name) {
-        next(new ValidationError('Team name is required'));
+        const error = new ValidationError('Team name is required');
+        next(error);
         return;
       }
 
       // Check user's plan limits
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        include: { ownedTeams: true }
+        include: { 
+          ownedTeams: {
+            include: {
+              members: true
+            }
+          }
+        }
       });
 
       if (!user) {
-        next(new NotFoundError('User not found'));
+        const error = new NotFoundError('User not found');
+        next(error);
         return;
       }
 
       if (user.plan === 'minimal' && user.ownedTeams.length >= 1) {
-        next(new ForbiddenError('Minimal plan users can only create one team'));
+        const error = new ForbiddenError('Minimal plan users can only create one team');
+        next(error);
         return;
       }
 
@@ -201,7 +210,7 @@ export class TeamController {
       }
 
       // Check if user is already a member
-      const existingMember = team.members.find(member => member.userId === invitedUser.id);
+      const existingMember = team.members.find((member: { userId: string }) => member.userId === invitedUser.id);
       if (existingMember) {
         next(new ValidationError('User is already a team member'));
         return;
