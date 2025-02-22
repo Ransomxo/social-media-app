@@ -65,27 +65,24 @@ afterEach(async () => {
 // Ensure test user exists before each test
 beforeEach(async () => {
   try {
-    const user = await prisma.user.findUnique({
-      where: { id: testUser.id },
-      select: { id: true, email: true }
+    // Generate new test user for each test to avoid conflicts
+    const timestamp = Date.now();
+    const randomId = Math.random().toString(36).substring(7);
+    const hashedPassword = await UserModel.hashPassword('password123');
+    const user = await prisma.user.create({
+      data: {
+        email: `test-user-${timestamp}-${randomId}@example.com`,
+        password: hashedPassword,
+        firstName: 'Test',
+        lastName: 'User',
+        plan: 'minimal',
+        teamMembers: [],
+      },
     });
-    if (!user) {
-      console.log('Recreating test user before test...');
-      const hashedPassword = await UserModel.hashPassword('password123');
-      await prisma.user.create({
-        data: {
-          id: testUser.id,
-          email: testUser.email,
-          password: hashedPassword,
-          firstName: 'Test',
-          lastName: 'User',
-          plan: 'minimal',
-          teamMembers: [],
-        },
-      });
-    }
+    testUser = { id: user.id, email: user.email };
+    console.log('Created new test user for test:', { id: user.id, email: user.email });
   } catch (error) {
-    console.error('Error ensuring test user exists:', error);
+    console.error('Error creating test user:', error);
     throw error;
   }
 });
