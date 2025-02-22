@@ -44,7 +44,7 @@ describe('FacebookExtendedAnalyticsAPI', () => {
       };
 
       // Mock posts response
-      const mockPosts = {
+      const mockPostsData = {
         data: [
           {
             id: 'post_123',
@@ -55,7 +55,7 @@ describe('FacebookExtendedAnalyticsAPI', () => {
       };
 
       // Mock post insights response
-      const mockPostInsights = {
+      const mockPostInsightsData = {
         data: [
           {
             name: 'post_impressions',
@@ -118,14 +118,14 @@ describe('FacebookExtendedAnalyticsAPI', () => {
       mockedAxios.get
         // Base analytics mocks
         .mockResolvedValueOnce({ data: mockPageInsights }) // Page insights
-        .mockResolvedValueOnce({ data: mockPosts }) // Posts list
-        .mockResolvedValueOnce({ data: mockPostInsights }) // Post insights
+        .mockResolvedValueOnce({ data: mockPostsData }) // Posts list
+        .mockResolvedValueOnce({ data: mockPostInsightsData }) // Post insights
         // Extended analytics mocks
         .mockResolvedValueOnce({ data: mockDemographics }) // Demographics
         .mockResolvedValueOnce({ data: mockDemographics }) // Location
         .mockResolvedValueOnce({ data: mockDemographics }) // Language
-        .mockResolvedValueOnce({ data: mockPosts }) // Posts for content performance
-        .mockResolvedValueOnce({ data: mockPostInsights }) // Post insights for content performance
+        .mockResolvedValueOnce({ data: mockPostsData }) // Posts for content performance
+        .mockResolvedValueOnce({ data: mockPostInsightsData }) // Post insights for content performance
         .mockResolvedValueOnce({ data: mockInsights }) // Fan growth
         .mockResolvedValueOnce({ data: mockInsights }) // Engagement
         .mockResolvedValueOnce({ data: mockInsights }); // Reach
