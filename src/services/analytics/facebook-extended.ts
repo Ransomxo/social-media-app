@@ -157,7 +157,17 @@ export class FacebookExtendedAnalyticsAPI extends FacebookAnalyticsAPI {
       const endDate = until || new Date().toISOString();
 
       const [baseAnalytics, demographics, contentPerformance, audienceInsights] = await Promise.all([
-        super.getAnalytics(pageId, accessToken, startDate, endDate),
+        super.getAnalytics(pageId, accessToken, startDate, endDate).catch(() => ({
+          page: {
+            followers: 0,
+            engagement_rate: 0,
+            reach: 0,
+            impressions: 0,
+            page_views: 0
+          },
+          posts: [],
+          period: { start: startDate, end: endDate }
+        })),
         this.getDemographics(pageId, accessToken),
         this.getContentPerformance(pageId, accessToken, startDate, endDate),
         this.getAudienceInsights(pageId, accessToken, startDate, endDate)
