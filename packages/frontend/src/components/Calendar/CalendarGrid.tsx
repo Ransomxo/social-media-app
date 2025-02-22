@@ -47,7 +47,7 @@ export default function CalendarGrid({
 
   const getEventsForDay = (date: Date) => {
     return events.filter(
-      (event) =>
+      (event: CalendarEvent) =>
         event.start.toDateString() === date.toDateString() ||
         event.end.toDateString() === date.toDateString()
     );
@@ -87,7 +87,7 @@ export default function CalendarGrid({
                 {day.getDate()}
               </div>
               <div className="space-y-1 mt-2">
-                {dayEvents.map((event) => (
+                {dayEvents.map((event: CalendarEvent) => (
                   <button
                     key={event.id}
                     onClick={(e) => {
@@ -102,7 +102,7 @@ export default function CalendarGrid({
                       <span className="flex-1 truncate">{event.title}</span>
                       {event.participants && (
                         <div className="flex -space-x-1">
-                          {event.participants.map((participant, idx) => (
+                          {event.participants.map((participant: { avatar: string; name: string }, idx: number) => (
                             <img
                               key={idx}
                               src={participant.avatar}
