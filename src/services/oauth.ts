@@ -1,9 +1,10 @@
+import { Prisma } from '@prisma/client';
 import { OAuthToken, SocialPlatform, SocialTokenResponse } from '../types/social-media/oauth';
 import { oauthConfigs } from '../config/oauth';
 import { ValidationError } from '../utils/errors/AppError';
 import prisma from '../lib/prisma';
 
-type DBSocialToken = {
+interface DBSocialToken {
   id: string;
   platform: string;
   accessToken: string;
@@ -12,13 +13,7 @@ type DBSocialToken = {
   userId: string;
   createdAt: Date;
   updatedAt: Date;
-};
-
-
-
-
-
-
+}
 
 export class OAuthService {
   private static mapSocialTokenToResponse(token: DBSocialToken): SocialTokenResponse {
