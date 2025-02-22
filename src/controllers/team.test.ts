@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { TeamController } from './team';
 import { prisma } from '../lib/prisma';
-import { ValidationError, NotFoundError, ForbiddenError } from '../utils/errors/AppError';
+import { ValidationError, NotFoundError, ForbiddenError, AppError } from '../utils/errors/AppError';
 import { AuthRequest } from '../middleware/auth';
 
 describe('TeamController', () => {
@@ -19,12 +19,8 @@ describe('TeamController', () => {
         plan: 'minimal',
         password: 'hashed_password',
         createdAt: new Date(),
-        updatedAt: new Date(),
-        ownedTeams: [],
-        memberOfTeams: [],
-        posts: [],
-        socialTokens: []
-      },
+        updatedAt: new Date()
+      } as any,
       params: {},
       body: {}
     };
