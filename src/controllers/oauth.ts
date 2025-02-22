@@ -1,11 +1,11 @@
-import { Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { AuthRequest } from '../middleware/auth';
 import { OAuthService } from '../services/oauth';
 import { SocialPlatform } from '../types/social-media/oauth';
 import { ValidationError } from '../utils/errors/AppError';
 
-export const getAuthUrl = async (
-  req: AuthRequest,
+export const getAuthorizationUrl = async (
+  req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
@@ -60,8 +60,8 @@ export const listConnections = async (
   }
 };
 
-export const removeConnection = async (
-  req: AuthRequest,
+export const deleteSocialToken = async (
+  req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {

@@ -3,10 +3,21 @@ import { OAuthToken, SocialPlatform, SocialTokenResponse } from '../types/social
 import { oauthConfigs } from '../config/oauth';
 import { ValidationError } from '../utils/errors/AppError';
 
+type SocialTokenRecord = {
+  id: string;
+  platform: string;
+  accessToken: string;
+  refreshToken: string | null;
+  expiresAt: Date | null;
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 const prisma = new PrismaClient();
 
 export class OAuthService {
-  private static mapSocialTokenToResponse(token: any): SocialTokenResponse {
+  private static mapSocialTokenToResponse(token: SocialTokenRecord): SocialTokenResponse {
     return {
       id: token.id,
       platform: token.platform as SocialPlatform,
