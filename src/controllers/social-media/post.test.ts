@@ -9,26 +9,9 @@ describe('Post Scheduling Endpoints', () => {
   let userId: string;
 
   beforeAll(async () => {
-    // Clean up any existing test data
-    await prisma.post.deleteMany();
-    await prisma.user.deleteMany();
-
-    // Create a test user
-    const hashedPassword = await UserModel.hashPassword('password123');
-    // Create test user
-    const user = await prisma.user.create({
-      data: {
-        email: `test-post-${Date.now()}@example.com`,
-        password: hashedPassword,
-        firstName: 'Test',
-        lastName: 'User',
-        plan: 'minimal',
-        teamMembers: [],
-      },
-    });
-    userId = user.id;
-    authToken = jwt.sign({ id: user.id }, process.env.JWT_SECRET || 'test-secret-key', { expiresIn: '1h' });
-    console.log('Test token generated:', { userId: user.id });
+    userId = testUser.id;
+    authToken = jwt.sign({ id: testUser.id }, process.env.JWT_SECRET || 'test-secret-key', { expiresIn: '1h' });
+    console.log('Test token generated:', { userId: testUser.id });
   });
 
   afterAll(async () => {

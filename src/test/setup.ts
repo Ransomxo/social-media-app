@@ -12,27 +12,49 @@ process.env.PORT = '3001';
 // Create a new Prisma client for tests
 const prisma = new PrismaClient();
 
-// Clean up database before all tests
+// Create shared test user
+let testUser: { id: string; email: string };
+
+// Initialize test environment
 beforeAll(async () => {
   try {
+    // Clean up existing data
     await prisma.$transaction([
       prisma.post.deleteMany(),
       prisma.user.deleteMany()
     ]);
+
+    // Create a shared test user
+    const hashedPassword = await UserModel.hashPassword('password123');
+    const user = await prisma.user.create({
+      data: {
+        email: `test-user-${Date.now()}@example.com`,
+        password: hashedPassword,
+        firstName: 'Test',
+        lastName: 'User',
+        plan: 'minimal',
+        teamMembers: [],
+      },
+    });
+    testUser = { id: user.id, email: user.email };
+    console.log('Created shared test user:', { id: user.id, email: user.email });
   } catch (error) {
-    console.error('Error cleaning up test database:', error);
+    console.error('Error setting up test environment:', error);
+    throw error;
   }
 });
 
-// Clean up after each test
+// Clean up posts between tests
 afterEach(async () => {
   try {
-    // Only clean up posts, keep users for authentication tests
     await prisma.post.deleteMany();
   } catch (error) {
     console.error('Error cleaning up test data:', error);
   }
 });
+
+// Export test user for use in tests
+export { testUser };
 
 // Disconnect after all tests
 afterAll(async () => {
