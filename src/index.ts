@@ -26,18 +26,26 @@ app.use('/api/auth', authRoutes);
 app.use(errorHandler);
 
 // Database initialization and server start
-if (require.main === module) {
-  (process.env.NODE_ENV === 'test' ? TestDataSource : AppDataSource).initialize()
-    .then(() => {
+const initializeApp = async () => {
+  try {
+    const dataSource = process.env.NODE_ENV === 'test' ? TestDataSource : AppDataSource;
+    if (!dataSource.isInitialized) {
+      await dataSource.initialize();
+    }
+    if (require.main === module) {
       app.listen(port, () => {
         console.log(`Server is running on port ${port}`);
         console.log('Database connection established');
       });
-    })
-    .catch((error) => {
-      console.error('Error connecting to database:', error);
-      process.exit(1);
-    });
+    }
+  } catch (error) {
+    console.error('Error connecting to database:', error);
+    process.exit(1);
+  }
+};
+
+if (require.main === module) {
+  initializeApp();
 }
 
 export default app;
