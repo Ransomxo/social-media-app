@@ -2,6 +2,8 @@ import axios from 'axios';
 import { ValidationError } from '../../utils/errors/AppError';
 import {
   TwitterAnalyticsResponse,
+  TwitterProfile,
+  TwitterPost,
   TwitterMetricType,
   TwitterTweetMetricType,
   TwitterError
@@ -134,14 +136,20 @@ export class TwitterAnalyticsAPI {
         })
       );
 
-      const posts = tweetsWithMetrics.map(tweet => ({
+      const posts: TwitterPost[] = tweetsWithMetrics.map(tweet => ({
         id: tweet.id,
         created_at: tweet.created_at,
+        text: tweet.text,
         metrics: {
           impressions: tweet.metrics.impressions,
           likes: tweet.metrics.likes,
           engagement_rate: tweet.metrics.engagement_rate
-        }
+        },
+        retweets: tweet.metrics.retweets,
+        replies: tweet.metrics.replies,
+        url_clicks: tweet.metrics.url_clicks,
+        profile_clicks: tweet.metrics.profile_clicks,
+        hashtag_clicks: tweet.metrics.hashtag_clicks
       }));
 
       const profile: TwitterProfile = {
