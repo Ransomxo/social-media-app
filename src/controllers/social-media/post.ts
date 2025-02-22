@@ -34,7 +34,10 @@ export const createPost = async (
 
     const post = await prisma.post.create({
       data: {
-        ...postData,
+        content: postData.content,
+        media: postData.media,
+        platforms: postData.platforms,
+        scheduledAt: new Date(postData.scheduledAt),
         userId: req.user.id,
       },
     });
