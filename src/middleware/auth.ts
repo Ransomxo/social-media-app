@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { JwtPayload } from '../types/jwt';
 import { UnauthorizedError } from '../utils/errors/AppError';
 import { AppDataSource } from '../config/database';
 import { User } from '../models/User';
@@ -19,7 +20,7 @@ export const authMiddleware = async (
       throw new UnauthorizedError('No token provided');
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as { id: string };
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
     const userRepository = AppDataSource.getRepository(User);
     const user = await userRepository.findOne({ where: { id: decoded.id } });
 
