@@ -25,11 +25,11 @@ beforeAll(async () => {
       prisma.user.deleteMany()
     ]);
 
-    // Create a shared test user
+    // Create a shared test user with a fixed email to ensure consistency
     const hashedPassword = await UserModel.hashPassword('password123');
     const user = await prisma.user.create({
       data: {
-        email: `test-user-${Date.now()}@example.com`,
+        email: 'test-user@example.com',
         password: hashedPassword,
         firstName: 'Test',
         lastName: 'User',
