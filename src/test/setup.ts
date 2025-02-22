@@ -27,10 +27,8 @@ beforeAll(async () => {
 // Clean up after each test
 afterEach(async () => {
   try {
-    await prisma.$transaction([
-      prisma.post.deleteMany(),
-      prisma.user.deleteMany()
-    ]);
+    // Only clean up posts, keep users for authentication tests
+    await prisma.post.deleteMany();
   } catch (error) {
     console.error('Error cleaning up test data:', error);
   }
