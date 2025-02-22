@@ -30,7 +30,7 @@ export class User {
   @Column({ default: 'minimal' })
   plan: 'minimal' | 'team';
 
-  @Column({ type: 'text', array: true, default: '{}' })
+  @Column('text', { array: true, default: [] })
   teamMembers: string[];
 
   @CreateDateColumn()
