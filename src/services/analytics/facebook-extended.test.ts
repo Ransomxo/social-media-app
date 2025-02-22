@@ -6,17 +6,18 @@ jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('FacebookExtendedAnalyticsAPI', () => {
-  const mockPageId = '123456789';
-  const mockAccessToken = 'mock_access_token';
-  const mockSince = '2025-01-01';
-  const mockUntil = '2025-02-01';
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  // Mock page insights response
-  const mockPageInsights = {
+  describe('getExtendedAnalytics', () => {
+    const mockPageId = '123456789';
+    const mockAccessToken = 'mock_access_token';
+    const mockSince = '2025-01-01';
+    const mockUntil = '2025-02-01';
+
+    // Mock page insights response
+    const mockPageInsights = {
     data: [
       {
         name: 'page_impressions',
