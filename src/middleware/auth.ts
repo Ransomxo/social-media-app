@@ -20,7 +20,7 @@ export const authMiddleware = async (
       return next(new UnauthorizedError('No token provided'));
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'test-secret') as JwtPayload;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
     const user = await prisma.user.findUnique({ where: { id: decoded.id } });
 
     if (!user) {
