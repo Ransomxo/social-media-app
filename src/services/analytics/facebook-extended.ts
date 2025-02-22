@@ -168,9 +168,21 @@ export class FacebookExtendedAnalyticsAPI extends FacebookAnalyticsAPI {
           posts: [],
           period: { start: startDate, end: endDate }
         })),
-        this.getDemographics(pageId, accessToken),
-        this.getContentPerformance(pageId, accessToken, startDate, endDate),
-        this.getAudienceInsights(pageId, accessToken, startDate, endDate)
+        this.getDemographics(pageId, accessToken).catch(() => ({
+          age_gender: [],
+          location: [],
+          language: []
+        })),
+        this.getContentPerformance(pageId, accessToken, startDate, endDate).catch(() => ({
+          best_performing_posts: [],
+          content_type_performance: [],
+          optimal_posting_times: []
+        })),
+        this.getAudienceInsights(pageId, accessToken, startDate, endDate).catch(() => ({
+          fan_growth: [],
+          engagement_trends: [],
+          reach_trends: []
+        }))
       ]);
 
       return {
