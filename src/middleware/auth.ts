@@ -17,25 +17,18 @@ export const authMiddleware = async (
   try {
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) {
-      throw new UnauthorizedError('No token provided');
+      return next(new UnauthorizedError('No token provided'));
     }
 
-    try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'test-secret') as JwtPayload;
-      const user = await prisma.user.findUnique({ where: { id: decoded.id } });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'test-secret') as JwtPayload;
+    const user = await prisma.user.findUnique({ where: { id: decoded.id } });
 
-      if (!user) {
-        throw new UnauthorizedError('User not found');
-      }
-
-      req.user = user;
-      return next();
-    } catch (error) {
-      if (error instanceof jwt.JsonWebTokenError) {
-        throw new UnauthorizedError('Invalid token');
-      }
-      throw error;
+    if (!user) {
+      return next(new UnauthorizedError('User not found'));
     }
+
+    req.user = user;
+    return next();
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {
       return next(new UnauthorizedError('Invalid token'));
