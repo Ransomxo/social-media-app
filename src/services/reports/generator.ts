@@ -6,10 +6,20 @@ import { LinkedInAnalyticsAPI } from '../analytics/linkedin';
 import { ValidationError } from '../../utils/errors/AppError';
 
 export class ReportGenerator {
-import { BaseAnalyticsResponse } from '../../types/social-media/analytics/base';
+import { BaseAnalyticsResponse, BaseAnalyticsPost } from '../../types/social-media/analytics/base';
 
 export class ReportGenerator {
-  private static readonly platformAPIs: {
+  public static async generateReport(
+    userId: string,
+    accessTokens: { [platform: string]: string },
+    config: EmailReportConfig,
+    startDate: string,
+    endDate: string
+  ): Promise<EmailReportTemplate> {
+    return new ReportGenerator().generateReport(userId, accessTokens, config, startDate, endDate);
+  }
+
+  private readonly platformAPIs: {
     [key: string]: {
       getAnalytics(
         userId: string,
@@ -25,7 +35,7 @@ export class ReportGenerator {
     linkedin: LinkedInAnalyticsAPI
   };
 
-  static async generateReport(
+  private async generateReport(
     userId: string,
     accessTokens: { [platform: string]: string },
     config: EmailReportConfig,
