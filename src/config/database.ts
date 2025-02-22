@@ -5,7 +5,15 @@ dotenv.config();
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
-  url: process.env.DATABASE_URL,
+  host: 'ep-royal-queen-a5munids-pooler.us-east-2.aws.neon.tech',
+  port: 5432,
+  username: 'neondb_owner',
+  password: 'npg_RZIM5o6xFIhC',
+  database: 'neondb',
+  ssl: {
+    require: true,
+    rejectUnauthorized: true
+  },
   synchronize: process.env.NODE_ENV === 'development',
   logging: process.env.NODE_ENV === 'development',
   entities: ['src/models/**/*.ts'],
