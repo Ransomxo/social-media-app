@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { JwtPayload } from '../types/jwt';
 import { AppDataSource } from '../config/database';
 import { User } from '../models/User';
 import { ValidationError, UnauthorizedError } from '../utils/errors/AppError';
@@ -31,7 +32,7 @@ export const register = async (
     await user.hashPassword();
     await userRepository.save(user);
 
-    const token = jwt.sign({ id: user.id } as { id: string }, process.env.JWT_SECRET!, {
+    const token = jwt.sign({ id: user.id } as JwtPayload, process.env.JWT_SECRET!, {
       expiresIn: process.env.JWT_EXPIRATION,
     });
 
@@ -65,7 +66,7 @@ export const login = async (
       throw new UnauthorizedError('Invalid email or password');
     }
 
-    const token = jwt.sign({ id: user.id } as { id: string }, process.env.JWT_SECRET!, {
+    const token = jwt.sign({ id: user.id } as JwtPayload, process.env.JWT_SECRET!, {
       expiresIn: process.env.JWT_EXPIRATION,
     });
 
