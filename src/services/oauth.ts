@@ -62,16 +62,16 @@ export class OAuthService {
     token: OAuthToken
   ): Promise<SocialTokenResponse> {
     const result = await prisma.$queryRaw`
-      INSERT INTO social_tokens (
-        id, platform, access_token, refresh_token, expires_at, user_id, created_at, updated_at
+      INSERT INTO "social_tokens" (
+        "id", "platform", "access_token", "refresh_token", "expires_at", "user_id", "created_at", "updated_at"
       ) VALUES (
         gen_random_uuid(), ${platform}, ${token.accessToken}, ${token.refreshToken}, ${token.expiresAt}, ${userId}, NOW(), NOW()
       )
-      ON CONFLICT (user_id, platform) DO UPDATE SET
-        access_token = ${token.accessToken},
-        refresh_token = ${token.refreshToken},
-        expires_at = ${token.expiresAt},
-        updated_at = NOW()
+      ON CONFLICT ("user_id", "platform") DO UPDATE SET
+        "access_token" = ${token.accessToken},
+        "refresh_token" = ${token.refreshToken},
+        "expires_at" = ${token.expiresAt},
+        "updated_at" = NOW()
       RETURNING *
     ` as unknown as DBSocialToken;
     
@@ -80,7 +80,7 @@ export class OAuthService {
 
   static async getUserSocialTokens(userId: string): Promise<SocialTokenResponse[]> {
     const tokens = await prisma.$queryRaw`
-      SELECT * FROM social_tokens WHERE user_id = ${userId}
+      SELECT * FROM "social_tokens" WHERE "user_id" = ${userId}
     ` as unknown as DBSocialToken[];
     
     return tokens.map((token: DBSocialToken) => this.mapSocialTokenToResponse(token));
@@ -88,7 +88,7 @@ export class OAuthService {
 
   static async deleteSocialToken(userId: string, platform: SocialPlatform): Promise<void> {
     await prisma.$executeRaw`
-      DELETE FROM social_tokens WHERE user_id = ${userId} AND platform = ${platform}
+      DELETE FROM "social_tokens" WHERE "user_id" = ${userId} AND "platform" = ${platform}
     `;
   }
 }
