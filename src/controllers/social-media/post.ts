@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { ValidationError, NotFoundError } from '../../utils/errors/AppError';
 import { AuthRequest } from '../../middleware/auth';
 import prisma from '../../lib/prisma';
@@ -32,12 +32,14 @@ export const createPost = async (
       throw new ValidationError('Scheduled time must be in the future');
     }
 
+    // Create post with proper type casting
     const post = await prisma.post.create({
       data: {
         content: postData.content,
-        media: postData.media,
+        media: postData.media || null,
         platforms: postData.platforms,
         scheduledAt: new Date(postData.scheduledAt),
+        status: 'scheduled',
         userId: req.user.id,
       },
     });

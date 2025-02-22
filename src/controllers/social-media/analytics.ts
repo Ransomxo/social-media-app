@@ -1,7 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { NotFoundError } from '../../utils/errors/AppError';
 import { SocialMediaAnalytics } from '../../types/social-media/analytics';
-import prisma from '../../lib/prisma';
 import { AuthRequest } from '../../middleware/auth';
 
 export const getSocialMediaAnalytics = async (
