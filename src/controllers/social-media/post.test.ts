@@ -9,11 +9,15 @@ describe('Post Scheduling Endpoints', () => {
   let userId: string;
 
   beforeAll(async () => {
+    // Clean up any existing test data
+    await prisma.post.deleteMany();
+    await prisma.user.deleteMany();
+
     // Create a test user
     const hashedPassword = await UserModel.hashPassword('password123');
     const user = await prisma.user.create({
       data: {
-        email: 'test@example.com',
+        email: 'test-post@example.com',
         password: hashedPassword,
         firstName: 'Test',
         lastName: 'User',
@@ -26,8 +30,10 @@ describe('Post Scheduling Endpoints', () => {
   });
 
   afterAll(async () => {
-    await prisma.post.deleteMany({ where: { userId } });
-    await prisma.user.delete({ where: { id: userId } });
+    await prisma.$transaction([
+      prisma.post.deleteMany({ where: { userId } }),
+      prisma.user.delete({ where: { id: userId } })
+    ]);
     await prisma.$disconnect();
   });
 
