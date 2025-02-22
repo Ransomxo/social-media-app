@@ -21,9 +21,7 @@ export class TeamController {
       const user = await prisma.user.findUnique({
         where: { id: userId },
         include: {
-          ownedTeams: {
-            where: { ownerId: userId }
-          }
+          ownedTeams: true
         }
       });
 
@@ -38,7 +36,7 @@ export class TeamController {
         return;
       }
 
-      const team = await prisma.team.create({
+      const team = await prisma.Team.create({
         data: {
           name,
           ownerId: userId,
@@ -74,7 +72,7 @@ export class TeamController {
     try {
       const userId = req.user?.id;
 
-      const teams = await prisma.team.findMany({
+      const teams = await prisma.Team.findMany({
         where: {
           OR: [
             { ownerId: userId },
@@ -108,7 +106,7 @@ export class TeamController {
       const teamId = req.params.teamId;
       const { name }: UpdateTeamDto = req.body;
 
-      const team = await prisma.team.findUnique({
+      const team = await prisma.Team.findUnique({
         where: { id: teamId },
         include: { members: true }
       });
@@ -123,7 +121,7 @@ export class TeamController {
         return;
       }
 
-      const updatedTeam = await prisma.team.update({
+      const updatedTeam = await prisma.Team.update({
         where: { id: teamId },
         data: { name },
         include: {
@@ -158,7 +156,7 @@ export class TeamController {
         return;
       }
 
-      const team = await prisma.team.findUnique({
+      const team = await prisma.Team.findUnique({
         where: { id: teamId },
         include: {
           members: true,
@@ -211,7 +209,7 @@ export class TeamController {
         return;
       }
 
-      const teamMember = await prisma.teamMember.create({
+      const teamMember = await prisma.TeamMember.create({
         data: {
           userId: invitedUser.id,
           teamId,
@@ -240,7 +238,7 @@ export class TeamController {
       const teamId = req.params.teamId;
       const memberId = req.params.memberId;
 
-      const team = await prisma.team.findUnique({
+      const team = await prisma.Team.findUnique({
         where: { id: teamId },
         include: { members: true }
       });
@@ -255,7 +253,7 @@ export class TeamController {
         return;
       }
 
-      const member = await prisma.teamMember.findUnique({
+      const member = await prisma.TeamMember.findUnique({
         where: { id: memberId }
       });
 
@@ -264,7 +262,7 @@ export class TeamController {
         return;
       }
 
-      await prisma.teamMember.delete({
+      await prisma.TeamMember.delete({
         where: { id: memberId }
       });
 

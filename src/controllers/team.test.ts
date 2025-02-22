@@ -47,7 +47,7 @@ describe('TeamController', () => {
         ...mockRequest.user,
         ownedTeams: []
       } as any);
-      jest.spyOn(prisma.Team, 'create').mockResolvedValue(mockTeam as any);
+      jest.spyOn(prisma.team, 'create').mockResolvedValue(mockTeam as any);
 
       await TeamController.createTeam(
         mockRequest as AuthRequest,
@@ -76,7 +76,7 @@ describe('TeamController', () => {
       mockRequest.body = { name: 'Test Team' };
       jest.spyOn(prisma.user, 'findUnique').mockResolvedValue({
         ...mockRequest.user,
-        ownedTeams: [{ id: 'existing-team' }]
+        teams: [{ id: 'existing-team' }]
       } as any);
 
       await TeamController.createTeam(
@@ -121,9 +121,9 @@ describe('TeamController', () => {
         role: 'member'
       };
 
-      jest.spyOn(prisma.Team, 'findUnique').mockResolvedValue(mockTeam as any);
+      jest.spyOn(prisma.team, 'findUnique').mockResolvedValue(mockTeam as any);
       jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(mockInvitedUser as any);
-      jest.spyOn(prisma.TeamMember, 'create').mockResolvedValue(mockTeamMember as any);
+      jest.spyOn(prisma.teamMember, 'create').mockResolvedValue(mockTeamMember as any);
 
       await TeamController.inviteTeamMember(
         mockRequest as AuthRequest,
@@ -136,7 +136,7 @@ describe('TeamController', () => {
     });
 
     it('should throw error if team not found', async () => {
-      jest.spyOn(prisma.Team, 'findUnique').mockResolvedValue(null);
+      jest.spyOn(prisma.team, 'findUnique').mockResolvedValue(null);
 
       await TeamController.inviteTeamMember(
         mockRequest as AuthRequest,
@@ -149,7 +149,7 @@ describe('TeamController', () => {
     });
 
     it('should throw error if user is not team owner', async () => {
-      jest.spyOn(prisma.Team, 'findUnique').mockResolvedValue({
+      jest.spyOn(prisma.team, 'findUnique').mockResolvedValue({
         ...mockTeam,
         ownerId: 'different-user-id'
       } as any);
