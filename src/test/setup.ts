@@ -9,10 +9,26 @@ const prisma = new PrismaClient();
 
 // Clean up database before all tests
 beforeAll(async () => {
-  await prisma.$transaction([
-    prisma.post.deleteMany(),
-    prisma.user.deleteMany()
-  ]);
+  try {
+    await prisma.$transaction([
+      prisma.post.deleteMany(),
+      prisma.user.deleteMany()
+    ]);
+  } catch (error) {
+    console.error('Error cleaning up test database:', error);
+  }
+});
+
+// Clean up after each test
+afterEach(async () => {
+  try {
+    await prisma.$transaction([
+      prisma.post.deleteMany(),
+      prisma.user.deleteMany()
+    ]);
+  } catch (error) {
+    console.error('Error cleaning up test data:', error);
+  }
 });
 
 // Disconnect after all tests

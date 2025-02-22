@@ -30,12 +30,6 @@ describe('Social Media Analytics Endpoints', () => {
   });
 
   afterAll(async () => {
-    if (userId) {
-      await prisma.$transaction([
-        prisma.post.deleteMany({ where: { userId } }),
-        prisma.user.delete({ where: { id: userId } })
-      ]);
-    }
     await prisma.$disconnect();
   });
 
