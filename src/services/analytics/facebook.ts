@@ -133,7 +133,7 @@ export class FacebookAnalyticsAPI {
       );
 
       return {
-        page: {
+        profile: {
           followers: this.extractMetricValue(pageInsights, 'page_fans'),
           engagement_rate: this.calculatePageEngagementRate(pageInsights),
           reach: this.extractMetricValue(pageInsights, 'page_impressions'),
