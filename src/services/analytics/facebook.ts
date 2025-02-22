@@ -20,6 +20,9 @@ export class FacebookAnalyticsAPI {
     if (error instanceof Error) {
       throw new ValidationError(error.message);
     }
+    if (typeof error === 'string') {
+      throw new ValidationError(error);
+    }
     throw new ValidationError('An unknown error occurred while calling the Facebook Analytics API');
   }
 
