@@ -15,10 +15,10 @@ const FACEBOOK_API_URL = `https://graph.facebook.com/${FACEBOOK_API_VERSION}`;
 export class FacebookAnalyticsAPI {
   private static handleError(error: unknown): never {
     if (axios.isAxiosError(error) && error.response?.data?.error) {
-      throw new ValidationError(`Facebook Analytics API Error: ${error.response.data.error.message}`);
+      throw new ValidationError(error.response.data.error.message);
     }
     if (error instanceof Error) {
-      throw new ValidationError(`Facebook Analytics API Error: ${error.message}`);
+      throw new ValidationError(error.message);
     }
     throw new ValidationError('An unknown error occurred while calling the Facebook Analytics API');
   }
