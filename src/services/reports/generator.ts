@@ -4,8 +4,6 @@ import { TwitterAnalyticsAPI } from '../analytics/twitter';
 import { InstagramAnalyticsAPI } from '../analytics/instagram';
 import { LinkedInAnalyticsAPI } from '../analytics/linkedin';
 import { ValidationError } from '../../utils/errors/AppError';
-
-export class ReportGenerator {
 import { BaseAnalyticsResponse, BaseAnalyticsPost } from '../../types/social-media/analytics/base';
 
 export class ReportGenerator {
@@ -19,7 +17,7 @@ export class ReportGenerator {
     return new ReportGenerator().generateReport(userId, accessTokens, config, startDate, endDate);
   }
 
-  private readonly platformAPIs: {
+  private static readonly platformAPIs: {
     [key: string]: {
       getAnalytics(
         userId: string,
@@ -35,7 +33,7 @@ export class ReportGenerator {
     linkedin: LinkedInAnalyticsAPI
   };
 
-  private async generateReport(
+  public static async generateReport(
     userId: string,
     accessTokens: { [platform: string]: string },
     config: EmailReportConfig,
