@@ -1,35 +1,27 @@
-export interface InstagramAnalyticsResponse {
-  profile: {
-    followers: number;
-    following: number;
-    posts: number;
-    engagement_rate: number;
-    reach: number;
-    impressions: number;
-  };
-  media: Array<{
-    id: string;
-    created_at: string;
-    media_type: 'IMAGE' | 'VIDEO' | 'CAROUSEL_ALBUM';
-    media_url: string;
-    permalink: string;
-    caption?: string;
-    metrics: {
-      impressions: number;
-      reach: number;
-      engagement: number;
-      saved: number;
-      video_views?: number;
-      carousel_album_engagement?: number;
-      likes: number;
-      comments: number;
-      shares: number;
-    };
-  }>;
-  period: {
-    start: string;
-    end: string;
-  };
+import { BaseProfile, BasePost, BaseAnalyticsResponse } from './base';
+
+export interface InstagramProfile extends BaseProfile {
+  following: number;
+  posts: number;
+  reach: number;
+}
+
+export interface InstagramPost extends BasePost {
+  media_type: 'IMAGE' | 'VIDEO' | 'CAROUSEL_ALBUM';
+  media_url: string;
+  permalink: string;
+  caption?: string;
+  reach: number;
+  saved: number;
+  video_views?: number;
+  carousel_album_engagement?: number;
+  comments: number;
+  shares: number;
+}
+
+export interface InstagramAnalyticsResponse extends BaseAnalyticsResponse {
+  profile: InstagramProfile;
+  posts: InstagramPost[];
 }
 
 export interface InstagramMetricType {

@@ -2,6 +2,8 @@ import axios from 'axios';
 import { ValidationError } from '../../utils/errors/AppError';
 import {
   InstagramAnalyticsResponse,
+  InstagramProfile,
+  InstagramPost,
   InstagramMetricType,
   InstagramMediaMetricType,
   InstagramError
@@ -189,16 +191,38 @@ export class InstagramAnalyticsAPI {
         })
       );
 
-      return {
-        profile: {
-          followers: profileMetrics.followers,
-          following: 0, // Not available via API
-          posts: profileMetrics.posts,
-          engagement_rate: this.calculateProfileEngagementRate(profileMetrics),
-          reach: profileMetrics.reach,
-          impressions: profileMetrics.impressions
+      const profile: InstagramProfile = {
+        followers: profileMetrics.followers,
+        following: 0, // Not available via API
+        posts: profileMetrics.posts,
+        engagement_rate: this.calculateProfileEngagementRate(profileMetrics),
+        reach: profileMetrics.reach,
+        impressions: profileMetrics.impressions
+      };
+
+      const posts: InstagramPost[] = mediaWithMetrics.map(media => ({
+        id: media.id,
+        created_at: media.created_at,
+        media_type: media.media_type,
+        media_url: media.media_url,
+        permalink: media.permalink,
+        caption: media.caption,
+        metrics: {
+          impressions: media.metrics.impressions,
+          likes: media.metrics.likes,
+          engagement_rate: media.metrics.engagement / media.metrics.impressions * 100
         },
-        media: mediaWithMetrics,
+        reach: media.metrics.reach,
+        saved: media.metrics.saved,
+        video_views: media.metrics.video_views,
+        carousel_album_engagement: media.metrics.carousel_album_engagement,
+        comments: media.metrics.comments,
+        shares: media.metrics.shares
+      }));
+
+      return {
+        profile,
+        posts,
         period: {
           start: startDate,
           end: endDate
