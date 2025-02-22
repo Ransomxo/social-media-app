@@ -21,7 +21,7 @@ export class TeamController {
       const user = await prisma.user.findUnique({
         where: { id: userId },
         include: {
-          teams: {
+          ownedTeams: {
             where: { ownerId: userId }
           }
         }
@@ -32,7 +32,7 @@ export class TeamController {
         return;
       }
 
-      if (user.plan === 'minimal' && user.teams?.length >= 1) {
+      if (user.plan === 'minimal' && user.ownedTeams?.length >= 1) {
         const error = new ForbiddenError('Minimal plan users can only create one team');
         next(error);
         return;
