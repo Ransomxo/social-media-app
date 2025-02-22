@@ -81,16 +81,16 @@ describe('TwitterAnalyticsAPI', () => {
     });
 
     it('should handle API errors gracefully', async () => {
-      const mockError = {
-        response: {
-          data: {
-            errors: [
-              {
-                message: 'Invalid token',
-                code: 'invalid_token'
-              }
-            ]
-          }
+      const mockError = new Error('Invalid token');
+      (mockError as any).isAxiosError = true;
+      (mockError as any).response = {
+        data: {
+          errors: [
+            {
+              message: 'Invalid token',
+              code: 'invalid_token'
+            }
+          ]
         }
       };
 
