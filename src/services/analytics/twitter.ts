@@ -12,9 +12,14 @@ const TWITTER_API_URL = `https://api.twitter.com/v${TWITTER_API_VERSION}`;
 
 export class TwitterAnalyticsAPI {
   protected static handleError(error: unknown): never {
-    if (axios.isAxiosError(error) && error.response?.data?.errors) {
-      const twitterError = error.response.data as TwitterError;
-      throw new ValidationError(twitterError.message || 'Twitter API error');
+    if (axios.isAxiosError(error)) {
+      const twitterError = error.response?.data as TwitterError;
+      if (twitterError?.errors?.length > 0) {
+        throw new ValidationError(twitterError.errors[0].message);
+      }
+      if (twitterError?.message) {
+        throw new ValidationError(twitterError.message);
+      }
     }
     if (error instanceof Error) {
       throw new ValidationError(error.message);
