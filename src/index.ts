@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { errorHandler } from './middleware/errorHandler';
 import authRoutes from './routes/auth';
+import analyticsRoutes from './routes/social-media/analytics';
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ app.get('/', (req: express.Request, res: express.Response): void => {
 });
 
 app.use('/api/auth', authRoutes);
+app.use('/api/social-media', analyticsRoutes);
 
 // Error handling
 app.use(errorHandler);
