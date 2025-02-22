@@ -36,6 +36,15 @@ beforeAll(async () => {
     // Create a shared test user with a unique email
     const timestamp = Date.now();
     const hashedPassword = await UserModel.hashPassword('password123');
+    // Clean up any existing test users
+    await prisma.user.deleteMany({
+      where: {
+        email: {
+          contains: 'test-user-'
+        }
+      }
+    });
+
     const user = await prisma.user.create({
       data: {
         email: `test-user-${timestamp}@example.com`,
@@ -55,17 +64,33 @@ beforeAll(async () => {
   }
 });
 
-// Clean up posts between tests, but keep users
+// Clean up posts between tests, but keep test user
 afterEach(async () => {
   try {
     await prisma.post.deleteMany();
-    // Log current users for debugging
-    const users = await prisma.user.findMany({
+    // Verify test user still exists
+    const user = await prisma.user.findUnique({
+      where: { id: testUser.id },
       select: { id: true, email: true }
     });
-    console.log('Current users after test:', users);
+    if (!user) {
+      console.error('Test user not found after test, recreating...');
+      const hashedPassword = await UserModel.hashPassword('password123');
+      const newUser = await prisma.user.create({
+        data: {
+          id: testUser.id,
+          email: testUser.email,
+          password: hashedPassword,
+          firstName: 'Test',
+          lastName: 'User',
+          plan: 'minimal',
+          teamMembers: [],
+        },
+      });
+      console.log('Recreated test user:', { id: newUser.id, email: newUser.email });
+    }
   } catch (error) {
-    console.error('Error cleaning up test data:', error);
+    console.error('Error in afterEach:', error);
   }
 });
 
