@@ -1,4 +1,4 @@
-import { PrismaClient, Platform, SocialToken } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { OAuthToken, SocialPlatform, SocialTokenResponse } from '../types/social-media/oauth';
 import { oauthConfigs } from '../config/oauth';
 import { ValidationError } from '../utils/errors/AppError';
@@ -6,10 +6,16 @@ import { ValidationError } from '../utils/errors/AppError';
 const prisma = new PrismaClient();
 
 export class OAuthService {
-  private static mapSocialTokenToResponse(token: SocialToken): SocialTokenResponse {
+  private static mapSocialTokenToResponse(token: any): SocialTokenResponse {
     return {
-      ...token,
-      platform: token.platform as SocialPlatform
+      id: token.id,
+      platform: token.platform as SocialPlatform,
+      accessToken: token.accessToken,
+      refreshToken: token.refreshToken,
+      expiresAt: token.expiresAt,
+      userId: token.userId,
+      createdAt: token.createdAt,
+      updatedAt: token.updatedAt
     };
   }
 
@@ -50,7 +56,7 @@ export class OAuthService {
       where: {
         userId_platform: {
           userId,
-          platform: platform as Platform
+          platform
         }
       },
       update: {
@@ -60,7 +66,7 @@ export class OAuthService {
       },
       create: {
         userId,
-        platform: platform as Platform,
+        platform,
         accessToken: token.accessToken,
         refreshToken: token.refreshToken,
         expiresAt: token.expiresAt
@@ -83,10 +89,9 @@ export class OAuthService {
       where: {
         userId_platform: {
           userId,
-          platform: platform as Platform
+          platform
         }
       }
     });
   }
-}
 }
