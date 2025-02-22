@@ -31,7 +31,9 @@ export class TeamController {
       const team = await prisma.team.create({
         data: {
           name,
-          ownerId: userId,
+          owner: {
+            connect: { id: userId }
+          },
           members: {
             create: [{
               user: {
