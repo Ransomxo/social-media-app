@@ -58,14 +58,18 @@ describe('FacebookGraphAPI', () => {
       };
       mockedAxios.get.mockRejectedValueOnce(mockError);
 
-      await expect(async () => {
+      try {
         await FacebookGraphAPI.exchangeCodeForToken(
           'invalid_code',
           'http://localhost:3000/callback',
           'client_id',
           'client_secret'
         );
-      }).rejects.toThrow('Facebook API Error: Invalid OAuth code');
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ValidationError);
+        expect(error.message).toBe('Facebook API Error: Invalid OAuth code');
+      }
     });
   });
 
@@ -115,9 +119,13 @@ describe('FacebookGraphAPI', () => {
       };
       mockedAxios.post.mockRejectedValueOnce(mockError);
 
-      await expect(async () => {
+      try {
         await FacebookGraphAPI.createPost('page_123', 'invalid_token', mockPost);
-      }).rejects.toThrow('Facebook API Error: Invalid page access token');
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ValidationError);
+        expect(error.message).toBe('Facebook API Error: Invalid page access token');
+      }
     });
   });
 
@@ -159,9 +167,13 @@ describe('FacebookGraphAPI', () => {
       };
       mockedAxios.get.mockRejectedValueOnce(mockError);
 
-      await expect(async () => {
+      try {
         await FacebookGraphAPI.getPageAccessToken('invalid_token', 'page_123');
-      }).rejects.toThrow('Facebook API Error: Invalid user access token');
+        fail('Should have thrown an error');
+      } catch (error) {
+        expect(error).toBeInstanceOf(ValidationError);
+        expect(error.message).toBe('Facebook API Error: Invalid user access token');
+      }
     });
   });
 });
