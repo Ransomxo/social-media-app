@@ -21,7 +21,9 @@ export class TeamController {
       const user = await prisma.user.findUnique({
         where: { id: userId },
         include: {
-          ownedTeams: true
+          ownedTeams: {
+            where: { ownerId: userId }
+          }
         }
       });
 
