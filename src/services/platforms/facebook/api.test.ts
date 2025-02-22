@@ -68,7 +68,9 @@ describe('FacebookGraphAPI', () => {
         fail('Should have thrown an error');
       } catch (error) {
         expect(error).toBeInstanceOf(ValidationError);
-        expect(error.message).toBe('Facebook API Error: Invalid OAuth code');
+        if (error instanceof ValidationError) {
+          expect(error.message).toBe('Facebook API Error: Invalid OAuth code');
+        }
       }
     });
   });
@@ -124,7 +126,9 @@ describe('FacebookGraphAPI', () => {
         fail('Should have thrown an error');
       } catch (error) {
         expect(error).toBeInstanceOf(ValidationError);
-        expect(error.message).toBe('Facebook API Error: Invalid page access token');
+        if (error instanceof ValidationError) {
+          expect(error.message).toBe('Facebook API Error: Invalid page access token');
+        }
       }
     });
   });
@@ -172,7 +176,9 @@ describe('FacebookGraphAPI', () => {
         fail('Should have thrown an error');
       } catch (error) {
         expect(error).toBeInstanceOf(ValidationError);
-        expect(error.message).toBe('Facebook API Error: Invalid user access token');
+        if (error instanceof ValidationError) {
+          expect(error.message).toBe('Facebook API Error: Invalid user access token');
+        }
       }
     });
   });
