@@ -7,7 +7,7 @@ describe('Social Media Analytics Endpoints', () => {
   let authToken: string;
   let userId: string;
 
-  beforeAll(async () => {
+  beforeEach(async () => {
     userId = testUser.id;
     authToken = jwt.sign({ id: testUser.id }, process.env.JWT_SECRET || 'test-secret-key', { expiresIn: '1h' });
     console.log('Test token generated:', { userId: testUser.id });
