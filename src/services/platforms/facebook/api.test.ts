@@ -1,6 +1,6 @@
 import { FacebookGraphAPI } from './api';
 import axios from 'axios';
-import { ValidationError } from '../../../utils/errors/AppError';
+import { AppError, ValidationError } from '../../../utils/errors/AppError';
 import { Platform } from '../../../services/post';
 
 jest.mock('axios');
