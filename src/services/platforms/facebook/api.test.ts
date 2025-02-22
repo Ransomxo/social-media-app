@@ -44,15 +44,15 @@ describe('FacebookGraphAPI', () => {
     });
 
     it('should handle Facebook API errors', async () => {
-      const mockError = {
-        response: {
-          data: {
-            error: {
-              message: 'Invalid OAuth code',
-              type: 'OAuthException',
-              code: 190,
-              fbtrace_id: 'mock_trace_id'
-            }
+      const mockError = new Error('Invalid OAuth code');
+      (mockError as any).isAxiosError = true;
+      (mockError as any).response = {
+        data: {
+          error: {
+            message: 'Invalid OAuth code',
+            type: 'OAuthException',
+            code: 190,
+            fbtrace_id: 'mock_trace_id'
           }
         }
       };
@@ -107,15 +107,15 @@ describe('FacebookGraphAPI', () => {
     });
 
     it('should handle post creation errors', async () => {
-      const mockError = {
-        response: {
-          data: {
-            error: {
-              message: 'Invalid page access token',
-              type: 'OAuthException',
-              code: 190,
-              fbtrace_id: 'mock_trace_id'
-            }
+      const mockError = new Error('Invalid page access token');
+      (mockError as any).isAxiosError = true;
+      (mockError as any).response = {
+        data: {
+          error: {
+            message: 'Invalid page access token',
+            type: 'OAuthException',
+            code: 190,
+            fbtrace_id: 'mock_trace_id'
           }
         }
       };
@@ -157,15 +157,15 @@ describe('FacebookGraphAPI', () => {
     });
 
     it('should handle page token fetch errors', async () => {
-      const mockError = {
-        response: {
-          data: {
-            error: {
-              message: 'Invalid user access token',
-              type: 'OAuthException',
-              code: 190,
-              fbtrace_id: 'mock_trace_id'
-            }
+      const mockError = new Error('Invalid user access token');
+      (mockError as any).isAxiosError = true;
+      (mockError as any).response = {
+        data: {
+          error: {
+            message: 'Invalid user access token',
+            type: 'OAuthException',
+            code: 190,
+            fbtrace_id: 'mock_trace_id'
           }
         }
       };
