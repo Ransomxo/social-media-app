@@ -6,12 +6,15 @@ const FACEBOOK_API_VERSION = 'v18.0';
 const FACEBOOK_GRAPH_URL = `https://graph.facebook.com/${FACEBOOK_API_VERSION}`;
 
 export class FacebookGraphAPI {
-  private static handleError(error: any): never {
-    if (axios.isAxiosError(error) && error.response?.data) {
+  private static handleError(error: unknown): never {
+    if (axios.isAxiosError(error) && error.response?.data?.error) {
       const fbError = error.response.data.error as FacebookError;
       throw new ValidationError(`Facebook API Error: ${fbError.message}`);
     }
-    throw error;
+    if (error instanceof Error) {
+      throw new ValidationError(`Facebook API Error: ${error.message}`);
+    }
+    throw new ValidationError('An unknown error occurred while calling the Facebook API');
   }
 
   static async exchangeCodeForToken(code: string, redirectUri: string, clientId: string, clientSecret: string): Promise<FacebookTokenExchangeResponse> {
