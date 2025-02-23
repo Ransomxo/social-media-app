@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "pnpm install && pnpm run vercel-build",
-  "installCommand": "pnpm install",
+  "buildCommand": "cd ../.. && pnpm install && pnpm --filter backend build",
+  "installCommand": "cd ../.. && pnpm install",
   "outputDirectory": "dist",
   "builds": [
     {
