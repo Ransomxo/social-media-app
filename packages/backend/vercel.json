@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "DEBUG=* cd ../.. && pnpm install && cd packages/backend && DEBUG=* pnpm prisma generate && DEBUG=* tsc",
+  "buildCommand": "DEBUG=* cd ../.. && pnpm install && cd packages/backend && DEBUG=* pnpm run build",
   "installCommand": "cd ../.. && pnpm install",
   "outputDirectory": "dist",
   "builds": [
