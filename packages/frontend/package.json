@@ -12,9 +12,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@social-media-app/backend": "workspace:*"
-  },
-  "dependencies": {
     "@headlessui/react": "^2.0.0-alpha.4",
     "@heroicons/react": "^2.1.1",
     "date-fns": "^3.3.1",
