@@ -23,8 +23,8 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="relative py-24">
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-purple-900/10 to-gray-900"></div>
+    <section className="section-spacing">
+      <div className="section-gradient"></div>
       <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
           <h2 className="section-title">Comprehensive Analytics</h2>
