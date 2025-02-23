@@ -87,14 +87,14 @@ export default function CalendarGrid({
   };
 
   const renderTimeGrid = () => (
-    <div className="grid grid-cols-[auto_1fr] gap-px bg-gray-800/50 backdrop-blur-sm">
+    <div className="time-grid">
       <div className="w-24 bg-gray-900/90" /> {/* Time column header */}
       <div className={view === 'Day' ? 'grid grid-cols-1' : 'grid grid-cols-7'}>
         {renderDayHeaders()}
       </div>
       {timeSlots.map((time) => (
         <React.Fragment key={time}>
-          <div className="w-24 bg-gray-900/90 py-3 px-4 text-sm font-medium text-gray-300 border-b border-gray-800/50">
+          <div className="time-column">
             {time}
           </div>
           <div className={view === 'Day' ? 'grid grid-cols-1' : 'grid grid-cols-7'}>
@@ -107,7 +107,7 @@ export default function CalendarGrid({
               return (
                 <div
                   key={i}
-                  className={`h-16 time-slot time-slot-hover p-1 ${isToday ? 'current-day' : ''}`}
+                  className={`time-slot time-slot-hover p-2 ${isToday ? 'current-day' : ''}`}
                   onClick={() => onTimeSlotClick(date)}
                 >
                   {getEventsForDay(date).map((event) => (
