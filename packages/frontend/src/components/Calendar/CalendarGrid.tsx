@@ -3,6 +3,7 @@
 import React, { useMemo } from 'react';
 import { format } from 'date-fns';
 import { CalendarEvent } from '../../types/calendar';
+import EventCard from './EventCard';
 
 interface CalendarGridProps {
   currentDate: Date;
@@ -21,8 +22,8 @@ export default function CalendarGrid({
     const start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const end = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
     
-    const days = [];
-    const week = [];
+    const days: Date[] = [];
+    const week: Date[][] = [];
     
     // Add days from previous month to start the week
     const startDay = start.getDay();
@@ -96,32 +97,7 @@ export default function CalendarGrid({
               </div>
               <div className="space-y-1 mt-2">
                 {dayEvents.map((event) => (
-                  <button
-                    key={event.id}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onEventClick(event);
-                    }}
-                    className={`w-full rounded-lg px-2 py-1 text-xs ${
-                      event.color || 'bg-purple-600/20 text-purple-200'
-                    } backdrop-blur-sm`}
-                  >
-                    <div className="flex items-center">
-                      <span className="flex-1 truncate">{event.title}</span>
-                      {event.participants && (
-                        <div className="flex -space-x-1">
-                          {event.participants.map((participant, idx) => (
-                            <img
-                              key={idx}
-                              src={participant.avatar}
-                              alt={participant.name}
-                              className="h-4 w-4 rounded-full ring-2 ring-gray-900"
-                            />
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </button>
+                  <EventCard key={event.id} event={event} onClick={onEventClick} />
                 ))}
               </div>
             </div>
