@@ -7,11 +7,13 @@ export interface BaseMetrics {
 export interface BaseProfile extends BaseMetrics {
   followers: number;
   page_views: number;
+  reach: number;
 }
 
 export interface BasePost {
   id: string;
   content: string;
+  created_at: string;
   posted_at: string;
   engagement: number;
   reach: number;

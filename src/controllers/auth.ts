@@ -36,8 +36,7 @@ export const register = async (
         password: hashedPassword,
         firstName,
         lastName,
-        plan: 'minimal',
-        teamMembers: [],
+        plan: 'minimal'
       },
     });
 

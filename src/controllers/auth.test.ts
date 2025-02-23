@@ -56,8 +56,7 @@ describe('Authentication Endpoints', () => {
           password: hashedPassword,
           firstName: 'Test',
           lastName: 'User',
-          plan: 'minimal',
-          teamMembers: [],
+          plan: 'minimal'
         },
       });
     });
