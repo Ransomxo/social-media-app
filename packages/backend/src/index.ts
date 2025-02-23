@@ -1,6 +1,9 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import debug from 'debug';
+
+const log = debug('app:server');
 import { errorHandler } from './middleware/errorHandler';
 import authRoutes from './routes/auth';
 import analyticsRoutes from './routes/social-media/analytics';
@@ -17,11 +20,14 @@ import { authMiddleware } from './middleware/auth';
 import healthRoutes from './routes/health';
 
 // Middleware
+log('Configuring middleware...');
 app.use(cors({
   origin: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
   credentials: true
 }));
+log('CORS configured with origin:', process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000');
 app.use(express.json());
+log('Express JSON middleware configured');
 
 // Routes
 app.get('/', (req: express.Request, res: express.Response): void => {
