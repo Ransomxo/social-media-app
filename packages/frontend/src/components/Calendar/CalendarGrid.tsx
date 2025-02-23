@@ -105,38 +105,35 @@ export default function CalendarGrid({
         ))}
       </div>
     </div>
-      {weeks.map((week, weekIdx) =>
-        week.map((day, dayIdx) => {
-          const dayEvents = getEventsForDay(day);
-          const isToday = day.toDateString() === new Date().toDateString();
-          const isCurrentMonth = day.getMonth() === currentDate.getMonth();
-
-          return (
-            <div
-              key={`${weekIdx}-${dayIdx}`}
-              className={`relative bg-gray-900/50 backdrop-blur-sm p-2 ${
-                !isCurrentMonth ? 'bg-opacity-50' : ''
-              }`}
-              onClick={() => onTimeSlotClick(day)}
-            >
-              <div
-                className={`flex h-6 w-6 items-center justify-center rounded-full ${
-                  isToday
-                    ? 'bg-purple-600 text-white'
-                    : 'text-gray-300'
-                }`}
-              >
-                {day.getDate()}
-              </div>
-              <div className="space-y-1 mt-2">
-                {dayEvents.map((event) => (
-                  <EventCard key={event.id} event={event} onClick={onEventClick} />
-                ))}
-              </div>
+      <div className="calendar-gradient min-h-screen">
+        {timeSlots.map((time) => (
+          <React.Fragment key={time}>
+            <div className="w-20 bg-gray-900/90 py-2 px-3 text-xs font-medium text-gray-300 border-b border-gray-800/50">
+              {time}
             </div>
-          );
-        })
-      )}
+            <div className="grid grid-cols-7 gap-px">
+              {Array(7).fill(null).map((_, i) => {
+                const date = new Date(currentDate);
+                date.setHours(parseInt(time));
+                date.setDate(date.getDate() - date.getDay() + i);
+                const isToday = date.toDateString() === new Date().toDateString();
+                
+                return (
+                  <div
+                    key={i}
+                    className={`h-12 time-slot time-slot-hover ${isToday ? 'current-day' : ''}`}
+                    onClick={() => onTimeSlotClick(date)}
+                  >
+                    {getEventsForDay(date).map((event) => (
+                      <EventCard key={event.id} event={event} onClick={onEventClick} />
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
     </div>
   );
 }
