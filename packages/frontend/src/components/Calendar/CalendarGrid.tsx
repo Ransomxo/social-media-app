@@ -104,6 +104,29 @@ export default function CalendarGrid({
             </div>
             <div className={view === 'Day' ? 'grid grid-cols-1' : 'grid grid-cols-7'}>
               {Array(view === 'Day' ? 1 : 7).fill(null).map((_, i) => {
+                const date = new Date(currentDate);
+                date.setHours(parseInt(time.split(':')[0]));
+                date.setDate(date.getDate() - date.getDay() + i);
+                const isToday = date.toDateString() === new Date().toDateString();
+                
+                return (
+                  <div
+                    key={i}
+                    className={`time-slot time-slot-hover p-2 ${isToday ? 'current-day' : ''}`}
+                    onClick={() => onTimeSlotClick(date)}
+                  >
+                    {getEventsForDay(date).map((event) => (
+                      <EventCard key={event.id} event={event} onClick={onEventClick} />
+                    ))}
+                  </div>
+                );
+              })}
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  );
               const date = new Date(currentDate);
               date.setHours(parseInt(time.split(':')[0]));
               date.setDate(date.getDate() - date.getDay() + i);
