@@ -1,7 +1,7 @@
 import { FacebookExtendedAnalyticsResponse } from '../../types/social-media/analytics/facebook-extended';
 import { FacebookProfile } from '../../types/social-media/analytics/facebook';
 import axios from 'axios';
-import { handleFacebookError } from '../../utils/errors/platformErrors';
+import { handleFacebookError } from '../../../utils/errors/platformErrors';
 
 export class FacebookExtendedAnalyticsAPI {
   static async getAnalytics(
