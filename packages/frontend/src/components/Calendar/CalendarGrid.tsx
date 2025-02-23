@@ -18,7 +18,7 @@ export default function CalendarGrid({
   events,
   onEventClick,
   onTimeSlotClick,
-  view,
+  view = 'Month',
 }: CalendarGridProps) {
   const timeSlots = useMemo(() => {
     return Array.from({ length: 8 }, (_, i) => {
@@ -125,37 +125,6 @@ export default function CalendarGrid({
   return (
     <div className="flex-1 calendar-grid">
       {renderTimeGrid()}
-    </div>
-  );    </div>
-  );
-        {timeSlots.map((time) => (
-          <React.Fragment key={time}>
-            <div className="w-24 bg-gray-900/90 py-3 px-4 text-sm font-medium text-gray-300 border-b border-gray-800/50">
-              {time}
-            </div>
-            <div className="grid grid-cols-7 gap-px">
-              {Array(7).fill(null).map((_, i) => {
-                const date = new Date(currentDate);
-                date.setHours(parseInt(time));
-                date.setDate(date.getDate() - date.getDay() + i);
-                const isToday = date.toDateString() === new Date().toDateString();
-                
-                return (
-                  <div
-                    key={i}
-                    className={`h-16 time-slot time-slot-hover p-1 ${isToday ? 'current-day' : ''}`}
-                    onClick={() => onTimeSlotClick(date)}
-                  >
-                    {getEventsForDay(date).map((event) => (
-                      <EventCard key={event.id} event={event} onClick={onEventClick} />
-                    ))}
-                  </div>
-                );
-              })}
-            </div>
-          </React.Fragment>
-        ))}
-      </div>
     </div>
   );
 }
