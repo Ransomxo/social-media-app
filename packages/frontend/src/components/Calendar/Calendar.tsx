@@ -88,30 +88,36 @@ export default function Calendar() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-900 calendar-gradient">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <CalendarHeader
-          currentDate={currentDate}
-          onPrevious={handlePrevious}
-          onNext={handleNext}
-          onToday={handleToday}
-          view={view}
-          onViewChange={setView}
-        />
-        <CalendarGrid
-          currentDate={currentDate}
-          events={events}
-          onEventClick={handleEventClick}
-          onTimeSlotClick={handleTimeSlotClick}
-          view={view}
-        />
-        <AddEventModal
-          isOpen={isAddEventModalOpen}
-          onClose={() => setIsAddEventModalOpen(false)}
-          selectedDate={selectedDate}
-          onSave={handleSaveEvent}
-        />
+    <div className="calendar-container">
+      <div className="flex h-screen">
+        <Sidebar />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="sticky top-0 z-50">
+            <CalendarHeader
+              currentDate={currentDate}
+              onPrevious={handlePrevious}
+              onNext={handleNext}
+              onToday={handleToday}
+              view={view}
+              onViewChange={setView}
+            />
+          </div>
+          <div className="flex-1 overflow-auto">
+            <CalendarGrid
+              currentDate={currentDate}
+              events={events}
+              onEventClick={handleEventClick}
+              onTimeSlotClick={handleTimeSlotClick}
+              view={view}
+            />
+          </div>
+          <AddEventModal
+            isOpen={isAddEventModalOpen}
+            onClose={() => setIsAddEventModalOpen(false)}
+            selectedDate={selectedDate}
+            onSave={handleSaveEvent}
+          />
+        </div>
       </div>
     </div>
   );
