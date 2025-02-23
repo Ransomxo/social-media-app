@@ -33,7 +33,7 @@ export const getSocialMediaAnalytics = async (
       }
     ];
 
-    res.json({
+    res.status(200).json({
       data: mockAnalytics,
       timestamp: new Date()
     });

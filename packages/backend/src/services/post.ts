@@ -1,5 +1,5 @@
 import { Post } from '@prisma/client';
-import prisma from '../lib/prisma';
+import { prisma } from '../lib/prisma';
 import { ValidationError } from '../utils/errors/AppError';
 
 export const SUPPORTED_PLATFORMS = ['facebook', 'twitter', 'instagram', 'linkedin'] as const;

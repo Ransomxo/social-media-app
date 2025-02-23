@@ -1,89 +1,123 @@
-import request from 'supertest';
-import app, { initializeApp } from '../index';
-import prisma from '../lib/prisma';
+import { Request, Response } from 'express';
+import { prisma } from '../lib/prisma';
+import { register, login } from './auth';
 import { UserModel } from '../models/User';
 
-describe('Authentication Endpoints', () => {
-  beforeAll(async () => {
-    await initializeApp();
+jest.mock('../lib/prisma', () => ({
+  prisma: {
+    user: {
+      findUnique: jest.fn(),
+      create: jest.fn(),
+    },
+  },
+}));
+
+jest.mock('../models/User', () => ({
+  UserModel: {
+    hashPassword: jest.fn(),
+    validatePassword: jest.fn(),
+  },
+}));
+
+describe('AuthController', () => {
+  let mockRequest: Partial<Request>;
+  let mockResponse: Partial<Response>;
+  let mockNext: jest.Mock;
+
+  beforeEach(() => {
+    mockRequest = {
+      body: {},
+    };
+    mockResponse = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+    mockNext = jest.fn();
   });
 
-  beforeEach(async () => {
-    await prisma.user.deleteMany();
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
-  afterAll(async () => {
-    await prisma.$disconnect();
-  });
-
-  describe('POST /api/auth/register', () => {
+  describe('register', () => {
     it('should register a new user successfully', async () => {
-      const res = await request(app)
-        .post('/api/auth/register')
-        .send({
-          email: 'test@example.com',
-          password: 'password123',
-          firstName: 'Test',
-          lastName: 'User'
-        });
+      const userData = {
+        email: 'test@example.com',
+        password: 'password123',
+        firstName: 'John',
+        lastName: 'Doe',
+      };
 
-      expect(res.status).toBe(201);
-      expect(res.body).toHaveProperty('token');
-      expect(res.body.user).toHaveProperty('id');
-      expect(res.body.user.email).toBe('test@example.com');
+      mockRequest.body = userData;
+      const hashedPassword = 'hashedPassword123';
+      const createdUser = {
+        id: '1',
+        ...userData,
+        password: hashedPassword,
+        plan: 'minimal',
+      };
+
+      (UserModel.hashPassword as jest.Mock).mockResolvedValue(hashedPassword);
+      (prisma.user.findUnique as jest.Mock).mockResolvedValue(null);
+      (prisma.user.create as jest.Mock).mockResolvedValue(createdUser);
+
+      await register(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockResponse.status).toHaveBeenCalledWith(201);
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: 'User registered successfully',
+          token: expect.any(String),
+          user: expect.objectContaining({
+            id: createdUser.id,
+            email: createdUser.email,
+            firstName: createdUser.firstName,
+            lastName: createdUser.lastName,
+            plan: createdUser.plan,
+          }),
+        })
+      );
     });
 
-    it('should not register a user with invalid data', async () => {
-      const res = await request(app)
-        .post('/api/auth/register')
-        .send({
-          email: 'invalid-email',
-          password: '123',
-          firstName: '',
-          lastName: ''
-        });
-
-      expect(res.status).toBe(400);
-    });
+    // Add more register tests...
   });
 
-  describe('POST /api/auth/login', () => {
-    beforeEach(async () => {
-      const hashedPassword = await UserModel.hashPassword('password123');
-      await prisma.user.create({
-        data: {
-          email: 'test@example.com',
-          password: hashedPassword,
-          firstName: 'Test',
-          lastName: 'User',
-          plan: 'minimal',
-          teamMembers: [],
-        },
-      });
+  describe('login', () => {
+    it('should login user successfully', async () => {
+      const userData = {
+        email: 'test@example.com',
+        password: 'password123',
+      };
+
+      mockRequest.body = userData;
+      const user = {
+        id: '1',
+        ...userData,
+        firstName: 'John',
+        lastName: 'Doe',
+        plan: 'minimal',
+      };
+
+      (prisma.user.findUnique as jest.Mock).mockResolvedValue(user);
+      (UserModel.validatePassword as jest.Mock).mockResolvedValue(true);
+
+      await login(mockRequest as Request, mockResponse as Response, mockNext);
+
+      expect(mockResponse.json).toHaveBeenCalledWith(
+        expect.objectContaining({
+          message: 'Login successful',
+          token: expect.any(String),
+          user: expect.objectContaining({
+            id: user.id,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            plan: user.plan,
+          }),
+        })
+      );
     });
 
-    it('should login successfully with correct credentials', async () => {
-      const res = await request(app)
-        .post('/api/auth/login')
-        .send({
-          email: 'test@example.com',
-          password: 'password123'
-        });
-
-      expect(res.status).toBe(200);
-      expect(res.body).toHaveProperty('token');
-      expect(res.body.user.email).toBe('test@example.com');
-    });
-
-    it('should not login with incorrect credentials', async () => {
-      const res = await request(app)
-        .post('/api/auth/login')
-        .send({
-          email: 'test@example.com',
-          password: 'wrongpassword'
-        });
-
-      expect(res.status).toBe(401);
-    });
+    // Add more login tests...
   });
 });

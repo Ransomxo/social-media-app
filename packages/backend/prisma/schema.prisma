@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,82 +8,50 @@ datasource db {
 }
 
 model User {
-  id            String         @id @default(uuid())
-  email         String         @unique
-  password      String
-  firstName     String
-  lastName      String
-  plan          String         @default("minimal")
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  posts         Post[]
-  socialTokens  SocialToken[]
-  ownedTeams    Team[]         @relation("TeamOwner")
-  teamMembers   TeamMember[]
-}
-
-model Team {
   id          String       @id @default(uuid())
-  name        String
-  ownerId     String
-  owner       User         @relation("TeamOwner", fields: [ownerId], references: [id])
-  members     TeamMember[]
+  email       String       @unique
+  password    String
+  firstName   String
+  lastName    String
+  plan        String       @default("free")
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-
-  @@index([ownerId])
-}
-
-model TeamMember {
-  id        String   @id @default(uuid())
-  userId    String
-  teamId    String
-  role      String   @default("member") // member, admin
-  user      User     @relation(fields: [userId], references: [id])
-  team      Team     @relation(fields: [teamId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([userId, teamId])
-  @@index([userId])
-  @@index([teamId])
-}
-
-model SocialToken {
-  id            String    @id @default(uuid())
-  platform      String    // Store as string to match SocialPlatform type
-  accessToken   String    @map("access_token")
-  refreshToken  String?   @map("refresh_token")
-  expiresAt     DateTime? @map("expires_at")
-  userId        String    @map("user_id")
-  user          User      @relation(fields: [userId], references: [id])
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
-
-  @@unique([userId, platform])
-  @@index([userId])
-  @@map("social_tokens")
-}
-
-enum Platform {
-  facebook
-  twitter
-  instagram
-  linkedin
+  posts       Post[]
+  ownedTeams  Team[]       @relation("OwnerTeams")
+  memberTeams TeamMember[]
 }
 
 model Post {
   id          String    @id @default(uuid())
   content     String
   media       String?
-  platforms   Platform[]
-  scheduledAt DateTime
-  status      String    @default("scheduled")
+  scheduledAt DateTime?
+  status      String    @default("draft")
   userId      String
-  user        User      @relation(fields: [userId], references: [id])
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  platform    String    @default("all")
+  platforms   String[]
+  user        User      @relation(fields: [userId], references: [id])
+}
 
-  @@index([userId])
-  @@index([scheduledAt])
+model Team {
+  id        String       @id @default(uuid())
+  name      String
+  ownerId   String
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  owner     User         @relation("OwnerTeams", fields: [ownerId], references: [id])
+  members   TeamMember[]
+}
+
+model TeamMember {
+  id        String   @id @default(uuid())
+  userId    String
+  teamId    String
+  role      String   @default("member")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  team      Team     @relation(fields: [teamId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
