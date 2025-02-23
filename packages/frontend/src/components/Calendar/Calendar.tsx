@@ -5,23 +5,13 @@ import CalendarHeader from './CalendarHeader';
 import CalendarGrid from './CalendarGrid';
 import AddEventModal from './AddEventModal';
 import Sidebar from './Sidebar';
+import { CalendarEvent, CalendarView } from '../../types/calendar';
 import './styles/calendar.css';
-
-interface CalendarEvent {
-  id: string;
-  title: string;
-  start: Date;
-  end: Date;
-  color?: string;
-  participants?: Array<{
-    avatar: string;
-    name: string;
-  }>;
-}
+import './styles/calendar.css';
 
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [view, setView] = useState<'Month' | 'Week' | 'Day'>('Month');
+  const [view, setView] = useState<CalendarView>('Month');
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [isAddEventModalOpen, setIsAddEventModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>();

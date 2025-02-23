@@ -1,3 +1,5 @@
+export type CalendarView = 'Month' | 'Week' | 'Day';
+
 export interface CalendarEvent {
   id: string;
   title: string;
@@ -15,6 +17,7 @@ export interface CalendarGridProps {
   events: CalendarEvent[];
   onEventClick: (event: CalendarEvent) => void;
   onTimeSlotClick: (date: Date) => void;
+  view: CalendarView;
 }
 
 export interface CalendarHeaderProps {
@@ -22,6 +25,6 @@ export interface CalendarHeaderProps {
   onPrevious: () => void;
   onNext: () => void;
   onToday: () => void;
-  view: 'Month' | 'Week' | 'Day';
-  onViewChange: (view: 'Month' | 'Week' | 'Day') => void;
+  view: CalendarView;
+  onViewChange: (view: CalendarView) => void;
 }
