@@ -59,6 +59,7 @@ export default function Calendar() {
   };
 
   const handleTimeSlotClick = (date: Date) => {
+    console.log('Time slot clicked:', date);
     setSelectedDate(date);
     setIsAddEventModalOpen(true);
   };
@@ -82,9 +83,9 @@ export default function Calendar() {
   };
 
   return (
-    <div className="flex h-full bg-gray-900">
+    <div className="flex h-screen bg-gray-900 calendar-gradient">
       <Sidebar />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col overflow-hidden">
         <CalendarHeader
           currentDate={currentDate}
           onPrevious={handlePrevious}
