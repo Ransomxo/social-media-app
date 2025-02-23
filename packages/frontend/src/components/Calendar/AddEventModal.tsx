@@ -15,6 +15,10 @@ interface AddEventModalProps {
     end: Date;
     description?: string;
     platforms: string[];
+    participants?: Array<{
+      name: string;
+      avatar: string;
+    }>;
   }) => void;
 }
 

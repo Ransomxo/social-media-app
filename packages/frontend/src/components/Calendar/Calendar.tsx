@@ -70,6 +70,10 @@ export default function Calendar() {
     end: Date;
     description?: string;
     platforms: string[];
+    participants?: Array<{
+      name: string;
+      avatar: string;
+    }>;
   }) => {
     const newEvent: CalendarEvent = {
       id: Math.random().toString(36).substr(2, 9),
