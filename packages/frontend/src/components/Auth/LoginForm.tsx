@@ -9,17 +9,17 @@ export default function LoginForm() {
     <div className="flex min-h-screen">
       {/* Left side - Image */}
       <div className="hidden lg:flex lg:w-1/2 gradient-bg">
-        <div className="flex flex-col justify-center px-16 text-white">
-          <h2 className="text-4xl font-bold mb-4">Welcome Back to</h2>
-          <h2 className="text-4xl font-bold">Your Social Hub</h2>
+        <div className="flex flex-col justify-center items-start w-full max-w-lg mx-auto px-16 text-white">
+          <h2 className="text-5xl font-bold mb-4">Welcome Back to</h2>
+          <h2 className="text-5xl font-bold">Your Social Hub</h2>
         </div>
       </div>
       
       {/* Right side - Form */}
       <div className="w-full lg:w-1/2 flex flex-col p-8 lg:p-16">
         <div className="flex justify-between items-center mb-12">
-          <div className="text-2xl font-bold">AMU</div>
-          <Link href="/" className="text-purple-600 hover:text-purple-700">
+          <div className="text-3xl font-bold text-gray-900">AMU</div>
+          <Link href="/" className="text-purple-600 hover:text-purple-700 font-medium">
             Back to website
           </Link>
         </div>
@@ -33,17 +33,17 @@ export default function LoginForm() {
             </Link>
           </p>
           
-          <form className="space-y-6">
+          <form className="form-section">
             <input
               type="email"
               placeholder="Email"
-              className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+              className="form-input"
             />
             <div className="relative">
               <input
                 type="password"
                 placeholder="Password"
-                className="w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                className="form-input"
               />
               <button
                 type="button"
@@ -71,15 +71,15 @@ export default function LoginForm() {
           </form>
           
           <div className="mt-8">
-            <div className="text-center text-sm text-gray-500 mb-4">Or continue with</div>
+            <div className="form-divider">Or continue with</div>
             <div className="grid grid-cols-2 gap-4">
-              <button className="flex items-center justify-center space-x-2 p-3 border rounded-lg hover:bg-gray-50 transition-colors">
-                <Image src="/google-icon.svg" alt="Google" width={20} height={20} />
-                <span>Google</span>
+              <button className="social-btn">
+                <Image src="/google-icon.svg" alt="Google" width={24} height={24} className="mr-2" />
+                <span className="font-medium">Google</span>
               </button>
-              <button className="flex items-center justify-center space-x-2 p-3 border rounded-lg hover:bg-gray-50 transition-colors">
-                <Image src="/apple-icon.svg" alt="Apple" width={20} height={20} />
-                <span>Apple</span>
+              <button className="social-btn">
+                <Image src="/apple-icon.svg" alt="Apple" width={24} height={24} className="mr-2" />
+                <span className="font-medium">Apple</span>
               </button>
             </div>
           </div>

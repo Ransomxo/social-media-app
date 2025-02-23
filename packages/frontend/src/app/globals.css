@@ -17,20 +17,40 @@ body {
   input[type='text'],
   input[type='email'],
   input[type='password'] {
-    @apply w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent;
+    @apply w-full p-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none text-base;
+  }
+
+  input[type='checkbox'] {
+    @apply rounded border-gray-300 text-purple-600 focus:ring-purple-600 focus:ring-offset-0;
+  }
+
+  label {
+    @apply text-gray-600;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors;
+    @apply w-full bg-purple-600 text-white py-4 rounded-lg hover:bg-purple-700 transition-colors font-semibold text-base;
   }
   
   .social-btn {
-    @apply flex items-center justify-center space-x-2 p-3 border rounded-lg hover:bg-gray-50 transition-colors;
+    @apply flex items-center justify-center p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors;
   }
 
   .gradient-bg {
-    @apply bg-gradient-to-br from-purple-600 to-purple-900;
+    @apply bg-gradient-to-br from-purple-600 to-purple-900 flex items-center justify-center shadow-xl;
+  }
+
+  .form-input {
+    @apply w-full p-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none;
+  }
+
+  .form-section {
+    @apply space-y-6;
+  }
+
+  .form-divider {
+    @apply text-center text-sm text-gray-500 my-6;
   }
 }
