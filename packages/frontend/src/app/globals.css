@@ -13,6 +13,10 @@ body {
   min-height: 100vh;
 }
 
+.gradient-bg {
+  @apply bg-gradient-to-br from-purple-600 to-purple-900;
+}
+
 @layer base {
   input[type='text'],
   input[type='email'],
@@ -31,15 +35,15 @@ body {
 
 @layer components {
   .btn-primary {
-    @apply w-full bg-purple-600 text-white py-4 px-6 rounded-lg hover:bg-purple-700 transition-colors font-semibold text-base shadow-sm;
+    @apply w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white py-4 px-6 rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all font-semibold text-base shadow-lg;
   }
   
   .social-btn {
-    @apply flex items-center justify-center gap-3 py-3 px-6 border border-gray-700 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors shadow-sm;
+    @apply flex items-center justify-center gap-3 py-3 px-6 border border-gray-700 bg-gray-800/50 backdrop-blur-sm text-white rounded-lg hover:bg-gray-700/70 transition-all shadow-lg;
   }
 
   .form-input {
-    @apply w-full p-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent outline-none bg-white shadow-sm;
+    @apply w-full p-4 rounded-lg border border-gray-700 bg-gray-800/50 backdrop-blur-sm text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none shadow-lg;
   }
 
   .form-section {
@@ -47,12 +51,12 @@ body {
   }
 
   .form-divider {
-    @apply relative text-center text-sm text-gray-500 my-8;
+    @apply relative text-center text-sm text-gray-400 my-8;
   }
 
   .form-divider::before,
   .form-divider::after {
-    @apply content-[''] absolute top-1/2 w-1/4 h-px bg-gray-300;
+    @apply content-[''] absolute top-1/2 w-1/4 h-px bg-gray-700;
   }
 
   .form-divider::before {
