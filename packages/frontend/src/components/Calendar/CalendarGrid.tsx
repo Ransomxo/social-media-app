@@ -18,6 +18,13 @@ export default function CalendarGrid({
   onEventClick,
   onTimeSlotClick,
 }: CalendarGridProps) {
+  const timeSlots = useMemo(() => {
+    return Array.from({ length: 8 }, (_, i) => {
+      const hour = i + 6;
+      return `${hour}${hour === 12 ? 'pm' : 'am'}`;
+    });
+  }, []);
+
   const weeks = useMemo(() => {
     const start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
     const end = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
@@ -63,15 +70,41 @@ export default function CalendarGrid({
   };
 
   return (
-    <div className="flex-1 grid grid-cols-7 grid-rows-6 gap-px bg-gray-800">
-      {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-        <div
-          key={day}
-          className="bg-gray-900 py-2 px-3 text-center text-xs font-semibold uppercase text-gray-300"
-        >
-          {day}
+    <div className="flex-1">
+      <div className="grid grid-cols-[auto_1fr] gap-px bg-gray-800">
+        <div className="w-20" /> {/* Time column header */}
+        <div className="grid grid-cols-7">
+          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
+            <div
+              key={day}
+              className="bg-gray-900 py-2 px-3 text-center text-xs font-semibold uppercase text-gray-300"
+            >
+              {day}
+            </div>
+          ))}
         </div>
-      ))}
+        {timeSlots.map((time) => (
+          <React.Fragment key={time}>
+            <div className="w-20 bg-gray-900 py-2 px-3 text-xs font-medium text-gray-300">
+              {time}
+            </div>
+            <div className="grid grid-cols-7 gap-px">
+              {Array(7).fill(null).map((_, i) => (
+                <div
+                  key={i}
+                  className="h-12 bg-gray-900/50 backdrop-blur-sm"
+                  onClick={() => {
+                    const date = new Date(currentDate);
+                    date.setHours(parseInt(time));
+                    onTimeSlotClick(date);
+                  }}
+                />
+              ))}
+            </div>
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
       {weeks.map((week, weekIdx) =>
         week.map((day, dayIdx) => {
           const dayEvents = getEventsForDay(day);
