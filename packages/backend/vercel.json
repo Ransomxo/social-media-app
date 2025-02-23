@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && pnpm install && cd packages/backend && pnpm prisma generate && tsc",
+  "buildCommand": "DEBUG=* cd ../.. && pnpm install && cd packages/backend && DEBUG=* pnpm prisma generate && DEBUG=* tsc",
   "installCommand": "cd ../.. && pnpm install",
   "outputDirectory": "dist",
   "builds": [
@@ -8,7 +8,7 @@
       "src": "dist/index.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["prisma/**/*", "dist/**/*"],
+        "includeFiles": ["prisma/**/*", "dist/**/*", ".env*"],
         "maxLambdaSize": "50mb"
       }
     }
@@ -22,6 +22,7 @@
   "env": {
     "DATABASE_URL": "@database-url",
     "JWT_SECRET": "@jwt-secret",
-    "NEXT_PUBLIC_APP_URL": "@next-public-app-url"
+    "NEXT_PUBLIC_APP_URL": "@next-public-app-url",
+    "DEBUG": "*"
   }
 }
