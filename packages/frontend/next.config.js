@@ -4,13 +4,12 @@ const nextConfig = {
   swcMinify: true,
   output: 'standalone',
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
+    domains: ['localhost'],
     unoptimized: true
+  },
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['@heroicons/react']
   }
 }
 
