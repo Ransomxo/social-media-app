@@ -4,7 +4,7 @@ import { OAuthService } from '../services/oauth';
 import { SocialPlatform } from '../types/social-media/oauth';
 import { ValidationError } from '../utils/errors/AppError';
 
-export const getAuthUrl = async (
+export const getAuthorizationUrl = async (
   req: AuthRequest,
   res: Response,
   next: NextFunction

@@ -4,7 +4,7 @@ import { authMiddleware } from '../middleware/auth';
 
 const router = Router();
 
-router.get('/auth/:platform', authMiddleware, getAuthUrl);
+router.get('/auth/:platform', authMiddleware, getAuthorizationUrl);
 router.get('/:platform/callback', authMiddleware, handleCallback);
 router.get('/connections', authMiddleware, listConnections);
 router.delete('/:platform', authMiddleware, removeConnection);
