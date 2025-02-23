@@ -43,6 +43,10 @@ export default function AddEventModal({
       start: startDate,
       end: endDate,
       platforms,
+      participants: participants.map(name => ({
+        name,
+        avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=6366f1&color=fff`
+      }))
     });
 
     setTitle('');

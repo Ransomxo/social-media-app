@@ -76,7 +76,8 @@ export default function Calendar() {
       title: eventData.title,
       start: eventData.start,
       end: eventData.end,
-      color: 'bg-blue-100 text-blue-700',
+      color: 'bg-purple-600/20 text-purple-200',
+      participants: eventData.participants,
     };
 
     setEvents([...events, newEvent]);
