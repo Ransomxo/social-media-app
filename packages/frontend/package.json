@@ -9,8 +9,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "vercel-build": "next build"
+    "lint": "next lint"
   },
   "dependencies": {
     "@headlessui/react": "^2.0.0-alpha.4",
