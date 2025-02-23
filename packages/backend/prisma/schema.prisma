@@ -16,9 +16,26 @@ model User {
   plan        String       @default("free")
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
-  posts       Post[]
-  ownedTeams  Team[]       @relation("OwnerTeams")
-  memberTeams TeamMember[]
+  posts           Post[]
+  ownedTeams      Team[]         @relation("OwnerTeams")
+  memberTeams     TeamMember[]
+  reportSchedules ReportSchedule[]
+}
+
+model ReportSchedule {
+  id            String    @id @default(uuid())
+  userId        String
+  frequency     String    // daily or weekly
+  platforms     String[]  // array of platform names
+  metrics       String[]  // array of metric names
+  emailConfig   Json      // email configuration
+  lastSent      DateTime?
+  nextScheduled DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  user          User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model Post {
