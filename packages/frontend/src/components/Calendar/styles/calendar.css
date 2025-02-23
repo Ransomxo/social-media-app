@@ -60,7 +60,11 @@
   }
 
   .time-grid {
-    @apply grid grid-cols-[auto_1fr] gap-px bg-gray-800/50 backdrop-blur-sm;
+    @apply grid grid-cols-[auto_1fr] gap-px bg-gray-800/50 backdrop-blur-sm h-full overflow-auto;
+  }
+
+  .time-grid-content {
+    @apply grid grid-cols-[auto_1fr] gap-px;
   }
 
   .event-card {

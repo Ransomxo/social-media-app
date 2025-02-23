@@ -88,17 +88,22 @@ export default function CalendarGrid({
 
   const renderTimeGrid = () => (
     <div className="time-grid">
-      <div className="w-24 bg-gray-900/90" /> {/* Time column header */}
-      <div className={view === 'Day' ? 'grid grid-cols-1' : 'grid grid-cols-7'}>
-        {renderDayHeaders()}
-      </div>
-      {timeSlots.map((time) => (
-        <React.Fragment key={time}>
-          <div className="time-column">
-            {time}
-          </div>
+      <div className="sticky top-0 z-10 bg-gray-900/90">
+        <div className="grid grid-cols-[auto_1fr]">
+          <div className="w-24" />
           <div className={view === 'Day' ? 'grid grid-cols-1' : 'grid grid-cols-7'}>
-            {Array(view === 'Day' ? 1 : 7).fill(null).map((_, i) => {
+            {renderDayHeaders()}
+          </div>
+        </div>
+      </div>
+      <div className="time-grid-content">
+        {timeSlots.map((time) => (
+          <React.Fragment key={time}>
+            <div className="time-column sticky left-0">
+              {time}
+            </div>
+            <div className={view === 'Day' ? 'grid grid-cols-1' : 'grid grid-cols-7'}>
+              {Array(view === 'Day' ? 1 : 7).fill(null).map((_, i) => {
               const date = new Date(currentDate);
               date.setHours(parseInt(time.split(':')[0]));
               date.setDate(date.getDate() - date.getDay() + i);
