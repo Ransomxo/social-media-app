@@ -7,6 +7,11 @@ const log = debug('app:server');
 const buildLog = debug('app:build');
 const deployLog = debug('app:deploy');
 
+// Enable debug logging in production
+if (process.env.NODE_ENV === 'production') {
+  debug.enable('app:*');
+}
+
 import { errorHandler } from './middleware/errorHandler';
 import authRoutes from './routes/auth';
 import analyticsRoutes from './routes/social-media/analytics';
