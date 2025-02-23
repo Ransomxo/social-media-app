@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && pnpm install && cd packages/backend && pnpm run vercel-build",
+  "buildCommand": "cd ../.. && pnpm install && pnpm turbo run build --filter=@social-media-app/backend...",
   "installCommand": "cd ../.. && pnpm install",
   "outputDirectory": "dist",
   "builds": [
