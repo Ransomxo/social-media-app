@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { Dialog } from '@headlessui/react';
+import { UserCircleIcon } from '@heroicons/react/24/outline';
 
 interface AddEventModalProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ export default function AddEventModal({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [platforms, setPlatforms] = useState<string[]>([]);
+  const [participants, setParticipants] = useState<string[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,6 +91,29 @@ export default function AddEventModal({
             <label className="block text-sm font-medium text-gray-300 mb-2">Date</label>
             <div className="mt-1 text-gray-300 bg-gray-700/50 rounded-lg p-3 backdrop-blur-sm">
               {selectedDate ? format(selectedDate, 'MMMM d, yyyy') : 'No date selected'}
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Participants
+            </label>
+            <div className="flex items-center space-x-2 mt-2">
+              {participants.map((participant, index) => (
+                <div
+                  key={index}
+                  className="flex items-center space-x-1 bg-gray-700/50 rounded-full px-3 py-1"
+                >
+                  <UserCircleIcon className="h-5 w-5 text-gray-400" />
+                  <span className="text-sm text-gray-300">{participant}</span>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={() => setParticipants([...participants, `User ${participants.length + 1}`])}
+                className="p-1 rounded-full hover:bg-gray-700/50"
+              >
+                <UserCircleIcon className="h-5 w-5 text-gray-400" />
+              </button>
             </div>
           </div>
           <div className="flex justify-end space-x-4 pt-6">
