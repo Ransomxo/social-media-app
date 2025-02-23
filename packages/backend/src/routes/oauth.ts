@@ -1,12 +1,12 @@
 import { Router } from 'express';
-import { getAuthUrl, handleCallback, listConnections, removeConnection } from '../controllers/oauth';
+import { getAuthorizationUrl, handleCallback, listConnections, deleteSocialToken } from '../controllers/oauth';
 import { authMiddleware } from '../middleware/auth';
 
 const router = Router();
 
-router.get('/auth/:platform', authMiddleware, getAuthUrl);
+router.get('/auth/:platform', authMiddleware, getAuthorizationUrl);
 router.get('/:platform/callback', authMiddleware, handleCallback);
 router.get('/connections', authMiddleware, listConnections);
-router.delete('/:platform', authMiddleware, removeConnection);
+router.delete('/:platform', authMiddleware, deleteSocialToken);
 
 export default router;
