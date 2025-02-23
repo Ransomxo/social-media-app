@@ -123,6 +123,40 @@ Frontend:
 - TailwindCSS
 - React Components
 
+## UI/UX Development Guidelines
+See detailed guidelines in `docs/UI_GUIDELINES.md`
+
+### Separation of Concerns
+1. Infrastructure Team (Current Session)
+   - Core authentication
+   - API integration
+   - Deployment configuration
+   - Environment setup
+   - Database management
+
+2. UI/UX Team (Separate Session)
+   - Page components
+   - User interface design
+   - Component library
+   - Interactive features
+   - Responsive layouts
+
+### Development Rules
+1. Branch Management
+   - UI features: `feature/ui-*`
+   - Infrastructure: `feature/infra-*`
+   - Current infra branch: `devin/1740283551-analytics-docs-and-fixes`
+
+2. File Ownership
+   - UI owns: `src/app/pages/*, src/components/*`
+   - Infrastructure owns: `src/lib/*, src/api/*, configs/*`
+
+3. Coordination
+   - UI team uses mock data during development
+   - Infrastructure team maintains API contracts
+   - Both teams follow TypeScript interfaces
+   - Regular sync via PR reviews
+
 Backend:
 - Express.js
 - PostgreSQL
