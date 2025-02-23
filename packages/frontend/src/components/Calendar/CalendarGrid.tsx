@@ -77,7 +77,7 @@ export default function CalendarGrid({
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
             <div
               key={day}
-              className="bg-gray-900 py-2 px-3 text-center text-xs font-semibold uppercase text-gray-300"
+              className="day-header py-2 px-3 text-center text-xs font-semibold uppercase"
             >
               {day}
             </div>
@@ -92,7 +92,7 @@ export default function CalendarGrid({
               {Array(7).fill(null).map((_, i) => (
                 <div
                   key={i}
-                  className="h-12 bg-gray-900/50 backdrop-blur-sm"
+                  className="h-12 time-slot time-slot-hover"
                   onClick={() => {
                     const date = new Date(currentDate);
                     date.setHours(parseInt(time));
