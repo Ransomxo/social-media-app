@@ -2,7 +2,6 @@
 
 import Image from 'next/image';
 import React, { useMemo } from 'react';
-import { format } from 'date-fns';
 
 import { CalendarEvent, CalendarGridProps } from '../../types/calendar';
 
