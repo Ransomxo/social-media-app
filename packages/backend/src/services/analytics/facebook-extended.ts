@@ -24,9 +24,9 @@ export class FacebookExtendedAnalyticsAPI {
           total_posts: 0
         },
         demographics: {
-          age_gender: { '18-24': { male: 0, female: 0 } },
-          location: { US: 0 },
-          language: { en: 0 }
+          age_gender: [{ age: '18-24', gender: 'male', count: 0 }],
+          location: [{ country: 'US', count: 0 }],
+          language: [{ language: 'en', count: 0 }]
         },
         content_performance: {
           top_posts: [],
