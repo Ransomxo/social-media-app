@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && pnpm install && pnpm turbo run build --filter=frontend...",
+  "buildCommand": "cd ../.. && pnpm install && pnpm run build --filter=frontend",
   "outputDirectory": ".next",
   "installCommand": "cd ../.. && pnpm install",
   "framework": "nextjs",
