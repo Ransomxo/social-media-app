@@ -8,7 +8,7 @@ export default function SignupForm() {
   return (
     <div className="flex min-h-screen">
       {/* Left side - Image */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-purple-600 to-purple-900">
+      <div className="hidden lg:flex lg:w-1/2 gradient-bg">
         <div className="flex flex-col justify-center items-start w-full max-w-lg mx-auto px-16 text-white">
           <h2 className="text-5xl font-bold mb-4">Capturing Moments,</h2>
           <h2 className="text-5xl font-bold">Creating Memories</h2>
