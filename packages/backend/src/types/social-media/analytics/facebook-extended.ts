@@ -30,9 +30,9 @@ export interface FacebookExtendedPost {
 }
 
 export interface FacebookExtendedDemographics {
-  age_gender: Array<{ age: string; gender: string; count: number }>;
-  location: Array<{ country: string; count: number }>;
-  language: Array<{ language: string; count: number }>;
+  age_gender: Record<string, { male: number; female: number }>;
+  location: Record<string, number>;
+  language: Record<string, number>;
 }
 
 export interface FacebookContentPerformance {
