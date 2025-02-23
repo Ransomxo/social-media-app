@@ -1,21 +1,22 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && pnpm install && cd packages/backend && pnpm build",
+  "buildCommand": "cd ../.. && pnpm install && cd packages/backend && pnpm prisma generate && tsc",
   "installCommand": "cd ../.. && pnpm install",
   "outputDirectory": "dist",
   "builds": [
     {
-      "src": "src/index.ts",
+      "src": "dist/index.js",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["prisma/**/*"]
+        "includeFiles": ["prisma/**/*", "dist/**/*"],
+        "maxLambdaSize": "50mb"
       }
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "src/index.ts"
+      "dest": "dist/index.js"
     }
   ],
   "env": {
