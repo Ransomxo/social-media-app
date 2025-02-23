@@ -2,7 +2,7 @@
   "version": 2,
   "buildCommand": "pnpm install && pnpm run vercel-build",
   "outputDirectory": ".next",
-  "installCommand": "cd ../.. && pnpm install",
+  "installCommand": "pnpm install",
   "framework": "nextjs",
   "env": {
     "NEXT_PUBLIC_API_URL": "https://api.omniposting.com",
