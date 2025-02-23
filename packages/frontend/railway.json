@@ -3,6 +3,10 @@
     "builder": "@railway/nixpacks",
     "buildCommand": "cd ../.. && pnpm install && cd packages/frontend && pnpm install && pnpm build"
   },
+  "nixpacks": {
+    "nodeVersion": "18.20.7",
+    "installCommand": "npm install -g pnpm@9.15.1"
+  },
   "deploy": {
     "startCommand": "pnpm start",
     "restartPolicyType": "ON_FAILURE",
