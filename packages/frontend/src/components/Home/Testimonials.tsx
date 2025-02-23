@@ -32,11 +32,12 @@ const testimonials = [
 
 export default function Testimonials() {
   return (
-    <section className="py-24 bg-gray-900">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section className="relative py-24">
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-purple-900/10 to-gray-900"></div>
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-xl text-center">
-          <h2 className="text-lg font-semibold leading-8 tracking-tight text-purple-600">Customer testimonials</h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <h2 className="section-title">Customer testimonials</h2>
+          <p className="section-description">
             Loved by social media professionals
           </p>
         </div>

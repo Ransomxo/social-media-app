@@ -53,14 +53,15 @@ const tiers = [
 
 export default function Pricing() {
   return (
-    <section className="py-24 bg-gray-900">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section className="relative py-24">
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-gray-900 to-gray-900"></div>
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-4xl text-center">
-          <h2 className="text-base font-semibold leading-7 text-purple-600">Pricing</h2>
-          <p className="mt-2 text-4xl font-bold tracking-tight text-white sm:text-5xl">
+          <h2 className="section-title">Pricing</h2>
+          <p className="section-description">
             Flexible Plans for Every Need
           </p>
-          <p className="mt-6 text-lg leading-8 text-gray-300">
+          <p className="section-subtitle">
             Whether you're a solo creator or managing multiple brands, we have a plan that's right for you.
           </p>
         </div>
