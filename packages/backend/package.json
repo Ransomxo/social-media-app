@@ -6,8 +6,8 @@
     "node": ">=18.0.0"
   },
   "scripts": {
-    "build": "prisma generate && tsc --project tsconfig.json --outDir dist",
-    "vercel-build": "DEBUG=* prisma generate && tsc --project tsconfig.json --outDir dist",
+    "build": "prisma generate && tsc",
+    "vercel-build": "prisma generate && tsc",
     "start": "node dist/index.js",
     "postinstall": "prisma generate",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
