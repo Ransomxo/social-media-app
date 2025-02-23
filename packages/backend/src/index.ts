@@ -17,18 +17,16 @@ import { authMiddleware } from './middleware/auth';
 // Middleware
 app.use(express.json());
 
-// Auth middleware for protected routes
-app.use('/api/social-media', authMiddleware);
-app.use('/api/posts', authMiddleware);
-
 // Routes
 app.get('/', (req: express.Request, res: express.Response): void => {
   res.json({ message: 'Welcome to the Social Media Analytics API' });
 });
 
 app.use('/api/auth', authRoutes);
-app.use('/api/social-media', analyticsRoutes);
-app.use('/api/posts', postRoutes);
+
+// Protected routes with auth middleware
+app.use('/api/social-media', authMiddleware, analyticsRoutes);
+app.use('/api/posts', authMiddleware, postRoutes);
 app.use('/api/oauth', oauthRoutes);
 
 // Error handling

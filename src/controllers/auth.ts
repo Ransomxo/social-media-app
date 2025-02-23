@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import { JwtPayload } from '../types/jwt';
-import prisma from '../lib/prisma';
+import { prisma } from '../lib/prisma';
 import { UserModel } from '../models/User';
 import { ValidationError, UnauthorizedError } from '../utils/errors/AppError';
 

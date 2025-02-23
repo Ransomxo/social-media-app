@@ -1,6 +1,6 @@
 import request from 'supertest';
 import app, { initializeApp } from '../index';
-import prisma from '../lib/prisma';
+import { prisma } from '../lib/prisma';
 import { UserModel } from '../models/User';
 
 describe('Authentication Endpoints', () => {

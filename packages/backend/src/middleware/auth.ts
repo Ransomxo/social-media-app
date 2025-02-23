@@ -17,23 +17,23 @@ export const authMiddleware = async (
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return next(new UnauthorizedError('No Bearer token provided'));
+      throw new UnauthorizedError('No Bearer token provided');
     }
 
     const token = authHeader.split(' ')[1];
     if (!token) {
-      return next(new UnauthorizedError('Empty token provided'));
+      throw new UnauthorizedError('Empty token provided');
     }
 
     if (!process.env.JWT_SECRET) {
-      return next(new Error('JWT secret not configured'));
+      throw new Error('JWT secret not configured');
     }
     
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
     } catch (e) {
-      return next(new UnauthorizedError('Invalid token'));
+      throw new UnauthorizedError('Invalid token');
     }
     
     const user = await prisma.user.findUnique({ 
@@ -54,7 +54,7 @@ export const authMiddleware = async (
     });
     
     if (!user) {
-      return next(new UnauthorizedError('User not found'));
+      throw new UnauthorizedError('User not found');
     }
     
     req.user = user;
@@ -63,6 +63,6 @@ export const authMiddleware = async (
     if (error instanceof jwt.JsonWebTokenError) {
       return next(new UnauthorizedError('Invalid token'));
     }
-    return next(new UnauthorizedError('Authentication failed'));
+    return next(error);
   }
 };
