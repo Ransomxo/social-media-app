@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-rgb: 17, 24, 39;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.gradient-bg {
+  @apply bg-gradient-to-br from-purple-600 to-purple-900;
+}
+
+@layer base {
+  input[type='text'],
+  input[type='email'],
+  input[type='password'] {
+    @apply w-full p-4 rounded-lg border border-gray-700 bg-gray-800/50 backdrop-blur-sm text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none text-base shadow-lg;
+  }
+
+  input[type='checkbox'] {
+    @apply rounded border-gray-700 bg-gray-800/50 backdrop-blur-sm text-purple-500 focus:ring-purple-500 focus:ring-offset-0 focus:ring-offset-gray-900;
+  }
+
+  label {
+    @apply text-gray-300;
+  }
+
+  h1 {
+    @apply text-4xl font-bold tracking-tight text-white sm:text-5xl;
+  }
+
+  h2 {
+    @apply text-3xl font-bold tracking-tight text-white sm:text-4xl;
+  }
+
+  p {
+    @apply text-base text-gray-300;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply w-full bg-gradient-to-r from-purple-600 to-purple-700 text-white py-4 px-6 rounded-lg hover:from-purple-700 hover:to-purple-800 transition-all duration-300 font-semibold text-base shadow-lg hover:shadow-xl hover:scale-[1.02];
+  }
+  
+  .social-btn {
+    @apply flex items-center justify-center gap-3 py-3 px-6 border border-gray-700 bg-gray-800/50 backdrop-blur-sm text-white rounded-lg hover:bg-gray-700/70 transition-all duration-300 shadow-lg hover:border-purple-500;
+  }
+
+  .form-input {
+    @apply w-full p-4 rounded-lg border border-gray-700 bg-gray-800/50 backdrop-blur-sm text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none shadow-lg transition-all duration-300;
+  }
+
+  .form-section {
+    @apply space-y-6 max-w-md w-full;
+  }
+
+  .form-divider {
+    @apply relative text-center text-sm text-gray-400 my-8;
+  }
+
+  .form-divider::before,
+  .form-divider::after {
+    @apply content-[''] absolute top-1/2 w-1/4 h-px bg-gray-700;
+  }
+
+  .form-divider::before {
+    @apply left-0;
+  }
+
+  .form-divider::after {
+    @apply right-0;
+  }
+
+  .card {
+    @apply bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-gray-700/50 transition-all duration-300 hover:shadow-xl hover:border-purple-500/50 hover:bg-gray-800/70;
+  }
+
+  .section-title {
+    @apply text-base font-semibold leading-7 text-purple-600;
+  }
+
+  .section-description {
+    @apply mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl;
+  }
+
+  .section-subtitle {
+    @apply mt-6 text-lg leading-8 text-gray-300;
+  }
+
+  .section-spacing {
+    @apply py-24 relative overflow-hidden;
+  }
+
+  .section-gradient {
+    @apply absolute inset-0 bg-gradient-to-br from-gray-900 via-purple-900/10 to-gray-900;
+  }
+}
