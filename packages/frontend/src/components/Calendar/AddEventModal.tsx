@@ -62,6 +62,7 @@ export default function AddEventModal({
             <input
               type="text"
               id="title"
+              devinid="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm focus:border-purple-500 focus:ring-purple-500"
@@ -74,6 +75,7 @@ export default function AddEventModal({
             </label>
             <textarea
               id="description"
+              devinid="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
