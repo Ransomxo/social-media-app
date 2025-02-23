@@ -52,11 +52,11 @@ export default function AddEventModal({
 
   return (
     <div className="fixed inset-0 bg-gray-900/75 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-gray-800 rounded-xl p-6 w-full max-w-md">
-        <h2 className="text-xl font-semibold text-white mb-4">Add Event</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="bg-gray-800/90 backdrop-blur-sm rounded-xl p-8 w-full max-w-md border border-gray-700 shadow-xl">
+        <h2 className="text-2xl font-semibold text-white mb-6 bg-gradient-to-r from-purple-500 to-purple-300 bg-clip-text text-transparent">Add Event</h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-300">
+            <label htmlFor="title" className="block text-sm font-medium text-gray-300 mb-2">
               Title
             </label>
             <input
@@ -65,12 +65,12 @@ export default function AddEventModal({
               devinid="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm focus:border-purple-500 focus:ring-purple-500"
+              className="mt-1 block w-full rounded-lg bg-gray-700/50 border-gray-600 text-white shadow-sm focus:border-purple-500 focus:ring-purple-500 backdrop-blur-sm"
               required
             />
           </div>
           <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-300">
+            <label htmlFor="description" className="block text-sm font-medium text-gray-300 mb-2">
               Description
             </label>
             <textarea
@@ -79,26 +79,26 @@ export default function AddEventModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={3}
-              className="mt-1 block w-full rounded-md bg-gray-700 border-gray-600 text-white shadow-sm focus:border-purple-500 focus:ring-purple-500"
+              className="mt-1 block w-full rounded-lg bg-gray-700/50 border-gray-600 text-white shadow-sm focus:border-purple-500 focus:ring-purple-500 backdrop-blur-sm"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-300">Date</label>
-            <div className="mt-1 text-gray-300">
+            <label className="block text-sm font-medium text-gray-300 mb-2">Date</label>
+            <div className="mt-1 text-gray-300 bg-gray-700/50 rounded-lg p-3 backdrop-blur-sm">
               {selectedDate ? format(selectedDate, 'MMMM d, yyyy') : 'No date selected'}
             </div>
           </div>
-          <div className="flex justify-end space-x-3 pt-4">
+          <div className="flex justify-end space-x-4 pt-6">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white focus:outline-none"
+              className="px-6 py-2.5 text-sm font-medium text-gray-300 hover:text-white focus:outline-none transition-colors duration-200"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-purple-600 rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800"
+              className="px-6 py-2.5 text-sm font-medium text-white bg-gradient-to-r from-purple-600 to-purple-500 rounded-lg hover:from-purple-700 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200"
             >
               Save
             </button>
