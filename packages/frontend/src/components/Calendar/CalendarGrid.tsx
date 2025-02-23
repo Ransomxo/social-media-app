@@ -2,7 +2,7 @@
 
 import React, { useMemo } from 'react';
 import { format } from 'date-fns';
-import { CalendarEvent } from '../../types/calendar';
+import { CalendarEvent, CalendarView } from '../../types/calendar';
 import EventCard from './EventCard';
 
 interface CalendarGridProps {
@@ -10,7 +10,7 @@ interface CalendarGridProps {
   events: CalendarEvent[];
   onEventClick: (event: CalendarEvent) => void;
   onTimeSlotClick: (date: Date) => void;
-  view: 'Month' | 'Week' | 'Day';
+  view: CalendarView;
 }
 
 export default function CalendarGrid({

@@ -7,7 +7,6 @@ import AddEventModal from './AddEventModal';
 import Sidebar from './Sidebar';
 import { CalendarEvent, CalendarView } from '../../types/calendar';
 import './styles/calendar.css';
-import './styles/calendar.css';
 
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
