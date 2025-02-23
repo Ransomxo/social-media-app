@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { CalendarHeaderProps } from '../../types/calendar';
-import ViewToggle from './Header/ViewToggle';
-import NavigationControls from './Header/NavigationControls';
+import ViewToggle from '../Calendar/Header/ViewToggle';
+import NavigationControls from '../Calendar/Header/NavigationControls';
 
 export default function CalendarHeader({
   currentDate,
