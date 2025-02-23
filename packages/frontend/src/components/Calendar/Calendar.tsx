@@ -55,11 +55,11 @@ export default function Calendar() {
   };
 
   const handleEventClick = (event: CalendarEvent) => {
-    console.log('Event clicked:', event);
+    // TODO: Implement event editing
   };
 
   const handleTimeSlotClick = (date: Date) => {
-    console.log('Time slot clicked:', date);
+    console.log('Calendar: handleTimeSlotClick', date);
     setSelectedDate(date);
     setIsAddEventModalOpen(true);
   };
@@ -102,7 +102,7 @@ export default function Calendar() {
               onViewChange={setView}
             />
           </div>
-          <div className="flex-1 overflow-auto">
+          <div className="flex-1 overflow-auto bg-gray-900/50">
             <CalendarGrid
               currentDate={currentDate}
               events={events}

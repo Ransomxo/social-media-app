@@ -9,18 +9,14 @@ interface ViewToggleProps {
 
 export default function ViewToggle({ view, onViewChange }: ViewToggleProps) {
   return (
-    <div className="flex rounded-md shadow-sm">
+    <div className="view-toggle">
       {(['Month', 'Week', 'Day'] as const).map((viewType) => (
         <button
           key={viewType}
           onClick={() => onViewChange(viewType)}
-          className={`relative -ml-px inline-flex items-center px-3 py-2 text-sm font-semibold ${
-            view === viewType
-              ? 'bg-purple-600 text-white'
-              : 'text-gray-300 ring-1 ring-inset ring-gray-700 hover:bg-gray-800'
-          } focus:z-10 ${viewType === 'Month' ? 'rounded-l-md' : ''} ${
-            viewType === 'Day' ? 'rounded-r-md' : ''
-          }`}
+          className={`view-toggle-button ${view === viewType ? 'view-toggle-button-active' : ''} ${
+            viewType === 'Month' ? 'rounded-l-lg' : ''
+          } ${viewType === 'Day' ? 'rounded-r-lg' : ''}`}
         >
           {viewType}
         </button>

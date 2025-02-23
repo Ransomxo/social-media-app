@@ -15,20 +15,96 @@
     @apply bg-gray-900/90 border-b border-gray-800 backdrop-blur-sm sticky top-0 z-10 px-6 py-4 flex items-center justify-between;
   }
 
+  .calendar-nav-button {
+    @apply p-2 text-gray-400 hover:text-white transition-colors duration-200 rounded-lg hover:bg-gray-800/50;
+  }
+
+  .calendar-today-button {
+    @apply px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200 rounded-lg hover:bg-gray-800/50;
+  }
+
+  .calendar-date-display {
+    @apply text-xl font-semibold text-white bg-gradient-to-r from-purple-500 to-purple-300 bg-clip-text text-transparent;
+  }
+
+  .calendar-controls {
+    @apply flex items-center gap-4;
+  }
+
+  .calendar-view-controls {
+    @apply flex items-center gap-2;
+  }
+
   .calendar-grid {
     @apply bg-gray-900/50 backdrop-blur-sm flex-1 overflow-auto;
   }
 
+  .calendar-sidebar {
+    @apply w-64 p-6 bg-gray-900/90 backdrop-blur-sm border-r border-gray-800/50 flex flex-col gap-6;
+  }
+
+  .calendar-sidebar-section {
+    @apply space-y-2;
+  }
+
+  .time-column {
+    @apply sticky left-0 w-24 px-4 py-3 text-sm text-gray-400 font-medium bg-gray-900/90 backdrop-blur-sm border-r border-gray-800/50 flex items-center justify-end;
+  }
+
   .time-slot {
-    @apply bg-gray-900/80 backdrop-blur-sm border-b border-gray-800/50 relative min-h-[80px] transition-all duration-200;
+    @apply bg-gray-900/80 backdrop-blur-sm border-b border-gray-800/50 relative min-h-[80px] transition-all duration-200 p-2;
+  }
+
+  .time-slot:hover {
+    @apply bg-gradient-to-r from-purple-600/10 to-purple-400/10;
+  }
+
+  .time-slot:hover .time-slot-content {
+    @apply scale-[1.02] transform transition-transform duration-200;
   }
 
   .time-slot-hover {
-    @apply hover:bg-purple-600/10 hover:border-purple-500/30 cursor-pointer;
+    @apply cursor-pointer relative;
+  }
+
+  .time-slot-hover:hover {
+    @apply bg-gradient-to-r from-purple-600/10 to-purple-400/10 border-purple-500/30;
+  }
+
+  .time-slot-content {
+    @apply space-y-2;
+  }
+
+  .time-slot-hover::after {
+    @apply content-[''] absolute inset-0 border border-purple-500/0 transition-all duration-200;
+  }
+
+  .time-slot-hover:hover::after {
+    @apply border-purple-500/30;
+  }
+
+  .time-slot-hover:hover .time-slot-content {
+    @apply scale-[1.01] transform transition-transform duration-200;
+  }
+
+  .time-slot-hover::before {
+    @apply content-[''] absolute inset-0 border border-purple-500/0 transition-all duration-200 pointer-events-none;
+  }
+
+  .time-slot-hover:hover::before {
+    @apply border-purple-500/30;
+  }
+
+  .time-slot-hover:hover {
+    @apply bg-gradient-to-r from-purple-600/10 to-purple-400/10;
   }
 
   .day-header {
-    @apply bg-gray-900/90 backdrop-blur-sm text-gray-300 font-medium sticky top-0 z-10 py-4 text-center border-b border-gray-800/50;
+    @apply bg-gray-900/90 backdrop-blur-sm text-gray-300 font-medium sticky top-0 z-10 py-4 text-center border-b border-gray-800/50 uppercase tracking-wider text-sm hover:text-white transition-colors duration-200;
+  }
+
+  .calendar-header-title {
+    @apply text-lg font-semibold text-white bg-gradient-to-r from-purple-500 to-purple-300 bg-clip-text text-transparent;
   }
 
   .current-day {
@@ -37,6 +113,10 @@
 
   .selected-slot {
     @apply ring-2 ring-purple-500 ring-opacity-50;
+  }
+
+  .time-slot-content {
+    @apply relative z-10 h-full flex flex-col gap-1;
   }
 
   .sidebar {
@@ -60,11 +140,15 @@
   }
 
   .time-grid {
-    @apply grid grid-cols-[auto_1fr] gap-px bg-gray-800/50 backdrop-blur-sm h-full overflow-auto;
+    @apply grid grid-cols-[auto_1fr] gap-px bg-gray-800/50 backdrop-blur-sm h-full overflow-auto border-t border-gray-800/50;
   }
 
   .time-grid-content {
-    @apply grid grid-cols-[auto_1fr] gap-px;
+    @apply grid grid-cols-[auto_1fr] gap-px relative;
+  }
+
+  .time-grid-overlay {
+    @apply absolute inset-0 pointer-events-none bg-gradient-to-b from-gray-900/20 via-transparent to-gray-900/20 z-10;
   }
 
   .event-card {
@@ -80,15 +164,23 @@
   }
 
   .view-toggle {
-    @apply flex rounded-md shadow-sm bg-gray-800/50 p-1;
+    @apply flex rounded-lg bg-gray-800/50 p-1;
   }
 
   .view-toggle-button {
-    @apply relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors duration-200 rounded-md;
+    @apply relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-all duration-200;
   }
 
   .view-toggle-button-active {
-    @apply bg-purple-600 text-white shadow-lg;
+    @apply bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-lg;
+  }
+
+  .view-toggle-button:hover {
+    @apply bg-gray-700/50;
+  }
+
+  .view-toggle-button:focus {
+    @apply outline-none ring-2 ring-purple-500/50 ring-offset-2 ring-offset-gray-900;
   }
 
   .add-event-modal {
@@ -97,6 +189,26 @@
 
   .modal-content {
     @apply bg-gray-800/90 backdrop-blur-sm rounded-xl p-8 w-full max-w-md border border-gray-700 shadow-xl;
+  }
+
+  .modal-input {
+    @apply mt-1 block w-full rounded-lg bg-gray-700/50 border-gray-600 text-white shadow-sm focus:border-purple-500 focus:ring-purple-500 backdrop-blur-sm;
+  }
+
+  .modal-label {
+    @apply block text-sm font-medium text-gray-300 mb-2;
+  }
+
+  .modal-button {
+    @apply px-6 py-2.5 text-sm font-medium transition-all duration-200;
+  }
+
+  .modal-button-primary {
+    @apply modal-button text-white bg-gradient-to-r from-purple-600 to-purple-500 rounded-lg hover:from-purple-700 hover:to-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800;
+  }
+
+  .modal-button-secondary {
+    @apply modal-button text-gray-300 hover:text-white focus:outline-none;
   }
 
   /* Enhanced styles to match design reference */

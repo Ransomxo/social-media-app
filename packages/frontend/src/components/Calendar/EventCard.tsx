@@ -15,9 +15,9 @@ export default function EventCard({ event, onClick }: EventCardProps) {
         e.stopPropagation();
         onClick(event);
       }}
-      className={`w-full rounded-lg px-2 py-1 text-xs ${
-        event.color || 'bg-purple-600/20 text-purple-200'
-      } backdrop-blur-sm hover:bg-opacity-30 transition-all duration-200 event-card-gradient`}
+      className={`w-full rounded-lg px-3 py-2 text-xs ${
+        event.color || 'bg-gradient-to-r from-purple-600/20 to-purple-400/20 hover:from-purple-600/30 hover:to-purple-400/30'
+      } backdrop-blur-sm transition-all duration-200 hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/10 hover:ring-1 hover:ring-purple-500/30`}
     >
       <div className="flex items-center justify-between">
         <span className="flex-1 truncate font-medium text-white">{event.title}</span>
