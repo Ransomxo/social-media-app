@@ -16,19 +16,19 @@ export default function LoginForm() {
       </div>
       
       {/* Right side - Form */}
-      <div className="w-full lg:w-1/2 flex flex-col p-8 lg:p-16">
+      <div className="w-full lg:w-1/2 flex flex-col p-8 lg:p-16 bg-gray-900">
         <div className="flex justify-between items-center mb-12">
-          <div className="text-3xl font-bold text-gray-900">AMU</div>
-          <Link href="/" className="text-purple-600 hover:text-purple-700 font-medium">
+          <div className="text-3xl font-bold text-white">AMU</div>
+          <Link href="/" className="text-purple-400 hover:text-purple-300 font-medium">
             Back to website
           </Link>
         </div>
         
         <div className="flex-grow">
-          <h1 className="text-4xl font-bold mb-4">Log in</h1>
-          <p className="text-gray-600 mb-8">
+          <h1 className="text-4xl font-bold mb-4 text-white">Log in</h1>
+          <p className="text-gray-400 mb-8">
             Don&apos;t have an account?{' '}
-            <Link href="/signup" className="text-purple-600 hover:text-purple-700">
+            <Link href="/signup" className="text-purple-400 hover:text-purple-300">
               Create one
             </Link>
           </p>
