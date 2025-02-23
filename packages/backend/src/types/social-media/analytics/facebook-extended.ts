@@ -33,6 +33,12 @@ export interface FacebookExtendedDemographics {
   age_gender: Record<string, { male: number; female: number }>;
   location: Record<string, number>;
   language: Record<string, number>;
+  profile: {
+    age_range: string;
+    gender: string;
+    location: string;
+    language: string;
+  };
 }
 
 export interface FacebookContentPerformance {
