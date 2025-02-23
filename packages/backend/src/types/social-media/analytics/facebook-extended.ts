@@ -1,84 +1,66 @@
-import { FacebookAnalyticsResponse } from './facebook';
+export interface FacebookExtendedMetrics {
+  likes: number;
+  shares: number;
+  comments: number;
+  reach: number;
+  impressions: number;
+  engagement_rate: number;
+  clicks: number;
+  video_views: number;
+  duration: number;
+}
 
-export interface FacebookDemographics {
-  age_gender: Array<{
-    age_range: string;
-    gender: string;
-    percentage: number;
-  }>;
-  location: Array<{
-    country: string;
-    city?: string;
-    percentage: number;
-  }>;
-  language: Array<{
-    language: string;
-    percentage: number;
-  }>;
+export interface FacebookExtendedProfile {
+  followers: number;
+  page_likes: number;
+  engagement_rate: number;
+  reach: number;
+  impressions: number;
+  page_views: number;
+  video_views: number;
+  total_posts: number;
+}
+
+export interface FacebookExtendedPost {
+  id: string;
+  created_time: string;
+  message: string;
+  type: string;
+  metrics: FacebookExtendedMetrics;
+}
+
+export interface FacebookExtendedDemographics {
+  age_gender: Array<{ age: string; gender: string; count: number }>;
+  location: Array<{ country: string; count: number }>;
+  language: Array<{ language: string; count: number }>;
 }
 
 export interface FacebookContentPerformance {
-  best_performing_posts: Array<{
-    id: string;
-    content: string;
-    type: 'photo' | 'video' | 'link' | 'status';
-    engagement_rate: number;
-    reach: number;
-    impressions: number;
-    reactions: {
-      like: number;
-      love: number;
-      haha: number;
-      wow: number;
-      sad: number;
-      angry: number;
-    };
-    comments: number;
-    shares: number;
-    posted_at: string;
-  }>;
-  content_type_performance: Array<{
-    type: 'photo' | 'video' | 'link' | 'status';
-    average_engagement_rate: number;
-    average_reach: number;
-    total_posts: number;
-  }>;
-  optimal_posting_times: Array<{
-    day_of_week: string;
-    hour: number;
-    engagement_rate: number;
-  }>;
+  top_posts: Array<FacebookExtendedPost>;
+  content_types: Array<{ type: string; engagement_rate: number }>;
 }
 
-export interface FacebookAudienceInsights {
-  fan_growth: Array<{
-    date: string;
-    total_fans: number;
-    new_fans: number;
-    unfollows: number;
-    net_growth: number;
-  }>;
-  engagement_trends: Array<{
-    date: string;
-    engagement_rate: number;
-    total_engagements: number;
-    reactions: number;
-    comments: number;
-    shares: number;
-  }>;
-  reach_trends: Array<{
-    date: string;
-    organic_reach: number;
-    paid_reach: number;
-    total_reach: number;
-  }>;
+export interface FacebookAudienceGrowth {
+  total_followers: number;
+  new_followers: number;
+  follower_growth_rate: number;
+  unfollow_rate: number;
 }
 
-export interface FacebookExtendedAnalyticsResponse extends FacebookAnalyticsResponse {
-  demographics: FacebookDemographics;
+export interface FacebookEngagementMetrics {
+  engagement_rate: number;
+  interactions_per_post: number;
+  reach_per_post: number;
+  impressions_per_post: number;
+}
+
+export interface FacebookExtendedAnalyticsResponse {
+  profile: FacebookExtendedProfile;
+  demographics: FacebookExtendedDemographics;
   content_performance: FacebookContentPerformance;
-  audience_insights: FacebookAudienceInsights;
-  date_range: {
+  audience_growth: FacebookAudienceGrowth;
+  engagement_metrics: FacebookEngagementMetrics;
+  period: {
     start: string;
     end: string;
   };

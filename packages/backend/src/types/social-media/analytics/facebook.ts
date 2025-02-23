@@ -1,61 +1,23 @@
-import { BaseProfile, BasePost, BaseAnalyticsResponse } from './base';
+import { BaseAnalyticsResponse, BaseMetrics, BasePost, BaseProfile } from './base';
+
+export interface FacebookMetrics extends BaseMetrics {
+  likes: number;
+  shares: number;
+  comments: number;
+  reach: number;
+}
 
 export interface FacebookProfile extends BaseProfile {
-  reach: number;
-  impressions: number;
-  page_views: number;
-}
-
-export interface FacebookPost extends BasePost {
-  reactions: number;
-  comments: number;
-  shares: number;
+  page_likes: number;
   reach: number;
 }
 
-export interface FacebookAnalyticsResponse extends BaseAnalyticsResponse {
+export interface FacebookPost extends Omit<BasePost, 'metrics'> {
+  message: string;
+  metrics: FacebookMetrics;
+}
+
+export interface FacebookAnalyticsResponse extends Omit<BaseAnalyticsResponse, 'profile' | 'posts'> {
   profile: FacebookProfile;
   posts: FacebookPost[];
 }
-
-export interface FacebookInsightsMetric {
-  name: string;
-  period: string;
-  values: Array<{
-    value: number;
-    end_time: string;
-  }>;
-  title: string;
-  description: string;
-  id: string;
-}
-
-export interface FacebookPageInsights {
-  data: FacebookInsightsMetric[];
-  paging?: {
-    previous: string;
-    next: string;
-  };
-}
-
-export interface FacebookPostInsights {
-  data: FacebookInsightsMetric[];
-  paging?: {
-    previous: string;
-    next: string;
-  };
-}
-
-export type FacebookMetricType = 
-  | 'page_impressions'
-  | 'page_engaged_users'
-  | 'page_post_engagements'
-  | 'page_fans'
-  | 'page_views_total';
-
-export type FacebookPostMetricType =
-  | 'post_impressions'
-  | 'post_engaged_users'
-  | 'post_reactions_by_type_total'
-  | 'post_clicks'
-  | 'post_activity';

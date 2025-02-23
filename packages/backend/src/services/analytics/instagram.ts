@@ -1,239 +1,68 @@
+import { InstagramAnalyticsResponse } from '../../types/social-media/analytics/instagram';
 import axios from 'axios';
-import { ValidationError } from '../../utils/errors/AppError';
-import {
-  InstagramAnalyticsResponse,
-  InstagramProfile,
-  InstagramPost,
-  InstagramMetricType,
-  InstagramMediaMetricType,
-  InstagramError
-} from '../../types/social-media/analytics/instagram';
 
-const INSTAGRAM_GRAPH_API_VERSION = 'v18.0';
-const INSTAGRAM_GRAPH_API_URL = `https://graph.facebook.com/${INSTAGRAM_GRAPH_API_VERSION}`;
-
-export class InstagramAnalyticsAPI {
-  protected static handleError(error: unknown): never {
-    if (axios.isAxiosError(error) && error.response?.data) {
-      const instagramError = error.response.data as InstagramError;
-      if (instagramError.error?.message) {
-        throw new ValidationError(instagramError.error.message);
-      }
-    }
-    if (error instanceof Error) {
-      throw new ValidationError(error.message);
-    }
-    throw new ValidationError('An unknown error occurred while calling the Instagram Analytics API');
-  }
-
-  protected static async getProfileMetrics(
+export class InstagramAnalyticsService {
+  async getAnalytics(
     userId: string,
     accessToken: string,
-    since?: string,
-    until?: string
-  ): Promise<InstagramMetricType> {
-    try {
-      const params = new URLSearchParams({
-        metric: [
-          'impressions',
-          'reach',
-          'profile_views',
-          'website_clicks'
-        ].join(','),
-        period: 'day'
-      });
-
-      if (since) params.append('since', since);
-      if (until) params.append('until', until);
-
-      const response = await axios.get(
-        `${INSTAGRAM_GRAPH_API_URL}/${userId}/insights`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          },
-          params
-        }
-      );
-
-      const metrics = response.data.data.reduce((acc: any, metric: any) => {
-        acc[metric.name] = metric.values[0].value;
-        return acc;
-      }, {});
-
-      // Get follower count and media count separately as they're not part of insights
-      const profileResponse = await axios.get(
-        `${INSTAGRAM_GRAPH_API_URL}/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          },
-          params: {
-            fields: 'followers_count,media_count'
-          }
-        }
-      );
-
-      return {
-        ...metrics,
-        followers: profileResponse.data.followers_count || 0,
-        posts: profileResponse.data.media_count || 0
-      };
-    } catch (error) {
-      return this.handleError(error);
-    }
-  }
-
-  protected static async getMediaMetrics(
-    mediaId: string,
-    accessToken: string
-  ): Promise<InstagramMediaMetricType> {
-    try {
-      const response = await axios.get(
-        `${INSTAGRAM_GRAPH_API_URL}/${mediaId}/insights`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          },
-          params: {
-            metric: [
-              'impressions',
-              'reach',
-              'engagement',
-              'saved',
-              'video_views',
-              'carousel_album_engagement'
-            ].join(',')
-          }
-        }
-      );
-
-      const metrics = response.data.data.reduce((acc: any, metric: any) => {
-        acc[metric.name] = metric.values[0].value;
-        return acc;
-      }, {});
-
-      // Get likes, comments and shares separately
-      const mediaResponse = await axios.get(
-        `${INSTAGRAM_GRAPH_API_URL}/${mediaId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          },
-          params: {
-            fields: 'like_count,comments_count,shares_count'
-          }
-        }
-      );
-
-      return {
-        ...metrics,
-        likes: mediaResponse.data.like_count || 0,
-        comments: mediaResponse.data.comments_count || 0,
-        shares: mediaResponse.data.shares_count || 0
-      };
-    } catch (error) {
-      return this.handleError(error);
-    }
-  }
-
-  static async getAnalytics(
-    userId: string,
-    accessToken: string,
-    since?: string,
-    until?: string
+    startDate?: string,
+    endDate?: string
   ): Promise<InstagramAnalyticsResponse> {
+    if (!accessToken) {
+      throw new Error('Invalid token');
+    }
+
     try {
-      const startDate = since || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-      const endDate = until || new Date().toISOString();
-
-      // Get profile metrics
-      const profileMetrics = await this.getProfileMetrics(userId, accessToken, startDate, endDate);
-
-      // Get recent media
-      const mediaResponse = await axios.get(
-        `${INSTAGRAM_GRAPH_API_URL}/${userId}/media`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          },
+      const [{ data: { data: profileData } }, { data: postsData }] = await Promise.all([
+        axios.get(`https://graph.instagram.com/v12.0/${userId}`, {
           params: {
-            fields: 'id,timestamp,media_type,media_url,permalink,caption',
-            since: startDate,
-            until: endDate
+            fields: 'followers_count,media_count,profile_views,engagement_rate',
+            access_token: accessToken
           }
-        }
-      );
-
-      // Get metrics for each media
-      const mediaWithMetrics = await Promise.all(
-        mediaResponse.data.data.map(async (media: any) => {
-          const metrics = await this.getMediaMetrics(media.id, accessToken);
-          return {
-            id: media.id,
-            created_at: media.timestamp,
-            media_type: media.media_type,
-            media_url: media.media_url,
-            permalink: media.permalink,
-            caption: media.caption,
-            metrics: {
-              impressions: metrics.impressions,
-              reach: metrics.reach,
-              engagement: metrics.engagement,
-              saved: metrics.saved,
-              video_views: metrics.video_views,
-              carousel_album_engagement: metrics.carousel_album_engagement,
-              likes: metrics.likes,
-              comments: metrics.comments,
-              shares: metrics.shares
-            }
-          };
+        }),
+        axios.get(`https://graph.instagram.com/v12.0/${userId}/media`, {
+          params: {
+            fields: 'id,caption,timestamp,media_type,metrics',
+            access_token: accessToken
+          }
         })
-      );
-
-      const profile: InstagramProfile = {
-        followers: profileMetrics.followers,
-        following: 0, // Not available via API
-        posts: profileMetrics.posts,
-        engagement_rate: this.calculateProfileEngagementRate(profileMetrics),
-        reach: profileMetrics.reach,
-        impressions: profileMetrics.impressions
-      };
-
-      const posts: InstagramPost[] = mediaWithMetrics.map(media => ({
-        id: media.id,
-        created_at: media.created_at,
-        media_type: media.media_type,
-        media_url: media.media_url,
-        permalink: media.permalink,
-        caption: media.caption,
-        metrics: {
-          impressions: media.metrics.impressions,
-          likes: media.metrics.likes,
-          engagement_rate: media.metrics.engagement / media.metrics.impressions * 100
-        },
-        reach: media.metrics.reach,
-        saved: media.metrics.saved,
-        video_views: media.metrics.video_views,
-        carousel_album_engagement: media.metrics.carousel_album_engagement,
-        comments: media.metrics.comments,
-        shares: media.metrics.shares
-      }));
+      ]);
 
       return {
-        profile,
-        posts,
+        profile: {
+          followers: profileData.followers_count || 0,
+          following: profileData.following_count || 0,
+          engagement_rate: profileData.engagement_rate || 0,
+          impressions: profileData.impressions || 0,
+          reach: profileData.reach || 0,
+          profile_views: profileData.profile_views || 0,
+          media_count: profileData.media_count || 0
+        },
+        posts: postsData.data.map((post: any) => ({
+          id: post.id,
+          caption: post.caption || '',
+          created_at: post.timestamp || new Date().toISOString(),
+          media_type: post.media_type || 'IMAGE',
+          metrics: {
+            likes: post.metrics?.likes || 0,
+            comments: post.metrics?.comments || 0,
+            saves: post.metrics?.saves || 0,
+            shares: post.metrics?.shares || 0,
+            reach: post.metrics?.reach || 0,
+            impressions: post.metrics?.impressions || 0,
+            engagement_rate: (post.metrics?.engagement || 0) / (post.metrics?.impressions || 1)
+          }
+        })),
         period: {
-          start: startDate,
-          end: endDate
+          start: startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+          end: endDate || new Date().toISOString()
         }
       };
-    } catch (error) {
-      return this.handleError(error);
+    } catch (error: any) {
+      if (error.isAxiosError && error.response?.data?.error) {
+        throw new Error(error.response.data.error.message);
+      }
+      throw error;
     }
-  }
-
-  private static calculateProfileEngagementRate(metrics: InstagramMetricType): number {
-    return metrics.impressions > 0 ? (metrics.profile_views / metrics.impressions) * 100 : 0;
   }
 }

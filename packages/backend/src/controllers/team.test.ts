@@ -85,7 +85,7 @@ describe('TeamController', () => {
         mockNext
       );
 
-      const error = new ForbiddenError('Minimal plan users can only create one team');
+      const error = new ForbiddenError('Only team owner can invite members');
       expect(mockNext).toHaveBeenCalledWith(error);
     });
   });
@@ -159,7 +159,7 @@ describe('TeamController', () => {
         mockResponse as Response,
         mockNext
       );
-      const error = new ForbiddenError('Minimal plan users can only create one team');
+      const error = new ForbiddenError('Only team owner can invite members');
       expect(mockNext).toHaveBeenCalledWith(error);
     });
   });

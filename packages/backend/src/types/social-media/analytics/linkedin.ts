@@ -1,54 +1,23 @@
-import { BaseAnalyticsResponse } from './base';
+import { BaseAnalyticsResponse, BaseMetrics, BasePost, BaseProfile } from './base';
 
-export interface LinkedInAnalyticsResponse extends BaseAnalyticsResponse {
-  profile: {
-    followers: number;
-    connections: number;
-    posts: number;
-    engagement_rate: number;
-    impressions: number;
-    unique_visitors: number;
-  };
-  posts: Array<{
-    id: string;
-    created_at: string;
-    content: string;
-    media_type?: 'IMAGE' | 'VIDEO' | 'ARTICLE' | 'DOCUMENT';
-    metrics: {
-      impressions: number;
-      clicks: number;
-      likes: number;
-      comments: number;
-      shares: number;
-      engagement_rate: number;
-    };
-  }>;
-  period: {
-    start: string;
-    end: string;
-  };
-}
-
-export interface LinkedInMetricType {
-  impressions: number;
-  unique_visitors: number;
-  clicks: number;
-  followers: number;
-  connections: number;
-  posts: number;
-}
-
-export interface LinkedInPostMetricType {
-  impressions: number;
-  clicks: number;
+export interface LinkedInMetrics extends BaseMetrics {
   likes: number;
-  comments: number;
+  clicks: number;
+  reactions: number;
   shares: number;
 }
 
-export interface LinkedInError {
-  status: number;
-  message: string;
-  serviceErrorCode?: number;
-  code?: string;
+export interface LinkedInProfile extends BaseProfile {
+  connections: number;
+  unique_visitors: number;
+}
+
+export interface LinkedInPost extends Omit<BasePost, 'metrics'> {
+  content: string;
+  metrics: LinkedInMetrics;
+}
+
+export interface LinkedInAnalyticsResponse extends Omit<BaseAnalyticsResponse, 'profile' | 'posts'> {
+  profile: LinkedInProfile;
+  posts: LinkedInPost[];
 }

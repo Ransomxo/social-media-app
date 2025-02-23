@@ -1,4 +1,5 @@
-import { InstagramAnalyticsAPI } from './instagram';
+import { InstagramAnalyticsService } from './instagram';
+import { InstagramAnalyticsResponse } from '../../types/social-media/analytics/instagram';
 import axios from 'axios';
 import { ValidationError } from '../../utils/errors/AppError';
 
@@ -11,75 +12,34 @@ describe('InstagramAnalyticsAPI', () => {
   const mockSince = '2025-01-01';
   const mockUntil = '2025-02-01';
 
-  // Mock profile metrics response
   const mockProfileMetrics = {
-    data: [
-      {
-        name: 'impressions',
-        values: [{ value: 10000 }]
-      },
-      {
-        name: 'reach',
-        values: [{ value: 5000 }]
-      },
-      {
-        name: 'profile_views',
-        values: [{ value: 1000 }]
-      },
-      {
-        name: 'website_clicks',
-        values: [{ value: 200 }]
-      }
-    ]
+    data: {
+      followers_count: 5000,
+      engagement_rate: 3.5,
+      media_count: 100,
+      reach: 10000,
+      profile_views: 500
+    }
   };
 
-  // Mock profile info response
-  const mockProfileInfo = {
-    followers_count: 5000,
-    media_count: 100
-  };
-
-  // Mock media list response
-  const mockMediaList = {
+  const mockPostsData = {
     data: [
       {
         id: 'media_123',
         timestamp: '2025-01-15T12:00:00Z',
+        caption: 'Test post',
         media_type: 'IMAGE',
-        media_url: 'https://example.com/image.jpg',
-        permalink: 'https://instagram.com/p/123',
-        caption: 'Test post'
+        metrics: {
+          likes: 50,
+          comments: 20,
+          saves: 10,
+          shares: 5,
+          reach: 1000,
+          impressions: 1500,
+          engagement: 75
+        }
       }
     ]
-  };
-
-  // Mock media metrics response
-  const mockMediaMetrics = {
-    data: [
-      {
-        name: 'impressions',
-        values: [{ value: 1000 }]
-      },
-      {
-        name: 'reach',
-        values: [{ value: 500 }]
-      },
-      {
-        name: 'engagement',
-        values: [{ value: 100 }]
-      },
-      {
-        name: 'saved',
-        values: [{ value: 50 }]
-      }
-    ]
-  };
-
-  // Mock media info response
-  const mockMediaInfo = {
-    like_count: 50,
-    comments_count: 10,
-    shares_count: 5
   };
 
   beforeEach(() => {
@@ -89,26 +49,22 @@ describe('InstagramAnalyticsAPI', () => {
   describe('getAnalytics', () => {
     it('should fetch analytics data successfully', async () => {
       mockedAxios.get
-        .mockResolvedValueOnce({ data: mockProfileMetrics }) // Profile metrics
-        .mockResolvedValueOnce({ data: mockProfileInfo }) // Profile info
-        .mockResolvedValueOnce({ data: mockMediaList }) // Media list
-        .mockResolvedValueOnce({ data: mockMediaMetrics }) // Media metrics
-        .mockResolvedValueOnce({ data: mockMediaInfo }); // Media info
+        .mockResolvedValueOnce({ data: mockProfileMetrics })
+        .mockResolvedValueOnce({ data: mockPostsData });
 
-      const result = await InstagramAnalyticsAPI.getAnalytics(
+      const service = new InstagramAnalyticsService();
+      const result = await service.getAnalytics(
         mockUserId,
-        mockAccessToken,
-        mockSince,
-        mockUntil
+        mockAccessToken
       );
 
       expect(result).toHaveProperty('profile');
-      expect(result).toHaveProperty('media');
+      expect(result).toHaveProperty('posts');
       expect(result).toHaveProperty('period');
 
       expect(result.profile.followers).toBe(5000);
-      expect(result.media).toHaveLength(1);
-      expect(result.media[0].metrics.likes).toBe(50);
+      expect(result.posts).toHaveLength(1);
+      expect(result.posts[0].metrics.likes).toBe(50);
     });
 
     it('should handle API errors gracefully', async () => {
@@ -118,9 +74,7 @@ describe('InstagramAnalyticsAPI', () => {
         data: {
           error: {
             message: 'Invalid token',
-            type: 'OAuthException',
-            code: 190,
-            fbtrace_id: 'mock_trace_id'
+            type: 'OAuthException'
           }
         }
       };
@@ -128,7 +82,7 @@ describe('InstagramAnalyticsAPI', () => {
       mockedAxios.get.mockRejectedValue(mockError);
 
       await expect(
-        InstagramAnalyticsAPI.getAnalytics(
+        new InstagramAnalyticsService().getAnalytics(
           mockUserId,
           'invalid_token',
           mockSince,
@@ -139,13 +93,11 @@ describe('InstagramAnalyticsAPI', () => {
 
     it('should use default date range when not provided', async () => {
       mockedAxios.get
-        .mockResolvedValueOnce({ data: mockProfileMetrics }) // Profile metrics
-        .mockResolvedValueOnce({ data: mockProfileInfo }) // Profile info
-        .mockResolvedValueOnce({ data: mockMediaList }) // Media list
-        .mockResolvedValueOnce({ data: mockMediaMetrics }) // Media metrics
-        .mockResolvedValueOnce({ data: mockMediaInfo }); // Media info
+        .mockResolvedValueOnce({ data: mockProfileMetrics })
+        .mockResolvedValueOnce({ data: mockPostsData });
 
-      const result = await InstagramAnalyticsAPI.getAnalytics(
+      const service = new InstagramAnalyticsService();
+      const result = await service.getAnalytics(
         mockUserId,
         mockAccessToken
       );

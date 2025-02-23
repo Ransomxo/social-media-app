@@ -201,7 +201,7 @@ export class TeamController {
       }
 
       // Check if user is already a member
-      const existingMember = team?.members.find(member => member.userId === invitedUser.id);
+      const existingMember = team?.members.find((member: { userId: string }) => member.userId === invitedUser.id);
       if (existingMember) {
         next(new ValidationError('User is already a team member'));
         return;

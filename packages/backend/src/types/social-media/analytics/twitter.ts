@@ -1,48 +1,22 @@
-import { BaseProfile, BasePost, BaseAnalyticsResponse } from './base';
+import { BaseAnalyticsResponse, BaseMetrics, BasePost, BaseProfile } from './base';
+
+export interface TwitterMetrics extends BaseMetrics {
+  likes: number;
+  retweets: number;
+  replies: number;
+}
 
 export interface TwitterProfile extends BaseProfile {
   following: number;
   tweets: number;
 }
 
-export interface TwitterPost extends BasePost {
+export interface TwitterPost extends Omit<BasePost, 'metrics'> {
   text: string;
-  retweets: number;
-  replies: number;
-  url_clicks?: number;
-  profile_clicks?: number;
-  hashtag_clicks?: number;
+  metrics: TwitterMetrics;
 }
 
-export interface TwitterAnalyticsResponse extends BaseAnalyticsResponse {
+export interface TwitterAnalyticsResponse extends Omit<BaseAnalyticsResponse, 'profile' | 'posts'> {
   profile: TwitterProfile;
   posts: TwitterPost[];
-}
-
-export interface TwitterMetricType {
-  impressions: number;
-  engagement: number;
-  profile_visits: number;
-  mentions: number;
-  followers: number;
-  tweets: number;
-}
-
-export interface TwitterTweetMetricType {
-  impressions: number;
-  likes: number;
-  retweets: number;
-  replies: number;
-  url_clicks?: number;
-  profile_clicks?: number;
-  hashtag_clicks?: number;
-}
-
-export interface TwitterError {
-  code: number;
-  message: string;
-  errors?: Array<{
-    message: string;
-    code: string;
-  }>;
 }

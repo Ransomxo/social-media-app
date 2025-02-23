@@ -1,4 +1,5 @@
-import { TwitterAnalyticsAPI } from './twitter';
+import { TwitterAnalyticsService } from './twitter';
+import { TwitterAnalyticsResponse } from '../../types/social-media/analytics/twitter';
 import axios from 'axios';
 import { ValidationError } from '../../utils/errors/AppError';
 
@@ -11,7 +12,6 @@ describe('TwitterAnalyticsAPI', () => {
   const mockSince = '2025-01-01';
   const mockUntil = '2025-02-01';
 
-  // Mock user metrics response
   const mockUserMetrics = {
     data: {
       public_metrics: {
@@ -25,7 +25,6 @@ describe('TwitterAnalyticsAPI', () => {
     }
   };
 
-  // Mock tweets response
   const mockTweetsData = {
     data: [
       {
@@ -36,7 +35,6 @@ describe('TwitterAnalyticsAPI', () => {
     ]
   };
 
-  // Mock tweet metrics response
   const mockTweetMetrics = {
     data: {
       public_metrics: {
@@ -60,24 +58,23 @@ describe('TwitterAnalyticsAPI', () => {
   describe('getAnalytics', () => {
     it('should fetch analytics data successfully', async () => {
       mockedAxios.get
-        .mockResolvedValueOnce({ data: mockUserMetrics }) // User metrics
-        .mockResolvedValueOnce({ data: mockTweetsData }) // Tweets list
-        .mockResolvedValueOnce({ data: mockTweetMetrics }); // Tweet metrics
+        .mockResolvedValueOnce({ data: mockUserMetrics })
+        .mockResolvedValueOnce({ data: mockTweetsData })
+        .mockResolvedValueOnce({ data: mockTweetMetrics });
 
-      const result = await TwitterAnalyticsAPI.getAnalytics(
+      const service = new TwitterAnalyticsService();
+      const result = await service.getAnalytics(
         mockUserId,
-        mockAccessToken,
-        mockSince,
-        mockUntil
+        mockAccessToken
       );
 
       expect(result).toHaveProperty('profile');
-      expect(result).toHaveProperty('tweets');
+      expect(result).toHaveProperty('posts');
       expect(result).toHaveProperty('period');
 
       expect(result.profile.followers).toBe(5000);
-      expect(result.tweets).toHaveLength(1);
-      expect(result.tweets[0].metrics.likes).toBe(50);
+      expect(result.posts).toHaveLength(1);
+      expect(result.posts[0].metrics.likes).toBe(50);
     });
 
     it('should handle API errors gracefully', async () => {
@@ -97,7 +94,7 @@ describe('TwitterAnalyticsAPI', () => {
       mockedAxios.get.mockRejectedValue(mockError);
 
       await expect(
-        TwitterAnalyticsAPI.getAnalytics(
+        new TwitterAnalyticsService().getAnalytics(
           mockUserId,
           'invalid_token',
           mockSince,
@@ -108,11 +105,12 @@ describe('TwitterAnalyticsAPI', () => {
 
     it('should use default date range when not provided', async () => {
       mockedAxios.get
-        .mockResolvedValueOnce({ data: mockUserMetrics }) // User metrics
-        .mockResolvedValueOnce({ data: mockTweetsData }) // Tweets list
-        .mockResolvedValueOnce({ data: mockTweetMetrics }); // Tweet metrics
+        .mockResolvedValueOnce({ data: mockUserMetrics })
+        .mockResolvedValueOnce({ data: mockTweetsData })
+        .mockResolvedValueOnce({ data: mockTweetMetrics });
 
-      const result = await TwitterAnalyticsAPI.getAnalytics(
+      const service = new TwitterAnalyticsService();
+      const result = await service.getAnalytics(
         mockUserId,
         mockAccessToken
       );
