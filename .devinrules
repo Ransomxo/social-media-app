@@ -67,21 +67,36 @@ Note: Environment variables will be configured in Railway.app during deployment 
 
 ## Current Status and Deployment Issues
 
-### Deployment Status (Last Updated: February 23, 2025 20:44:55 UTC)
+### Deployment Status (Last Updated: February 23, 2025 20:50:17 UTC)
 1. PR #16 Status:
    - Branch: devin/1740283551-analytics-docs-and-fixes
    - Contains: Analytics implementation, documentation updates, deployment fixes
-   - Status: Migrating from Vercel to Railway.app
+   - Status: Ready for Railway.app migration
 
-2. Railway.app Migration (In Progress):
+2. Railway.app Migration Progress:
    - Account: rowdyroque8@gmail.com
-   - Status: Initial setup pending
-   - Next Steps:
+   - Status: Configuration prepared
+   - Completed Steps:
+     - Removed Vercel configuration
+     - Created Railway.app configuration files
+     - Updated build and deployment settings
+   - Next Steps for Following Session:
+     - Install Railway CLI
      - Create Railway project
-     - Import repository
+     - Link frontend and backend services
      - Configure environment variables
-     - Set up build pipeline
-     - Configure domains
+     - Set up domains
+
+3. Railway.app Configuration Status:
+   Frontend (packages/frontend/railway.json):
+   - Build command: `cd ../.. && pnpm install && cd packages/frontend && pnpm install && pnpm build`
+   - Start command: `pnpm start`
+   - Watch patterns configured for frontend files
+
+   Backend (packages/backend/railway.json):
+   - Build command: `cd ../.. && pnpm install && cd packages/backend && pnpm install && pnpm build`
+   - Start command: `pnpm start`
+   - Watch patterns configured for backend files
 
 3. Required Environment Variables:
    Frontend (omniposting.com):
