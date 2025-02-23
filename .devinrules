@@ -124,7 +124,52 @@ Frontend:
 - React Components
 
 ## UI/UX Development Guidelines
-See detailed guidelines in `docs/UI_GUIDELINES.md`
+
+### Pages to Implement
+1. Authentication
+   - Login (`/auth/login`)
+   - Signup (`/auth/signup`)
+2. Dashboard
+   - Home (`/`)
+   - Calendar View (`/app/calendar`)
+   - Analytics Dashboard (`/app/analytics`)
+3. Management
+   - Team Management (`/app/team`)
+   - Profile Settings (`/app/settings`)
+   - Platform Integrations (`/app/integrations`)
+
+### Core UI Requirements
+- Calendar interface with month/week/day views
+- Event creation modal for scheduling posts
+- Sidebar with filters and calendars list
+- Time-slot based event scheduling (6am-1pm format)
+- User avatars for team collaboration
+- Color-coded event categories
+- Drag-and-drop event scheduling
+
+### Development Workflow
+1. Branch Management
+   - Create feature branches from `main`
+   - Use prefix `feature/ui-*` for all UI work
+   - Example: `feature/ui-calendar-view`
+
+2. Component Development
+   - Create reusable components in `src/components`
+   - Document props and usage
+   - Include responsive designs
+   - Follow existing styling patterns
+
+3. State Management
+   - Use React hooks for local state
+   - Implement proper loading states
+   - Handle error scenarios
+   - Add proper TypeScript types
+
+4. Testing & Preview
+   - Test on multiple viewports
+   - Verify accessibility
+   - Check performance metrics
+   - Use mock data initially
 
 ### Separation of Concerns
 1. Infrastructure Team (Current Session)
@@ -141,21 +186,43 @@ See detailed guidelines in `docs/UI_GUIDELINES.md`
    - Interactive features
    - Responsive layouts
 
-### Development Rules
-1. Branch Management
-   - UI features: `feature/ui-*`
-   - Infrastructure: `feature/infra-*`
-   - Current infra branch: `devin/1740283551-analytics-docs-and-fixes`
+### File Ownership
+1. UI Team
+   - `packages/frontend/src/app/*`
+   - `packages/frontend/src/components/*`
+   - `packages/frontend/src/styles/*`
+   - `packages/frontend/src/hooks/*`
 
-2. File Ownership
-   - UI owns: `src/app/pages/*, src/components/*`
-   - Infrastructure owns: `src/lib/*, src/api/*, configs/*`
+2. Infrastructure Team
+   - `packages/backend/*`
+   - `packages/frontend/src/lib/*`
+   - `packages/frontend/src/api/*`
+   - Root configuration files
 
-3. Coordination
-   - UI team uses mock data during development
-   - Infrastructure team maintains API contracts
-   - Both teams follow TypeScript interfaces
+### Coordination Rules
+1. Development Process
+   - UI team works in separate Devin session
+   - Use mock data during development
+   - Follow TypeScript interfaces
    - Regular sync via PR reviews
+
+2. Avoid Modifying
+   - Core authentication logic
+   - API integration code
+   - Environment configurations
+   - Deployment settings
+
+3. Preview Requirements
+   - Local development server
+   - Mock data for testing
+   - Component isolation
+   - Responsive testing
+
+4. Documentation
+   - Update component docs
+   - Add usage examples
+   - Document props
+   - Note dependencies
 
 Backend:
 - Express.js

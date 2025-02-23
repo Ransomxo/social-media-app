@@ -1,13 +1,11 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && pnpm install && cd packages/frontend && pnpm install && NEXT_DEBUG=1 DEBUG=* pnpm build",
+  "buildCommand": "cd ../.. && pnpm install && cd packages/frontend && pnpm install && pnpm build",
   "installCommand": "cd ../.. && pnpm install",
   "outputDirectory": ".next",
   "framework": "nextjs",
   "env": {
     "NEXT_PUBLIC_API_URL": "https://api.omniposting.com",
-    "NEXT_PUBLIC_APP_URL": "https://omniposting.com",
-    "NEXT_DEBUG": "1",
-    "DEBUG": "*"
+    "NEXT_PUBLIC_APP_URL": "https://omniposting.com"
   }
 }

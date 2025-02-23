@@ -5,8 +5,6 @@ import debug from 'debug';
 
 const log = debug('app:server');
 const buildLog = debug('app:build');
-const envLog = debug('app:env');
-const dbLog = debug('app:database');
 const deployLog = debug('app:deploy');
 
 import { errorHandler } from './middleware/errorHandler';
@@ -18,25 +16,8 @@ import { prisma } from './lib/prisma';
 
 dotenv.config();
 
-dbLog('Initializing database connection');
-
 process.on('beforeExit', async () => {
   await prisma.$disconnect();
-  dbLog('Database connection closed');
-});
-
-// Log environment and build information
-buildLog('Node version:', process.version);
-buildLog('TypeScript version:', require('typescript').version);
-buildLog('Current working directory:', process.cwd());
-buildLog('Environment:', process.env.NODE_ENV);
-
-// Log environment variables (safely)
-envLog('Environment variables configured:', {
-  DATABASE_URL: !!process.env.DATABASE_URL,
-  JWT_SECRET: !!process.env.JWT_SECRET,
-  NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-  PORT: process.env.PORT || '3000'
 });
 
 const app: express.Application = express();

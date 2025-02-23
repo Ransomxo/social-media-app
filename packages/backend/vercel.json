@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && pnpm install && cd packages/backend && pnpm install && DEBUG=* pnpm run build",
+  "buildCommand": "cd ../.. && pnpm install && cd packages/backend && pnpm install && pnpm run build",
   "installCommand": "cd ../.. && pnpm install",
   "outputDirectory": "dist",
   "builds": [
@@ -22,7 +22,6 @@
   "env": {
     "DATABASE_URL": "@database-url",
     "JWT_SECRET": "@jwt-secret",
-    "NEXT_PUBLIC_APP_URL": "@next-public-app-url",
-    "DEBUG": "*"
+    "NEXT_PUBLIC_APP_URL": "@next-public-app-url"
   }
 }
