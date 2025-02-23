@@ -1,7 +1,7 @@
 {
   "version": 2,
-  "buildCommand": "pnpm install && pnpm build",
-  "installCommand": "pnpm install",
+  "buildCommand": "cd ../.. && pnpm install && DEBUG=* pnpm --filter backend build",
+  "installCommand": "cd ../.. && pnpm install",
   "outputDirectory": "dist",
   "builds": [
     {
