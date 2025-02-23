@@ -20,9 +20,7 @@ const nextConfig = {
     ],
     unoptimized: process.env.NODE_ENV === 'development'
   },
-  onError: (err) => {
-    console.error('Next.js build error:', err);
-  },
+
   webpack: (config, { isServer, dev }) => {
     console.log(`Building for ${isServer ? 'server' : 'client'}, environment: ${process.env.NODE_ENV}`);
     console.log('Next.js config:', {
