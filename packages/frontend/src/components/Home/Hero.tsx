@@ -4,9 +4,9 @@ import DashboardPreview from './DashboardPreview';
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden py-20 sm:py-32 lg:pb-32 xl:pb-36">
-      <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900"></div>
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative">
+    <section className="section-spacing min-h-[90vh] flex items-center">
+      <div className="section-gradient"></div>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative py-12 sm:py-16">
         <div className="lg:grid lg:grid-cols-12 lg:gap-x-8 lg:gap-y-20">
           <div className="relative z-10 mx-auto max-w-2xl lg:col-span-7 lg:max-w-none lg:pt-6 xl:col-span-6">
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-100">
