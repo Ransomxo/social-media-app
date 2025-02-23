@@ -26,7 +26,13 @@ export class FacebookExtendedAnalyticsAPI {
         demographics: {
           age_gender: { '18-24': { male: 0, female: 0 } },
           location: { 'US': 0 },
-          language: { 'en': 0 }
+          language: { 'en': 0 },
+          profile: {
+            age_range: '18-24',
+            gender: 'unknown',
+            location: 'US',
+            language: 'en'
+          }
         },
         content_performance: {
           top_posts: [],
