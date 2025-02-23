@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import TestimonialAvatar from './TestimonialAvatar';
 
 const testimonials = [
   {
@@ -44,18 +45,12 @@ export default function Testimonials() {
         <div className="mx-auto mt-16 flow-root max-w-2xl sm:mt-20 lg:mx-0 lg:max-w-none">
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {testimonials.map((testimonial, testimonialIdx) => (
-              <div key={testimonialIdx} className="flex flex-col justify-between bg-gray-800/50 backdrop-blur-sm px-8 py-10 rounded-2xl">
+              <div key={testimonialIdx} className="card hover:bg-gray-800/70 transition-colors">
                 <blockquote className="text-lg leading-8 text-gray-300">
                   <p>&ldquo;{testimonial.content}&rdquo;</p>
                 </blockquote>
                 <div className="mt-8 flex items-center gap-x-4">
-                  <Image
-                    className="h-10 w-10 rounded-full bg-gray-800"
-                    src={testimonial.author.image}
-                    alt={testimonial.author.name}
-                    width={40}
-                    height={40}
-                  />
+                  <TestimonialAvatar name={testimonial.author.name} />
                   <div>
                     <div className="font-semibold text-white">{testimonial.author.name}</div>
                     <div className="text-gray-400">{testimonial.author.role}</div>
