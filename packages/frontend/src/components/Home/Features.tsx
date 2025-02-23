@@ -37,23 +37,23 @@ export default function Features() {
         <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
           <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-3">
             {features.map((feature) => (
-              <div key={feature.name} className="flex flex-col">
-                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-white">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-600">
+              <div key={feature.name} className="card flex flex-col">
+                <dt className="flex items-center gap-x-3 text-xl font-semibold leading-7 text-white">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-600">
                     <Image
                       src={feature.icon}
                       alt={feature.name}
-                      className="h-6 w-6 text-white"
-                      width={24}
-                      height={24}
+                      className="h-8 w-8 text-white"
+                      width={32}
+                      height={32}
                     />
                   </div>
                   {feature.name}
                 </dt>
-                <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-300">
+                <dd className="mt-6 flex flex-auto flex-col text-base leading-7 text-gray-300">
                   <p className="flex-auto">{feature.description}</p>
                   <p className="mt-6">
-                    <a href="#" className="text-sm font-semibold leading-6 text-purple-400">
+                    <a href="#" className="text-sm font-semibold leading-6 text-purple-400 hover:text-purple-300 transition-colors">
                       Learn more <span aria-hidden="true">→</span>
                     </a>
                   </p>

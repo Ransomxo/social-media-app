@@ -42,7 +42,7 @@ export default function Tools() {
         <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
           <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-16 lg:max-w-none lg:grid-cols-2">
             {tools.map((tool) => (
-              <div key={tool.name} className="flex flex-col bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8">
+              <div key={tool.name} className="card flex flex-col hover:bg-gray-800/70 transition-colors">
                 <dt className="flex items-center gap-x-3 text-xl font-semibold leading-7 text-white">
                   <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-600">
                     <Image
@@ -55,7 +55,7 @@ export default function Tools() {
                   </div>
                   {tool.name}
                 </dt>
-                <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-gray-300">
+                <dd className="mt-6 flex flex-auto flex-col text-base leading-7 text-gray-300">
                   <p className="flex-auto">{tool.description}</p>
                 </dd>
               </div>
