@@ -99,6 +99,7 @@ export default function Calendar() {
           events={events}
           onEventClick={handleEventClick}
           onTimeSlotClick={handleTimeSlotClick}
+          view={view}
         />
         <AddEventModal
           isOpen={isAddEventModalOpen}
