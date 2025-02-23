@@ -27,42 +27,6 @@ export default function CalendarGrid({
     });
   }, []);
 
-  const weeks = useMemo(() => {
-    const start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-    const end = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-    
-    const days: Date[] = [];
-    const week: Date[][] = [];
-    
-    // Add days from previous month to start the week
-    const startDay = start.getDay();
-    for (let i = startDay; i > 0; i--) {
-      const day = new Date(start);
-      day.setDate(day.getDate() - i);
-      days.push(day);
-    }
-    
-    // Add all days of current month
-    for (let d = start; d <= end; d.setDate(d.getDate() + 1)) {
-      days.push(new Date(d));
-    }
-    
-    // Add days from next month to complete the week
-    const endDay = end.getDay();
-    for (let i = 1; i < 7 - endDay; i++) {
-      const day = new Date(end);
-      day.setDate(day.getDate() + i);
-      days.push(day);
-    }
-    
-    // Group days into weeks
-    for (let i = 0; i < days.length; i += 7) {
-      week.push(days.slice(i, i + 7));
-    }
-    
-    return week;
-  }, [currentDate]);
-
   const getEventsForDay = (date: Date) => {
     return events.filter(
       (event) =>
@@ -85,70 +49,6 @@ export default function CalendarGrid({
       </div>
     ));
   };
-
-  const renderTimeGrid = () => (
-    <div className="time-grid">
-      <div className="sticky top-0 z-10 bg-gray-900/90">
-        <div className="grid grid-cols-[auto_1fr]">
-          <div className="w-24" />
-          <div className={view === 'Day' ? 'grid grid-cols-1' : 'grid grid-cols-7'}>
-            {renderDayHeaders()}
-          </div>
-        </div>
-      </div>
-      <div className="time-grid-content">
-        {timeSlots.map((time) => (
-          <React.Fragment key={time}>
-            <div className="time-column sticky left-0">
-              {time}
-            </div>
-            <div className={view === 'Day' ? 'grid grid-cols-1' : 'grid grid-cols-7'}>
-              {Array(view === 'Day' ? 1 : 7).fill(null).map((_, i) => {
-                const date = new Date(currentDate);
-                date.setHours(parseInt(time.split(':')[0]));
-                date.setDate(date.getDate() - date.getDay() + i);
-                const isToday = date.toDateString() === new Date().toDateString();
-                
-                return (
-                  <div
-                    key={i}
-                    className={`time-slot time-slot-hover p-2 ${isToday ? 'current-day' : ''}`}
-                    onClick={() => onTimeSlotClick(date)}
-                  >
-                    {getEventsForDay(date).map((event) => (
-                      <EventCard key={event.id} event={event} onClick={onEventClick} />
-                    ))}
-                  </div>
-                );
-              })}
-            </div>
-          </React.Fragment>
-        ))}
-      </div>
-    </div>
-  );
-              const date = new Date(currentDate);
-              date.setHours(parseInt(time.split(':')[0]));
-              date.setDate(date.getDate() - date.getDay() + i);
-              const isToday = date.toDateString() === new Date().toDateString();
-              
-              return (
-                <div
-                  key={i}
-                  className={`time-slot time-slot-hover p-2 ${isToday ? 'current-day' : ''}`}
-                  onClick={() => onTimeSlotClick(date)}
-                >
-                  {getEventsForDay(date).map((event) => (
-                    <EventCard key={event.id} event={event} onClick={onEventClick} />
-                  ))}
-                </div>
-              );
-            })}
-          </div>
-        </React.Fragment>
-      ))}
-    </div>
-  );
 
   return (
     <div className="flex-1 calendar-grid">
