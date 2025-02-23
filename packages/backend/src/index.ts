@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import { errorHandler } from './middleware/errorHandler';
 import authRoutes from './routes/auth';
 import analyticsRoutes from './routes/social-media/analytics';
@@ -16,6 +17,10 @@ import { authMiddleware } from './middleware/auth';
 import healthRoutes from './routes/health';
 
 // Middleware
+app.use(cors({
+  origin: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+  credentials: true
+}));
 app.use(express.json());
 
 // Routes

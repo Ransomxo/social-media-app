@@ -38,7 +38,7 @@ export class ReportGenerator {
         for (const post of analytics.posts.slice(0, 5)) {
           const typedPost = post as BasePost;
           report.push(`- Post ID: ${typedPost.id}`);
-          report.push(`  - Engagement: ${typedPost.metrics?.engagement || 0}`);
+          report.push(`  - Engagement: ${typedPost.metrics?.engagement_rate || 0}`);
           report.push(`  - Reach: ${typedPost.metrics?.reach || 0}`);
           report.push(`  - Posted: ${typedPost.created_at}`);
           report.push('');

@@ -35,7 +35,9 @@ export class LinkedInAnalyticsService {
           connections: profileData.data.numConnections || 0,
           engagement_rate: profileData.data.engagementRate || 0,
           impressions: profileData.data.impressions || 0,
-          unique_visitors: profileData.data.uniqueVisitors || 0
+          unique_visitors: profileData.data.uniqueVisitors || 0,
+          page_views: profileData.data.uniqueVisitors || 0,
+          reach: profileData.data.impressions || 0
         },
         posts: (postsData.data.elements || []).map((post: any) => ({
           id: post.id,

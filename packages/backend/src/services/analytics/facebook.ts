@@ -30,11 +30,12 @@ export class FacebookAnalyticsService {
 
       return {
         profile: {
-          followers: profileData.data.followers_count,
-          page_likes: profileData.data.page_likes,
-          engagement_rate: profileData.data.engagement,
-          reach: profileData.data.reach,
-          impressions: profileData.data.impressions
+          followers: profileData.data.followers_count || 0,
+          page_likes: profileData.data.page_likes || 0,
+          engagement_rate: profileData.data.engagement || 0,
+          reach: profileData.data.reach || 0,
+          impressions: profileData.data.impressions || 0,
+          page_views: profileData.data.page_views || 0
         },
         posts: postsData.data.data.map((post: any) => ({
           id: post.id,

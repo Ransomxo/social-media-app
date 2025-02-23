@@ -36,7 +36,8 @@ export class InstagramAnalyticsService {
           impressions: profileData.impressions || 0,
           reach: profileData.reach || 0,
           profile_views: profileData.profile_views || 0,
-          media_count: profileData.media_count || 0
+          media_count: profileData.media_count || 0,
+          page_views: profileData.profile_views || 0
         },
         posts: postsData.data.map((post: any) => ({
           id: post.id,

@@ -4,10 +4,24 @@
 
 ### Environment Variables
 Required environment variables for frontend deployment:
-- `NEXT_PUBLIC_API_URL`: Backend API URL (e.g., https://api.omniposting.com)
-- `NEXT_PUBLIC_APP_URL`: Frontend URL (e.g., https://omniposting.com)
+- `NEXT_PUBLIC_API_URL`: Backend API URL (https://api.omniposting.com)
+- `NEXT_PUBLIC_APP_URL`: Frontend URL (https://omniposting.com)
+
+Required environment variables for backend deployment:
 - `DATABASE_URL`: Neon.tech PostgreSQL connection string
 - `JWT_SECRET`: Secret for JWT token generation
+
+Note: Environment variables are configured in Vercel using deployment token: gN4Nz9xVItJ6HtyHKAf5fusA
+
+## Build Process
+- Backend: TypeScript compilation + Prisma generation
+- Frontend: Next.js standalone build
+- Monorepo: Turborepo for build optimization
+
+## Environment Setup
+- Vercel deployment token: gN4Nz9xVItJ6HtyHKAf5fusA
+- Domain configuration: DNS records configured
+- Database: Neon.tech PostgreSQL instance
 
 ### Vercel Configuration
 The frontend is configured for deployment on Vercel with the following settings:

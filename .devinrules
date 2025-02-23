@@ -50,12 +50,20 @@
 - Shadow database setup for Prisma migrations
 
 ### Environment Variables Required
+
+Frontend (omniposting.com):
 ```
 NEXT_PUBLIC_API_URL=https://api.omniposting.com
 NEXT_PUBLIC_APP_URL=https://omniposting.com
-JWT_SECRET=[secure-secret]
-DATABASE_URL=[neon-connection-string]
 ```
+
+Backend (api.omniposting.com):
+```
+DATABASE_URL=[neon-connection-string]
+JWT_SECRET=[secure-secret]
+```
+
+Note: All environment variables are configured in Vercel using deployment token: gN4Nz9xVItJ6HtyHKAf5fusA
 
 ## Current Issues
 1. CI pipeline failures in PR #16 need resolution

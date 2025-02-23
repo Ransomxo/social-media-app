@@ -35,7 +35,9 @@ export class TwitterAnalyticsService {
           following: userMetrics.data.data.public_metrics.following || 0,
           tweets: userMetrics.data.data.public_metrics.tweets || 0,
           impressions: userMetrics.data.data.public_metrics.impressions || 0,
-          engagement_rate: (userMetrics.data.data.public_metrics.engagement || 0) / (userMetrics.data.data.public_metrics.impressions || 1)
+          engagement_rate: (userMetrics.data.data.public_metrics.engagement || 0) / (userMetrics.data.data.public_metrics.impressions || 1),
+          page_views: userMetrics.data.data.public_metrics.profile_views || 0,
+          reach: userMetrics.data.data.public_metrics.impressions || 0
         },
         posts: tweetsData.data.data.map((tweet: any) => ({
           id: tweet.id,

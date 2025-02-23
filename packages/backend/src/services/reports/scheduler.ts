@@ -1,6 +1,35 @@
 import { PrismaClient, Prisma } from '@prisma/client';
 import { ReportConfig } from './emailGenerator';
-import { ReportSchedule, SerializedEmailConfig } from '../../types/reports';
+import { ReportSchedule, EmailConfig } from '../../types/reports';
+
+type SerializedEmailConfig = EmailConfig;
+
+function validateEmailConfig(config: unknown): config is EmailConfig {
+  const c = config as EmailConfig;
+  return Array.isArray(c?.to) && typeof c?.subject === 'string';
+}
+
+function toEmailConfig(json: Prisma.JsonValue | null): EmailConfig {
+  const data = json as any || {};
+  return {
+    to: Array.isArray(data.to) ? data.to : [],
+    cc: Array.isArray(data.cc) ? data.cc : [],
+    subject: typeof data.subject === 'string' ? data.subject : '',
+    customHeader: data.customHeader
+  };
+}
+
+function toJsonValue(config: EmailConfig | undefined): Prisma.InputJsonValue {
+  if (!config) {
+    return { to: [], cc: [], subject: '' };
+  }
+  return {
+    to: config.to,
+    cc: config.cc || [],
+    subject: config.subject || '',
+    customHeader: config.customHeader
+  };
+}
 
 export class ReportScheduler {
   private prisma: PrismaClient;
@@ -24,7 +53,7 @@ export class ReportScheduler {
         frequency,
         platforms,
         metrics,
-        emailConfig: serializedConfig,
+        emailConfig: toJsonValue(serializedConfig),
       }
     });
 
@@ -34,9 +63,9 @@ export class ReportScheduler {
       frequency: schedule.frequency as 'daily' | 'weekly',
       platforms: schedule.platforms,
       metrics: schedule.metrics,
-      emailConfig: serializedConfig,
-      lastSent: schedule.lastSent,
-      nextScheduled: schedule.nextScheduled,
+      emailConfig: toEmailConfig(schedule.emailConfig),
+      lastSent: schedule.lastSent || undefined,
+      nextScheduled: schedule.nextScheduled || undefined,
       createdAt: schedule.createdAt,
       updatedAt: schedule.updatedAt
     };
@@ -65,7 +94,7 @@ export class ReportScheduler {
         frequency: config.frequency,
         platforms: config.platforms,
         metrics: config.metrics,
-        emailConfig: serializedConfig,
+        emailConfig: toJsonValue(serializedConfig),
       }
     });
 
@@ -75,9 +104,9 @@ export class ReportScheduler {
       frequency: updated.frequency as 'daily' | 'weekly',
       platforms: updated.platforms,
       metrics: updated.metrics,
-      emailConfig: updated.emailConfig as SerializedEmailConfig,
-      lastSent: updated.lastSent,
-      nextScheduled: updated.nextScheduled,
+      emailConfig: toEmailConfig(updated.emailConfig),
+      lastSent: updated.lastSent || undefined,
+      nextScheduled: updated.nextScheduled || undefined,
       createdAt: updated.createdAt,
       updatedAt: updated.updatedAt
     };
@@ -103,9 +132,9 @@ export class ReportScheduler {
       frequency: schedule.frequency as 'daily' | 'weekly',
       platforms: schedule.platforms,
       metrics: schedule.metrics,
-      emailConfig: schedule.emailConfig as SerializedEmailConfig,
-      lastSent: schedule.lastSent,
-      nextScheduled: schedule.nextScheduled,
+      emailConfig: toEmailConfig(schedule.emailConfig),
+      lastSent: schedule.lastSent || undefined,
+      nextScheduled: schedule.nextScheduled || undefined,
       createdAt: schedule.createdAt,
       updatedAt: schedule.updatedAt
     };
@@ -124,9 +153,9 @@ export class ReportScheduler {
         frequency: schedule.frequency as 'daily' | 'weekly',
         platforms: schedule.platforms,
         metrics: schedule.metrics,
-        emailConfig: schedule.emailConfig as SerializedEmailConfig,
-        lastSent: schedule.lastSent,
-        nextScheduled: schedule.nextScheduled,
+        emailConfig: toEmailConfig(schedule.emailConfig),
+        lastSent: schedule.lastSent || undefined,
+        nextScheduled: schedule.nextScheduled || undefined,
         createdAt: schedule.createdAt,
         updatedAt: schedule.updatedAt
       };
