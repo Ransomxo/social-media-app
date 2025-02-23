@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { format } from 'date-fns';
+import { Dialog } from '@headlessui/react';
 
 interface AddEventModalProps {
   isOpen: boolean;
@@ -26,8 +27,6 @@ export default function AddEventModal({
   const [description, setDescription] = useState('');
   const [platforms, setPlatforms] = useState<string[]>([]);
 
-  if (!isOpen) return null;
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedDate) return;
@@ -51,9 +50,13 @@ export default function AddEventModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-900/75 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-gray-800/90 backdrop-blur-sm rounded-xl p-8 w-full max-w-md border border-gray-700 shadow-xl">
-        <h2 className="text-2xl font-semibold text-white mb-6 bg-gradient-to-r from-purple-500 to-purple-300 bg-clip-text text-transparent">Add Event</h2>
+    <Dialog open={isOpen} onClose={onClose} className="relative z-50">
+      <div className="fixed inset-0 bg-gray-900/75 backdrop-blur-sm" aria-hidden="true" />
+      <div className="fixed inset-0 flex items-center justify-center p-4">
+        <Dialog.Panel className="bg-gray-800/90 backdrop-blur-sm rounded-xl p-8 w-full max-w-md border border-gray-700 shadow-xl">
+          <Dialog.Title className="text-2xl font-semibold text-white mb-6 bg-gradient-to-r from-purple-500 to-purple-300 bg-clip-text text-transparent">
+            Add Event
+          </Dialog.Title>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-300 mb-2">
@@ -104,7 +107,8 @@ export default function AddEventModal({
             </button>
           </div>
         </form>
+        </Dialog.Panel>
       </div>
-    </div>
+    </Dialog>
   );
 }
