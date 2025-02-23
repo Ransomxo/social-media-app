@@ -27,7 +27,7 @@ export default function LoginForm() {
         <div className="flex-grow">
           <h1 className="text-4xl font-bold mb-4">Log in</h1>
           <p className="text-gray-600 mb-8">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link href="/signup" className="text-purple-600 hover:text-purple-700">
               Create one
             </Link>

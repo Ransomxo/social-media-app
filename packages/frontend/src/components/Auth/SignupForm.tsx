@@ -77,7 +77,7 @@ export default function SignupForm() {
               <label htmlFor="terms" className="text-sm text-gray-600">
                 I agree to the{' '}
                 <Link href="/terms" className="text-purple-600 hover:text-purple-700">
-                  Terms & Conditions
+                  Terms &amp; Conditions
                 </Link>
               </label>
             </div>
