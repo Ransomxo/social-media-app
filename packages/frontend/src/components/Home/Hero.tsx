@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import DashboardPreview from './DashboardPreview';
 
 export default function Hero() {
   return (
@@ -30,14 +31,7 @@ export default function Hero() {
               </div>
             </div>
             <div className="relative">
-              <Image
-                src="/dashboard-preview.png"
-                alt="App screenshot"
-                width={2432}
-                height={1442}
-                className="w-full rounded-xl shadow-2xl"
-                priority
-              />
+              <DashboardPreview />
               <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-gray-900/10"></div>
             </div>
           </div>
