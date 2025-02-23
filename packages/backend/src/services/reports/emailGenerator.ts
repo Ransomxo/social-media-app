@@ -1,5 +1,5 @@
 import { SocialPlatform } from '../../types/social-media/oauth';
-import { BaseAnalyticsResponse } from '../../types/social-media/analytics/base';
+import { BaseAnalyticsResponse, BasePost } from '../../types/social-media/analytics/base';
 import { EmailConfig } from '../../types/reports';
 
 export interface ReportConfig {
@@ -36,10 +36,11 @@ export class ReportGenerator {
       if (this.config.metrics.includes('posts')) {
         report.push('### Post Performance');
         for (const post of analytics.posts.slice(0, 5)) {
-          report.push(`- Post ID: ${post.id}`);
-          report.push(`  - Engagement: ${post.engagement}`);
-          report.push(`  - Reach: ${post.reach}`);
-          report.push(`  - Posted: ${post.posted_at}`);
+          const typedPost = post as BasePost;
+          report.push(`- Post ID: ${typedPost.id}`);
+          report.push(`  - Engagement: ${typedPost.metrics?.engagement || 0}`);
+          report.push(`  - Reach: ${typedPost.metrics?.reach || 0}`);
+          report.push(`  - Posted: ${typedPost.created_at}`);
           report.push('');
         }
       }

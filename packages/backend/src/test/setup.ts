@@ -41,9 +41,13 @@ beforeAll(async () => {
         password: hashedPassword,
         firstName: 'Test',
         lastName: 'User',
-        plan: 'minimal',
-
+        plan: 'minimal'
       },
+      include: {
+        ownedTeams: true,
+        memberTeams: true,
+        posts: true
+      }
     });
     
     // Wait a bit to ensure database consistency
@@ -81,9 +85,13 @@ beforeEach(async () => {
         password: hashedPassword,
         firstName: 'Test',
         lastName: 'User',
-        plan: 'minimal',
-
+        plan: 'minimal'
       },
+      include: {
+        ownedTeams: true,
+        memberTeams: true,
+        posts: true
+      }
     });
     
     // Wait a bit to ensure database consistency

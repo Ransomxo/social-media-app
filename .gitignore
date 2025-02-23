@@ -129,3 +129,31 @@ dist
 .yarn/install-state.gz
 .pnp.*
 .vercel
+
+# Environment files
+**/.env
+**/.env.local
+**/.env.development
+**/.env.test
+**/.env.production
+
+# Keep example files
+!**/.env.example
+!**/.env.test.example
+
+# Lock files
+**/pnpm-lock.yaml
+
+# Environment files
+**/.env
+**/.env.local
+**/.env.development
+**/.env.test
+**/.env.production
+
+# Keep example files
+!**/.env.example
+!**/.env.test.example
+
+# Lock files
+**/pnpm-lock.yaml

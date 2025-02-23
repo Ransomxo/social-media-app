@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import React, { useMemo } from 'react';
 import { format } from 'date-fns';
 
@@ -105,10 +106,12 @@ export default function CalendarGrid({
                       {event.participants && (
                         <div className="flex -space-x-1">
                           {event.participants.map((participant: { avatar: string; name: string }, idx: number) => (
-                            <img
+                            <Image
                               key={idx}
                               src={participant.avatar}
                               alt={participant.name}
+                              width={16}
+                              height={16}
                               className="h-4 w-4 rounded-full ring-2 ring-white"
                             />
                           ))}

@@ -8,7 +8,8 @@ describe('Social Media Analytics Endpoints', () => {
 
   beforeEach(async () => {
     // Token is generated after test user is created in global beforeEach
-    authToken = jwt.sign({ id: testUser.id }, process.env.JWT_SECRET || 'test-secret-key', { expiresIn: '1h' });
+    if (!process.env.JWT_SECRET) throw new Error('JWT_SECRET must be set for tests');
+    authToken = jwt.sign({ id: testUser.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
     console.log('Test token generated:', { userId: testUser.id });
   });
 

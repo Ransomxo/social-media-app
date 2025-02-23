@@ -47,9 +47,10 @@ model Post {
   userId      String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
-  platform    String    @default("all")
-  platforms   String[]
+  platforms   String[]  @default([])
   user        User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
 }
 
 model Team {

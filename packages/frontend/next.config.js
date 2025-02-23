@@ -3,9 +3,16 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   output: 'standalone',
-  env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: process.env.NEXT_PUBLIC_IMAGE_HOSTNAME || 'localhost',
+        port: '',
+        pathname: '/avatars/**',
+      },
+    ],
+    unoptimized: process.env.NODE_ENV === 'development'
   }
 };
 

@@ -11,58 +11,54 @@ export interface AuthRequest extends Request {
 
 export const authMiddleware = async (
   req: AuthRequest,
-  _res: Response,
+  res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      throw new UnauthorizedError('No Bearer token provided');
+      res.status(401).json({ error: 'No Bearer token provided' });
+      return;
     }
 
     const token = authHeader.split(' ')[1];
     if (!token) {
-      throw new UnauthorizedError('Empty token provided');
+      res.status(401).json({ error: 'Empty token provided' });
+      return;
     }
 
     if (!process.env.JWT_SECRET) {
-      throw new Error('JWT secret not configured');
+      console.error('JWT secret not configured');
+      res.status(500).json({ error: 'Internal server error' });
+      return;
     }
     
     let decoded;
     try {
       decoded = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
     } catch (e) {
-      throw new UnauthorizedError('Invalid token');
+      res.status(401).json({ error: 'Invalid token' });
+      return;
     }
-    
-    const user = await prisma.user.findUnique({ 
+
+    const user = await prisma.user.findUnique({
       where: { id: decoded.id },
       include: {
-        ownedTeams: {
-          include: {
-            members: true
-          }
-        },
-        posts: true,
-        memberTeams: {
-          include: {
-            team: true
-          }
-        }
+        ownedTeams: true,
+        memberTeams: true,
+        posts: true
       }
     });
-    
+
     if (!user) {
-      throw new UnauthorizedError('User not found');
+      res.status(401).json({ error: 'User not found' });
+      return;
     }
-    
+
     req.user = user;
     next();
   } catch (error) {
-    if (error instanceof jwt.JsonWebTokenError) {
-      return next(new UnauthorizedError('Invalid token'));
-    }
-    return next(error);
+    console.error('Auth middleware error:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 };
