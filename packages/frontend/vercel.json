@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd ../.. && NEXT_DEBUG=1 pnpm install && cd packages/frontend && NEXT_DEBUG=1 DEBUG=* pnpm build",
+  "buildCommand": "cd ../.. && pnpm install && cd packages/frontend && pnpm install && NEXT_DEBUG=1 DEBUG=* pnpm build",
   "installCommand": "cd ../.. && pnpm install",
   "outputDirectory": ".next",
   "framework": "nextjs",
