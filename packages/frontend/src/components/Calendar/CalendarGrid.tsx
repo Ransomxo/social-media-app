@@ -126,6 +126,7 @@ export default function CalendarGrid({
     <div className="flex-1 calendar-grid">
       {renderTimeGrid()}
     </div>
+  );    </div>
   );
         {timeSlots.map((time) => (
           <React.Fragment key={time}>
