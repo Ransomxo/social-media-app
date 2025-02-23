@@ -152,7 +152,45 @@ export default function CalendarGrid({
 
   return (
     <div className="flex-1 calendar-grid">
-      {renderTimeGrid()}
+      <div className="time-grid">
+        <div className="sticky top-0 z-10 bg-gray-900/90">
+          <div className="grid grid-cols-[auto_1fr]">
+            <div className="w-24" />
+            <div className={view === 'Day' ? 'grid grid-cols-1' : 'grid grid-cols-7'}>
+              {renderDayHeaders()}
+            </div>
+          </div>
+        </div>
+        <div className="time-grid-content">
+          {timeSlots.map((time) => (
+            <React.Fragment key={time}>
+              <div className="time-column sticky left-0">
+                {time}
+              </div>
+              <div className={view === 'Day' ? 'grid grid-cols-1' : 'grid grid-cols-7'}>
+                {Array(view === 'Day' ? 1 : 7).fill(null).map((_, i) => {
+                  const date = new Date(currentDate);
+                  date.setHours(parseInt(time.split(':')[0]));
+                  date.setDate(date.getDate() - date.getDay() + i);
+                  const isToday = date.toDateString() === new Date().toDateString();
+                  
+                  return (
+                    <div
+                      key={i}
+                      className={`time-slot time-slot-hover p-2 ${isToday ? 'current-day' : ''}`}
+                      onClick={() => onTimeSlotClick(date)}
+                    >
+                      {getEventsForDay(date).map((event) => (
+                        <EventCard key={event.id} event={event} onClick={onEventClick} />
+                      ))}
+                    </div>
+                  );
+                })}
+              </div>
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
