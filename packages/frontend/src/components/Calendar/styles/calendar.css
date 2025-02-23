@@ -1,35 +1,57 @@
-.calendar-gradient {
-  @apply bg-gradient-to-br from-gray-900 via-purple-900/10 to-gray-900;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-.event-card-gradient {
-  @apply bg-gradient-to-r from-purple-600/20 to-purple-400/20 hover:from-purple-600/30 hover:to-purple-400/30 transition-all duration-200;
-}
+@layer components {
+  .calendar-gradient {
+    @apply bg-gradient-to-br from-gray-900 via-purple-900/10 to-gray-900;
+  }
 
-.calendar-header {
-  @apply bg-gray-900/90 border-b border-gray-800 backdrop-blur-sm;
-}
+  .event-card-gradient {
+    @apply bg-gradient-to-r from-purple-600/20 to-purple-400/20 hover:from-purple-600/30 hover:to-purple-400/30 transition-all duration-200;
+  }
 
-.calendar-grid {
-  @apply bg-gray-900/50 backdrop-blur-sm;
-}
+  .calendar-header {
+    @apply bg-gray-900/90 border-b border-gray-800 backdrop-blur-sm sticky top-0 z-10;
+  }
 
-.time-slot {
-  @apply bg-gray-900/80 backdrop-blur-sm border-b border-gray-800/50;
-}
+  .calendar-grid {
+    @apply bg-gray-900/50 backdrop-blur-sm flex-1 overflow-auto;
+  }
 
-.time-slot-hover {
-  @apply hover:bg-purple-600/10 transition-colors duration-200;
-}
+  .time-slot {
+    @apply bg-gray-900/80 backdrop-blur-sm border-b border-gray-800/50 relative;
+  }
 
-.day-header {
-  @apply bg-gray-900/90 backdrop-blur-sm text-gray-300 font-medium;
-}
+  .time-slot-hover {
+    @apply hover:bg-purple-600/10 transition-colors duration-200 cursor-pointer;
+  }
 
-.current-day {
-  @apply bg-purple-600/20 border-purple-500/50;
-}
+  .day-header {
+    @apply bg-gray-900/90 backdrop-blur-sm text-gray-300 font-medium sticky top-0 z-10;
+  }
 
-.selected-slot {
-  @apply ring-2 ring-purple-500 ring-opacity-50;
+  .current-day {
+    @apply bg-purple-600/20 border-purple-500/50;
+  }
+
+  .selected-slot {
+    @apply ring-2 ring-purple-500 ring-opacity-50;
+  }
+
+  .sidebar {
+    @apply w-64 bg-gray-900/90 backdrop-blur-sm border-r border-gray-800 p-6 flex flex-col gap-8;
+  }
+
+  .calendar-list {
+    @apply space-y-2;
+  }
+
+  .calendar-item {
+    @apply flex items-center space-x-2 text-gray-300 hover:text-white transition-colors duration-200;
+  }
+
+  .category-item {
+    @apply flex items-center space-x-2 text-gray-300 hover:text-white transition-colors duration-200;
+  }
 }
