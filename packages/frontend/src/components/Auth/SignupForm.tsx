@@ -38,24 +38,24 @@ export default function SignupForm() {
               <input
                 type="text"
                 placeholder="First name"
-                className="form-input bg-white"
+                className="form-input"
               />
               <input
                 type="text"
                 placeholder="Last name"
-                className="form-input bg-white"
+                className="form-input"
               />
             </div>
             <input
               type="email"
               placeholder="Email"
-              className="form-input bg-white"
+              className="form-input"
             />
             <div className="relative">
               <input
                 type="password"
                 placeholder="Enter your password"
-                className="form-input bg-white pr-12"
+                className="form-input pr-12"
               />
               <button
                 type="button"
