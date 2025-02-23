@@ -70,9 +70,9 @@ export default function CalendarGrid({
   };
 
   return (
-    <div className="flex-1">
-      <div className="grid grid-cols-[auto_1fr] gap-px bg-gray-800">
-        <div className="w-20" /> {/* Time column header */}
+    <div className="flex-1 calendar-gradient min-h-screen">
+      <div className="grid grid-cols-[auto_1fr] gap-px bg-gray-800/50 backdrop-blur-sm">
+        <div className="w-20 bg-gray-900/90" /> {/* Time column header */}
         <div className="grid grid-cols-7">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
             <div
@@ -83,29 +83,6 @@ export default function CalendarGrid({
             </div>
           ))}
         </div>
-        {timeSlots.map((time) => (
-          <React.Fragment key={time}>
-            <div className="w-20 bg-gray-900 py-2 px-3 text-xs font-medium text-gray-300">
-              {time}
-            </div>
-            <div className="grid grid-cols-7 gap-px">
-              {Array(7).fill(null).map((_, i) => (
-                <div
-                  key={i}
-                  className="h-12 time-slot time-slot-hover"
-                  onClick={() => {
-                    const date = new Date(currentDate);
-                    date.setHours(parseInt(time));
-                    onTimeSlotClick(date);
-                  }}
-                />
-              ))}
-            </div>
-          </React.Fragment>
-        ))}
-      </div>
-    </div>
-      <div className="calendar-gradient min-h-screen">
         {timeSlots.map((time) => (
           <React.Fragment key={time}>
             <div className="w-20 bg-gray-900/90 py-2 px-3 text-xs font-medium text-gray-300 border-b border-gray-800/50">
