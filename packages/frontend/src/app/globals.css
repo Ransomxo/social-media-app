@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 255, 255, 255;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+  min-height: 100vh;
+}
+
+@layer base {
+  input[type='text'],
+  input[type='email'],
+  input[type='password'] {
+    @apply w-full p-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-600 focus:border-transparent;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply w-full bg-purple-600 text-white py-3 rounded-lg hover:bg-purple-700 transition-colors;
+  }
+  
+  .social-btn {
+    @apply flex items-center justify-center space-x-2 p-3 border rounded-lg hover:bg-gray-50 transition-colors;
+  }
+
+  .gradient-bg {
+    @apply bg-gradient-to-br from-purple-600 to-purple-900;
+  }
+}
