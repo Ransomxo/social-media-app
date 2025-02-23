@@ -28,14 +28,15 @@ const tools = [
 
 export default function Tools() {
   return (
-    <section className="py-24 bg-gray-900/50">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+    <section className="relative py-24">
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-900/10 via-gray-900 to-gray-900"></div>
+      <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-base font-semibold leading-7 text-purple-600">Get more value from your tools</h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <h2 className="section-title">Get more value from your tools</h2>
+          <p className="section-description">
             Convert your reach into revenue with our powerful tools
           </p>
-          <p className="mt-6 text-lg leading-8 text-gray-300">
+          <p className="section-subtitle">
             Leverage our comprehensive suite of tools designed to help you maximize your social media impact and drive meaningful results.
           </p>
         </div>
