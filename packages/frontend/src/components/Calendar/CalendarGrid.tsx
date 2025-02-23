@@ -10,6 +10,7 @@ interface CalendarGridProps {
   events: CalendarEvent[];
   onEventClick: (event: CalendarEvent) => void;
   onTimeSlotClick: (date: Date) => void;
+  view: 'Month' | 'Week' | 'Day';
 }
 
 export default function CalendarGrid({
@@ -17,11 +18,12 @@ export default function CalendarGrid({
   events,
   onEventClick,
   onTimeSlotClick,
+  view,
 }: CalendarGridProps) {
   const timeSlots = useMemo(() => {
     return Array.from({ length: 8 }, (_, i) => {
       const hour = i + 6;
-      return `${hour}${hour === 12 ? 'pm' : 'am'}`;
+      return format(new Date().setHours(hour, 0, 0, 0), 'h:mm a');
     });
   }, []);
 
@@ -69,20 +71,27 @@ export default function CalendarGrid({
     );
   };
 
+  const renderDayHeaders = () => {
+    const days = view === 'Week' ? 7 : view === 'Day' ? 1 : 7;
+    const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const startIdx = view === 'Day' ? currentDate.getDay() : 0;
+    
+    return dayLabels.slice(startIdx, startIdx + days).map((day) => (
+      <div
+        key={day}
+        className="day-header py-3 px-4 text-center text-sm font-semibold uppercase tracking-wider"
+      >
+        {day}
+      </div>
+    ));
+  };
+
   return (
     <div className="flex-1 calendar-grid">
       <div className="grid grid-cols-[auto_1fr] gap-px bg-gray-800/50 backdrop-blur-sm">
         <div className="w-24 bg-gray-900/90" /> {/* Time column header */}
-        <div className="grid grid-cols-7">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-            <div
-              key={day}
-              className="day-header py-3 px-4 text-center text-sm font-semibold uppercase tracking-wider"
-            >
-              {day}
-            </div>
-          ))}
-        </div>
+        <div className={`grid grid-cols-${view === 'Day' ? '1' : '7'}`}>
+          {renderDayHeaders()}
         {timeSlots.map((time) => (
           <React.Fragment key={time}>
             <div className="w-24 bg-gray-900/90 py-3 px-4 text-sm font-medium text-gray-300 border-b border-gray-800/50">
