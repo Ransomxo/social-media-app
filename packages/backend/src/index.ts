@@ -11,8 +11,9 @@ dotenv.config();
 const app: express.Application = express();
 const port: number = parseInt(process.env.PORT || '3000', 10);
 
-// Import middleware
+// Import middleware and routes
 import { authMiddleware } from './middleware/auth';
+import healthRoutes from './routes/health';
 
 // Middleware
 app.use(express.json());
@@ -21,6 +22,9 @@ app.use(express.json());
 app.get('/', (req: express.Request, res: express.Response): void => {
   res.json({ message: 'Welcome to the Social Media Analytics API' });
 });
+
+// Health check route
+app.use('/api/health', healthRoutes);
 
 app.use('/api/auth', authRoutes);
 
