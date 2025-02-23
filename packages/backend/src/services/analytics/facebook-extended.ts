@@ -30,7 +30,7 @@ export class FacebookExtendedAnalyticsAPI {
         },
         content_performance: {
           top_posts: [],
-          content_types: []
+          content_types: [{ type: '', engagement_rate: 0 }]
         },
         audience_growth: {
           total_followers: 0,
