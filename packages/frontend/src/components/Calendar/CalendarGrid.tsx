@@ -70,14 +70,14 @@ export default function CalendarGrid({
   };
 
   return (
-    <div className="flex-1 calendar-gradient min-h-screen">
+    <div className="flex-1 calendar-grid">
       <div className="grid grid-cols-[auto_1fr] gap-px bg-gray-800/50 backdrop-blur-sm">
-        <div className="w-20 bg-gray-900/90" /> {/* Time column header */}
+        <div className="w-24 bg-gray-900/90" /> {/* Time column header */}
         <div className="grid grid-cols-7">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
             <div
               key={day}
-              className="day-header py-2 px-3 text-center text-xs font-semibold uppercase"
+              className="day-header py-3 px-4 text-center text-sm font-semibold uppercase tracking-wider"
             >
               {day}
             </div>
@@ -85,7 +85,7 @@ export default function CalendarGrid({
         </div>
         {timeSlots.map((time) => (
           <React.Fragment key={time}>
-            <div className="w-20 bg-gray-900/90 py-2 px-3 text-xs font-medium text-gray-300 border-b border-gray-800/50">
+            <div className="w-24 bg-gray-900/90 py-3 px-4 text-sm font-medium text-gray-300 border-b border-gray-800/50">
               {time}
             </div>
             <div className="grid grid-cols-7 gap-px">
@@ -98,7 +98,7 @@ export default function CalendarGrid({
                 return (
                   <div
                     key={i}
-                    className={`h-12 time-slot time-slot-hover ${isToday ? 'current-day' : ''}`}
+                    className={`h-16 time-slot time-slot-hover p-1 ${isToday ? 'current-day' : ''}`}
                     onClick={() => onTimeSlotClick(date)}
                   >
                     {getEventsForDay(date).map((event) => (
