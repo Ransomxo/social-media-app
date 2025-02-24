@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react';
 import { format } from 'date-fns';
 import { CalendarEvent, CalendarView } from '../../types/calendar';
-import { EventCard } from './';
+import EventCard from './EventCard';
 
 interface CalendarGridProps {
   currentDate: Date;
