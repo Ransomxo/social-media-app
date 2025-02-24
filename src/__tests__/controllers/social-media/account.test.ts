@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
+import axios from 'axios';
 import { SocialMediaAccountController } from '../../../controllers/social-media/account.controller';
 import { prismaMock } from '../../setup/setup';
-import { AppError } from '../../../utils/errors/AppError';
+
+jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('SocialMediaAccountController', () => {
   let mockRequest: Partial<Request>;
@@ -10,12 +13,13 @@ describe('SocialMediaAccountController', () => {
 
   beforeEach(() => {
     mockRequest = {
-      user: { 
+      user: {
         id: '1',
         email: 'test@example.com',
         firstName: 'Test',
         lastName: 'User',
-        plan: 'minimal'
+        plan: 'minimal',
+        teamMembers: []
       },
       body: {}
     };
@@ -27,7 +31,7 @@ describe('SocialMediaAccountController', () => {
   });
 
   describe('connectAccount', () => {
-    it('should connect a social media account', async () => {
+    it('should connect a Twitter account', async () => {
       const accountData = {
         platform: 'twitter',
         code: 'auth_code',
@@ -35,6 +39,13 @@ describe('SocialMediaAccountController', () => {
       };
 
       mockRequest.body = accountData;
+
+      mockedAxios.post.mockResolvedValueOnce({
+        data: {
+          access_token: 'twitter_token',
+          refresh_token: 'refresh_token'
+        }
+      });
 
       prismaMock.socialMediaAccount.create.mockResolvedValue({
         id: '1',
