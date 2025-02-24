@@ -1,6 +1,6 @@
 import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-import { initSentry } from './utils/monitoring/sentry';
+import { initSentry, sentryErrorHandler } from './utils/monitoring/sentry';
 import { apiLimiter, authLimiter, socialMediaLimiter } from './utils/monitoring/rateLimit';
 import { logRequest, trackApiUsage } from './middleware/monitoring';
 import authRoutes from './routes/auth';
@@ -11,7 +11,7 @@ import { AppError } from './utils/errors/AppError';
 
 const app = express();
 
-// Initialize Sentry
+// Initialize Sentry (must be first)
 initSentry(app);
 
 // Middleware
@@ -35,7 +35,10 @@ app.use('/api/auth', authRoutes);
 app.use('/api/social-media', socialMediaRoutes);
 app.use('/api/team', teamRoutes);
 
-// Error handling
+// Sentry error handler must be before any other error middleware
+app.use(sentryErrorHandler);
+
+// Global error handler
 app.use((err: AppError, req: Request, res: Response, _next: NextFunction): void => {
   logger.error('Application error', {
     error: err,
@@ -47,9 +50,13 @@ app.use((err: AppError, req: Request, res: Response, _next: NextFunction): void 
     }
   });
 
+  // Send error response
   res.status(err.statusCode || 500).json({
     status: 'error',
-    message: err.message || 'Internal server error'
+    message: process.env.NODE_ENV === 'production' 
+      ? 'Internal server error' 
+      : err.message || 'Internal server error',
+    ...(process.env.NODE_ENV !== 'production' && { stack: err.stack })
   });
 });
 
