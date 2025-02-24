@@ -17,6 +17,8 @@ jobs:
           echo "${{ secrets.DIGITALOCEAN_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 137.184.15.8 >> ~/.ssh/known_hosts
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
       
       - name: Setup Node.js
         uses: actions/setup-node@v2
@@ -28,7 +30,7 @@ jobs:
       
       - name: Deploy to DigitalOcean
         run: |
-          ssh -o StrictHostKeyChecking=no root@137.184.15.8 "cd /root/social-media-app && \
+          ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@137.184.15.8 "cd /root/social-media-app && \
             git fetch && \
             git checkout ${{ github.head_ref }} && \
             pnpm install && \
