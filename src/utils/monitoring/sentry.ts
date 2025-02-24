@@ -1,17 +1,15 @@
 import * as Sentry from '@sentry/node';
-import { nodeProfilingIntegration } from '@sentry/profiling-node';
-import { Express, Request, Response, NextFunction } from 'express';
+import { Express } from 'express';
+import { Integrations } from '@sentry/node';
 
 export const initSentry = (app: Express): void => {
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
     integrations: [
-      new Sentry.Integrations.Http(),
-      new Sentry.Integrations.Express({ app }),
-      nodeProfilingIntegration(),
+      new Integrations.Http({ tracing: true }),
+      new Integrations.Express({ app }),
     ],
     tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
-    profilesSampleRate: 1.0,
     environment: process.env.NODE_ENV,
   });
 
