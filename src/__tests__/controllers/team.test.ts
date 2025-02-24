@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { TeamController } from '../../controllers/team';
+import { TeamController } from '../../controllers/team.controller';
 import { prismaMock } from '../setup/setup';
 
 describe('TeamController', () => {

@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { SocialMediaAccountService } from '../../services/social-media/account.service';
-import { AppError } from '../../utils/errors/AppError';
 
 export class SocialMediaAccountController {
   static async connectAccount(
@@ -9,23 +8,24 @@ export class SocialMediaAccountController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const { platform, code, redirectUri } = req.body;
+      const { platform, authCode, redirectUri } = req.body;
       const userId = req.user?.id;
 
       if (!userId) {
-        throw new AppError('User not authenticated', 401);
+        throw new Error('User not authenticated');
       }
 
       const account = await SocialMediaAccountService.connectAccount(
         platform,
-        code,
+        authCode,
         redirectUri,
         userId
       );
 
       res.status(201).json({
+        success: true,
         message: 'Social media account connected successfully',
-        account
+        data: account
       });
     } catch (error) {
       next(error);
