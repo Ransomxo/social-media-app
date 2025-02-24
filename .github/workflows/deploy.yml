@@ -1,4 +1,4 @@
-name: Deploy to DigitalOcean
+name: Build and Test
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -32,20 +32,8 @@ jobs:
           cd packages/frontend
           pnpm build
       
-      - name: Deploy to DigitalOcean
-        if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
-        env:
-          PRIVATE_KEY: ${{ secrets.DIGITALOCEAN_SSH_KEY }}
-          HOST: ${{ secrets.DIGITALOCEAN_HOST }}
-        run: |
-          echo "$PRIVATE_KEY" > private_key
-          chmod 600 private_key
-          
-          # Deploy using rsync over SSH
-          rsync -avz -e "ssh -i private_key -o StrictHostKeyChecking=no" \
-            packages/frontend/.next/ \
-            root@$HOST:/root/social-media-app/packages/frontend/.next/
-          
-          # Restart services
-          ssh -i private_key -o StrictHostKeyChecking=no root@$HOST \
-            "cd /root/social-media-app && pm2 restart frontend && systemctl reload nginx"
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: packages/frontend/.next/
