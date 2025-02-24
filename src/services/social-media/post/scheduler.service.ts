@@ -11,13 +11,6 @@ interface PostScheduleRequest {
   userId: string;
 }
 
-interface PostResponse {
-  id: string;
-  platform: string;
-  status: string;
-  externalId?: string;
-}
-
 export class PostSchedulerService {
   static async schedulePost(data: PostScheduleRequest): Promise<SocialMediaPost> {
     const { content, platform, scheduledTime, userId } = data;
