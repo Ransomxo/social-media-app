@@ -1,11 +1,11 @@
 export class AppError extends Error {
-  constructor(
-    message: string,
-    public statusCode: number = 500,
-    public isOperational: boolean = true
-  ) {
+  statusCode: number;
+  status: string;
+
+  constructor(message: string, statusCode: number) {
     super(message);
-    this.name = this.constructor.name;
+    this.statusCode = statusCode;
+    this.status = 'error';
     Error.captureStackTrace(this, this.constructor);
   }
 }
