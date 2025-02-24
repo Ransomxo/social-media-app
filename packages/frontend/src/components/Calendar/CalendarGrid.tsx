@@ -68,8 +68,8 @@ export default function CalendarGrid({
               <div className="time-column">
                 <span className="text-gray-400">{time}</span>
               </div>
-              <div className={`grid ${view === 'Day' ? 'grid-cols-1' : 'grid-cols-7'} divide-x divide-gray-800/50`}>
-                {Array(view === 'Day' ? 1 : 7).fill(null).map((_, i) => {
+              <div className={`grid ${view === 'day' ? 'grid-cols-1' : 'grid-cols-7'} divide-x divide-gray-800/50`}>
+                {Array(view === 'day' ? 1 : 7).fill(null).map((_, i) => {
                   const date = new Date(currentDate);
                   date.setHours(parseInt(time.split(':')[0]));
                   date.setDate(date.getDate() - date.getDay() + i);
