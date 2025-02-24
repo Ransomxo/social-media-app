@@ -1,9 +1,12 @@
 import { Request, Response } from 'express';
 import { SocialMediaAccountController } from '../../../controllers/social-media/account.controller';
 import { SocialMediaAccountService } from '../../../services/social-media/account.service';
-import { prismaMock } from '../../setup/setup';
 
-jest.mock('../../../services/social-media/account.service');
+jest.mock('../../../services/social-media/account.service', () => ({
+  SocialMediaAccountService: {
+    connectAccount: jest.fn()
+  }
+}));
 
 describe('SocialMediaAccountController', () => {
   let mockRequest: Partial<Request>;
@@ -31,7 +34,9 @@ describe('SocialMediaAccountController', () => {
       json: jest.fn()
     };
     mockNext = jest.fn();
+  });
 
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
@@ -48,7 +53,7 @@ describe('SocialMediaAccountController', () => {
         updatedAt: new Date()
       };
 
-      (SocialMediaAccountService.connectAccount as jest.Mock).mockResolvedValue(mockAccount);
+      (SocialMediaAccountService.connectAccount as jest.Mock).mockResolvedValueOnce(mockAccount);
 
       await SocialMediaAccountController.connectAccount(
         mockRequest as Request,
@@ -73,7 +78,7 @@ describe('SocialMediaAccountController', () => {
 
     it('should handle connection errors', async () => {
       const error = new Error('Connection failed');
-      (SocialMediaAccountService.connectAccount as jest.Mock).mockRejectedValue(error);
+      (SocialMediaAccountService.connectAccount as jest.Mock).mockRejectedValueOnce(error);
 
       await SocialMediaAccountController.connectAccount(
         mockRequest as Request,

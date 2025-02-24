@@ -2,7 +2,11 @@ import { SocialMediaAccountService } from '../../services/social-media/account.s
 import { TwitterService } from '../../services/social-media/platforms/twitter';
 import { AppError } from '../../utils/errors/AppError';
 
-jest.mock('../../services/social-media/platforms/twitter');
+jest.mock('../../services/social-media/platforms/twitter', () => ({
+  TwitterService: {
+    getAccessToken: jest.fn()
+  }
+}));
 
 describe('Social Media Integration', () => {
   describe('Twitter Integration', () => {
@@ -17,7 +21,7 @@ describe('Social Media Integration', () => {
         accountId: 'twitter123'
       };
 
-      (TwitterService.getAccessToken as jest.Mock).mockResolvedValue(mockTokens);
+      (TwitterService.getAccessToken as jest.Mock).mockResolvedValueOnce(mockTokens);
 
       const account = await SocialMediaAccountService.connectAccount(
         'twitter',
@@ -36,7 +40,7 @@ describe('Social Media Integration', () => {
     });
 
     it('should handle Twitter API errors', async () => {
-      (TwitterService.getAccessToken as jest.Mock).mockRejectedValue(
+      (TwitterService.getAccessToken as jest.Mock).mockRejectedValueOnce(
         new Error('Invalid auth code')
       );
 
