@@ -1,0 +1,215 @@
+openapi: 3.0.0
+info:
+  title: Social Media Management API
+  version: 1.0.0
+  description: API for managing social media posts, analytics, and team collaboration
+
+servers:
+  - url: https://api.omniposting.com
+    description: Production server
+  - url: http://localhost:3000
+    description: Development server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        plan:
+          type: string
+        teamMembers:
+          type: array
+          items:
+            type: string
+
+    SocialMediaAccount:
+      type: object
+      properties:
+        id:
+          type: string
+        platform:
+          type: string
+        accountId:
+          type: string
+        userId:
+          type: string
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+        content:
+          type: string
+        platform:
+          type: string
+        scheduledTime:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [draft, scheduled, published, failed]
+
+paths:
+  /api/auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: Invalid input data
+        '409':
+          description: Email already exists
+
+  /api/social-media-data:
+    get:
+      tags:
+        - Analytics
+      summary: Get social media analytics data
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: platform
+          schema:
+            type: string
+        - in: query
+          name: startDate
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: endDate
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Analytics data retrieved successfully
+        '401':
+          description: Unauthorized
+        '500':
+          description: Server error
+
+  /api/generate-caption:
+    post:
+      tags:
+        - AI
+      summary: Generate social media caption
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                platform:
+                  type: string
+                tone:
+                  type: string
+                length:
+                  type: string
+      responses:
+        '200':
+          description: Caption generated successfully
+        '401':
+          description: Unauthorized
+        '500':
+          description: Server error
+
+  /api/schedule-post:
+    post:
+      tags:
+        - Posts
+      summary: Schedule a social media post
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                platform:
+                  type: string
+                scheduledTime:
+                  type: string
+                  format: date-time
+      responses:
+        '201':
+          description: Post scheduled successfully
+        '401':
+          description: Unauthorized
+        '500':
+          description: Server error
+
+  /api/team/add:
+    post:
+      tags:
+        - Team
+      summary: Add team member
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId:
+                  type: string
+                role:
+                  type: string
+      responses:
+        '201':
+          description: Team member added successfully
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Server error
