@@ -1,59 +1,53 @@
 import { SocialMediaAccountService } from '../../services/social-media/account.service';
-import { prismaMock } from '../setup/setup';
-import axios from 'axios';
+import { TwitterService } from '../../services/social-media/platforms/twitter';
+import { AppError } from '../../utils/errors/AppError';
 
-jest.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+jest.mock('../../services/social-media/platforms/twitter');
 
 describe('Social Media Integration', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   describe('Twitter Integration', () => {
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
     it('should connect Twitter account', async () => {
       const mockTokens = {
-        access_token: 'mock_token',
-        refresh_token: 'mock_refresh',
+        accessToken: 'test_access_token',
+        refreshToken: 'test_refresh_token',
         accountId: 'twitter123'
       };
 
-      mockedAxios.post.mockResolvedValueOnce({ data: mockTokens });
-
-      prismaMock.socialMediaAccount.create.mockResolvedValue({
-        id: '1',
-        platform: 'twitter',
-        accountId: mockTokens.accountId,
-        userId: 'user1',
-        accessToken: 'encrypted_token',
-        refreshToken: 'encrypted_refresh',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
+      (TwitterService.getAccessToken as jest.Mock).mockResolvedValue(mockTokens);
 
       const account = await SocialMediaAccountService.connectAccount(
         'twitter',
         'auth_code',
         'http://localhost:3000/callback',
-        'user1'
+        'user123'
       );
 
       expect(account).toBeDefined();
       expect(account.platform).toBe('twitter');
-      expect(account.accountId).toBe(mockTokens.accountId);
+      expect(account.accountId).toBe('twitter123');
+      expect(TwitterService.getAccessToken).toHaveBeenCalledWith(
+        'auth_code',
+        'http://localhost:3000/callback'
+      );
     });
 
     it('should handle Twitter API errors', async () => {
-      mockedAxios.post.mockRejectedValueOnce(new Error('API Error'));
+      (TwitterService.getAccessToken as jest.Mock).mockRejectedValue(
+        new Error('Invalid auth code')
+      );
 
       await expect(
         SocialMediaAccountService.connectAccount(
           'twitter',
           'invalid_code',
           'http://localhost:3000/callback',
-          'user1'
+          'user123'
         )
-      ).rejects.toThrow();
+      ).rejects.toThrow(AppError);
     });
   });
 });

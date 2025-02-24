@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
 import { SocialMediaAccountController } from '../../../controllers/social-media/account.controller';
+import { SocialMediaAccountService } from '../../../services/social-media/account.service';
 import { prismaMock } from '../../setup/setup';
-import axios from 'axios';
 
-jest.mock('axios');
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+jest.mock('../../../services/social-media/account.service');
 
 describe('SocialMediaAccountController', () => {
   let mockRequest: Partial<Request>;
@@ -21,7 +20,11 @@ describe('SocialMediaAccountController', () => {
         plan: 'minimal',
         teamMembers: []
       },
-      body: {}
+      body: {
+        platform: 'twitter',
+        authCode: 'test_auth_code',
+        redirectUri: 'http://localhost:3000/callback'
+      }
     };
     mockResponse = {
       status: jest.fn().mockReturnThis(),
@@ -29,66 +32,48 @@ describe('SocialMediaAccountController', () => {
     };
     mockNext = jest.fn();
 
-    // Reset mocks
     jest.clearAllMocks();
   });
 
   describe('connectAccount', () => {
     it('should connect a Twitter account', async () => {
-      const accountData = {
-        platform: 'twitter',
-        code: 'auth_code',
-        redirectUri: 'http://localhost:3000/callback'
-      };
-
-      mockRequest.body = accountData;
-
-      mockedAxios.post.mockResolvedValueOnce({
-        data: {
-          access_token: 'mock_token',
-          refresh_token: 'mock_refresh',
-          account_id: 'twitter123'
-        }
-      });
-
-      prismaMock.socialMediaAccount.create.mockResolvedValue({
+      const mockAccount = {
         id: '1',
+        userId: '1',
         platform: 'twitter',
         accountId: 'twitter123',
-        userId: '1',
         accessToken: 'encrypted_token',
-        refreshToken: 'encrypted_refresh',
+        refreshToken: 'encrypted_refresh_token',
         createdAt: new Date(),
         updatedAt: new Date()
-      });
+      };
+
+      (SocialMediaAccountService.connectAccount as jest.Mock).mockResolvedValue(mockAccount);
 
       await SocialMediaAccountController.connectAccount(
         mockRequest as Request,
         mockResponse as Response,
         mockNext
+      );
+
+      expect(SocialMediaAccountService.connectAccount).toHaveBeenCalledWith(
+        'twitter',
+        'test_auth_code',
+        'http://localhost:3000/callback',
+        '1'
       );
 
       expect(mockResponse.status).toHaveBeenCalledWith(201);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: 'Social media account connected successfully',
-          account: expect.objectContaining({
-            id: '1',
-            platform: 'twitter'
-          })
-        })
-      );
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        success: true,
+        message: 'Social media account connected successfully',
+        data: mockAccount
+      });
     });
 
-    it('should handle unauthorized requests', async () => {
-      const accountData = {
-        platform: 'twitter',
-        code: 'auth_code',
-        redirectUri: 'http://localhost:3000/callback'
-      };
-
-      mockRequest.body = accountData;
-      mockRequest.user = undefined;
+    it('should handle connection errors', async () => {
+      const error = new Error('Connection failed');
+      (SocialMediaAccountService.connectAccount as jest.Mock).mockRejectedValue(error);
 
       await SocialMediaAccountController.connectAccount(
         mockRequest as Request,
@@ -96,11 +81,7 @@ describe('SocialMediaAccountController', () => {
         mockNext
       );
 
-      expect(mockNext).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: 'User not authenticated'
-        })
-      );
+      expect(mockNext).toHaveBeenCalledWith(error);
     });
   });
 });
