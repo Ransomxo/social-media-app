@@ -1,0 +1,88 @@
+@layer components {
+  .calendar-grid {
+    @apply grid grid-cols-[auto_1fr] gap-0 overflow-y-auto;
+  }
+
+  .time-grid {
+    @apply w-full h-full;
+  }
+
+  .time-grid-content {
+    @apply relative grid grid-cols-[auto_1fr] divide-y divide-gray-800/50;
+  }
+
+  .time-grid-overlay {
+    @apply absolute inset-0 pointer-events-none;
+  }
+
+  .time-column {
+    @apply w-24 py-4 px-4 text-right sticky left-0 bg-gray-900/90 backdrop-blur-sm;
+  }
+
+  .time-slot {
+    @apply relative h-24 p-2 border-l border-gray-800/50 transition-colors duration-200;
+  }
+
+  .time-slot-hover {
+    @apply hover:bg-gray-800/30;
+  }
+
+  .time-slot-content {
+    @apply space-y-2;
+  }
+
+  .day-header {
+    @apply py-4 text-center text-sm font-medium text-gray-400 border-b border-gray-800/50;
+  }
+
+  .calendar-nav-button {
+    @apply p-2 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/50 
+           focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 
+           focus:ring-offset-gray-900 transition-all duration-200;
+  }
+
+  .calendar-today-button {
+    @apply px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-purple-600 
+           to-purple-500 rounded-lg shadow-lg hover:from-purple-500 hover:to-purple-400 
+           focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 
+           focus:ring-offset-gray-900 transition-all duration-200;
+  }
+
+  .event-card-gradient {
+    @apply bg-gradient-to-r from-purple-900/90 to-purple-800/90 hover:from-purple-800/90 
+           hover:to-purple-700/90 backdrop-blur-sm shadow-lg transition-all duration-200;
+  }
+
+  .event-avatar {
+    @apply h-8 w-8 rounded-full ring-2 ring-purple-500 ring-offset-2 ring-offset-gray-900;
+  }
+
+  .modal-content {
+    @apply bg-gray-800/90 backdrop-blur-sm rounded-xl p-8 w-full max-w-lg shadow-2xl border border-gray-700/50;
+  }
+
+  .modal-label {
+    @apply block text-sm font-medium text-gray-300 mb-2;
+  }
+
+  .modal-input {
+    @apply w-full px-4 py-2 bg-gray-900/50 border border-gray-700/50 rounded-lg 
+           text-white placeholder-gray-500 focus:ring-2 focus:ring-purple-500 
+           focus:border-transparent transition-all duration-200;
+  }
+
+  .modal-button-primary {
+    @apply px-6 py-2 bg-gradient-to-r from-purple-600 to-purple-500 
+           text-white rounded-lg font-medium shadow-lg 
+           hover:from-purple-500 hover:to-purple-400 
+           focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 
+           focus:ring-offset-gray-800 transition-all duration-200;
+  }
+
+  .modal-button-secondary {
+    @apply px-6 py-2 bg-gray-700/50 text-gray-300 rounded-lg font-medium 
+           hover:bg-gray-600/50 hover:text-white 
+           focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 
+           focus:ring-offset-gray-800 transition-all duration-200;
+  }
+}
