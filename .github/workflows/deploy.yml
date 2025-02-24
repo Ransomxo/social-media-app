@@ -14,10 +14,9 @@ jobs:
       - name: Install SSH Key
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.DIGITALOCEAN_SSH_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.DIGITALOCEAN_SSH_KEY }}" | base64 -d > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H 137.184.15.8 >> ~/.ssh/known_hosts
-          cat ~/.ssh/id_rsa | ssh-keygen -y -f /dev/stdin > ~/.ssh/id_rsa.pub
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa
       
@@ -31,7 +30,7 @@ jobs:
       
       - name: Deploy to DigitalOcean
         run: |
-          ssh -v -o StrictHostKeyChecking=no root@137.184.15.8 "cd /root/social-media-app && \
+          ssh -o StrictHostKeyChecking=no root@137.184.15.8 "cd /root/social-media-app && \
             git fetch && \
             git checkout ${{ github.head_ref }} && \
             pnpm install && \
