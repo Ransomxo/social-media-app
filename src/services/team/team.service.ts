@@ -9,6 +9,10 @@ export class TeamService {
     role: string
   ): Promise<TeamMember> {
     try {
+      if (!teamId || !userId || !role) {
+        throw new AppError('Missing required parameters', 400);
+      }
+
       const existingMember = await prisma.teamMember.findFirst({
         where: {
           teamId,
@@ -20,7 +24,7 @@ export class TeamService {
         throw new AppError('User is already a team member', 409);
       }
 
-      return prisma.teamMember.create({
+      return await prisma.teamMember.create({
         data: {
           teamId,
           userId,

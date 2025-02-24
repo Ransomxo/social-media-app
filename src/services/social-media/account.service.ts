@@ -12,6 +12,10 @@ export class SocialMediaAccountService {
     userId: string
   ): Promise<SocialMediaAccount> {
     try {
+      if (!platform || !authCode || !redirectUri || !userId) {
+        throw new AppError('Missing required parameters', 400);
+      }
+
       let accessToken: string;
       let accountId: string;
       let refreshToken: string | undefined;
@@ -32,16 +36,23 @@ export class SocialMediaAccountService {
         ? EncryptionService.encrypt(refreshToken)
         : null;
 
-      return prisma.socialMediaAccount.create({
-        data: {
-          userId,
-          platform,
-          accountId,
-          accessToken: encryptedAccessToken,
-          refreshToken: encryptedRefreshToken
-        }
-      });
+      try {
+        return await prisma.socialMediaAccount.create({
+          data: {
+            userId,
+            platform,
+            accountId,
+            accessToken: encryptedAccessToken,
+            refreshToken: encryptedRefreshToken
+          }
+        });
+      } catch (dbError) {
+        throw new AppError(`Failed to create social media account: ${dbError.message}`, 500);
+      }
     } catch (error) {
+      if (error instanceof AppError) {
+        throw error;
+      }
       throw new AppError(
         `Failed to connect ${platform} account: ${error.message}`,
         error.statusCode || 500
@@ -53,6 +64,9 @@ export class SocialMediaAccountService {
     userId: string,
     platform: string
   ): Promise<SocialMediaAccount | null> {
+    if (!userId || !platform) {
+      throw new AppError('Missing required parameters', 400);
+    }
     return prisma.socialMediaAccount.findFirst({
       where: {
         userId,
