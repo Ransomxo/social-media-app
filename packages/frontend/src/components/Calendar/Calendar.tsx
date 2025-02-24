@@ -1,0 +1,113 @@
+'use client';
+
+import React, { useState } from 'react';
+import CalendarHeader from './CalendarHeader';
+import CalendarGrid from './CalendarGrid';
+import AddEventModal from './AddEventModal';
+import Sidebar from './Sidebar';
+import { CalendarEvent, CalendarView } from '../../types/calendar';
+import './styles/calendar.css';
+
+export default function Calendar() {
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [view, setView] = useState<CalendarView>('Month');
+  const [events, setEvents] = useState<CalendarEvent[]>([]);
+  const [isAddEventModalOpen, setIsAddEventModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date>();
+
+  const handlePrevious = () => {
+    const newDate = new Date(currentDate);
+    if (view === 'Month') {
+      newDate.setMonth(newDate.getMonth() - 1);
+    } else if (view === 'Week') {
+      newDate.setDate(newDate.getDate() - 7);
+    } else {
+      newDate.setDate(newDate.getDate() - 1);
+    }
+    setCurrentDate(newDate);
+  };
+
+  const handleNext = () => {
+    const newDate = new Date(currentDate);
+    if (view === 'Month') {
+      newDate.setMonth(newDate.getMonth() + 1);
+    } else if (view === 'Week') {
+      newDate.setDate(newDate.getDate() + 7);
+    } else {
+      newDate.setDate(newDate.getDate() + 1);
+    }
+    setCurrentDate(newDate);
+  };
+
+  const handleToday = () => {
+    setCurrentDate(new Date());
+  };
+
+  const handleEventClick = (event: CalendarEvent) => {
+    // TODO: Implement event editing
+  };
+
+  const handleTimeSlotClick = (date: Date) => {
+    console.log('Calendar: handleTimeSlotClick', date);
+    setSelectedDate(date);
+    setIsAddEventModalOpen(true);
+  };
+
+  const handleSaveEvent = (eventData: {
+    title: string;
+    start: Date;
+    end: Date;
+    description?: string;
+    platforms: string[];
+    participants?: Array<{
+      name: string;
+      avatar: string;
+    }>;
+  }) => {
+    const newEvent: CalendarEvent = {
+      id: Math.random().toString(36).substr(2, 9),
+      title: eventData.title,
+      start: eventData.start,
+      end: eventData.end,
+      color: 'bg-purple-600/20 text-purple-200',
+      participants: eventData.participants,
+    };
+
+    setEvents([...events, newEvent]);
+  };
+
+  return (
+    <div className="calendar-container">
+      <div className="flex h-screen">
+        <Sidebar />
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <div className="sticky top-0 z-50">
+            <CalendarHeader
+              currentDate={currentDate}
+              onPrevious={handlePrevious}
+              onNext={handleNext}
+              onToday={handleToday}
+              view={view}
+              onViewChange={setView}
+            />
+          </div>
+          <div className="flex-1 overflow-auto bg-gray-900/50">
+            <CalendarGrid
+              currentDate={currentDate}
+              events={events}
+              onEventClick={handleEventClick}
+              onTimeSlotClick={handleTimeSlotClick}
+              view={view}
+            />
+          </div>
+          <AddEventModal
+            isOpen={isAddEventModalOpen}
+            onClose={() => setIsAddEventModalOpen(false)}
+            selectedDate={selectedDate}
+            onSave={handleSaveEvent}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
