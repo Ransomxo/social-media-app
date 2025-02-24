@@ -1,9 +1,10 @@
 import winston from 'winston';
 
 const logger = winston.createLogger({
-  level: 'info',
+  level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
   format: winston.format.combine(
     winston.format.timestamp(),
+    winston.format.errors({ stack: true }),
     winston.format.json()
   ),
   defaultMeta: { service: 'api' },
@@ -15,7 +16,10 @@ const logger = winston.createLogger({
 
 if (process.env.NODE_ENV !== 'production') {
   logger.add(new winston.transports.Console({
-    format: winston.format.simple()
+    format: winston.format.combine(
+      winston.format.colorize(),
+      winston.format.simple()
+    )
   }));
 }
 
