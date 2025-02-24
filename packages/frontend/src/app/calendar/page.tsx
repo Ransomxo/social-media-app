@@ -3,11 +3,6 @@
 import React from 'react';
 import Calendar from '../../components/Calendar/Calendar';
 
-export const metadata = {
-  title: 'Calendar - Omniposting',
-  description: 'Schedule and manage your social media posts',
-};
-
 export default function CalendarPage() {
   const sampleEvents = [
     {
