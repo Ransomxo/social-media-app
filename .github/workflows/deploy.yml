@@ -1,0 +1,51 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+      
+      - name: Install pnpm
+        run: npm install -g pnpm@9.15.1
+      
+      - name: Install dependencies
+        run: |
+          pnpm install
+          cd packages/frontend
+          pnpm install
+      
+      - name: Build frontend
+        run: |
+          cd packages/frontend
+          pnpm build
+      
+      - name: Deploy to DigitalOcean
+        if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+        env:
+          PRIVATE_KEY: ${{ secrets.DIGITALOCEAN_SSH_KEY }}
+          HOST: ${{ secrets.DIGITALOCEAN_HOST }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key
+          chmod 600 private_key
+          
+          # Deploy using rsync over SSH
+          rsync -avz -e "ssh -i private_key -o StrictHostKeyChecking=no" \
+            packages/frontend/.next/ \
+            root@$HOST:/root/social-media-app/packages/frontend/.next/
+          
+          # Restart services
+          ssh -i private_key -o StrictHostKeyChecking=no root@$HOST \
+            "cd /root/social-media-app && pm2 restart frontend && systemctl reload nginx"
