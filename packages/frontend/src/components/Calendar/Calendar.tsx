@@ -10,7 +10,7 @@ import './styles/calendar.css';
 
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [view, setView] = useState<CalendarView>('Month');
+  const [view, setView] = useState<CalendarView>('month');
   const [events, setEvents] = useState<CalendarEvent[]>([]);
   const [isAddEventModalOpen, setIsAddEventModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>();
