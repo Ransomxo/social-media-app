@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Calendar from '../../components/Calendar/Calendar';
+import { CalendarEvent } from '../../types/calendar';
 
 export default function CalendarPage() {
   const sampleEvents = [
