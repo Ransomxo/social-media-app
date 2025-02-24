@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
 import { TeamController } from '../../controllers/team.controller';
+import { TeamService } from '../../services/team/team.service';
 import { prismaMock } from '../setup/setup';
+
+jest.mock('../../services/team/team.service');
 
 describe('TeamController', () => {
   let mockRequest: Partial<Request>;
@@ -20,6 +23,9 @@ describe('TeamController', () => {
       body: {
         userId: '2',
         role: 'member'
+      },
+      params: {
+        teamId: '1'
       }
     };
     mockResponse = {
@@ -40,7 +46,7 @@ describe('TeamController', () => {
         updatedAt: new Date()
       };
 
-      prismaMock.teamMember.create.mockResolvedValue(mockTeamMember);
+      (TeamService.addMember as jest.Mock).mockResolvedValue(mockTeamMember);
 
       await TeamController.addTeamMember(
         mockRequest as Request,
@@ -48,11 +54,37 @@ describe('TeamController', () => {
         mockNext
       );
 
+      expect(TeamService.addMember).toHaveBeenCalledWith('1', '2', 'member');
       expect(mockResponse.status).toHaveBeenCalledWith(201);
       expect(mockResponse.json).toHaveBeenCalledWith({
         success: true,
         data: mockTeamMember
       });
+    });
+
+    it('should handle missing fields', async () => {
+      mockRequest.params = {};
+      
+      await TeamController.addTeamMember(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext
+      );
+
+      expect(mockNext).toHaveBeenCalledWith(expect.any(Error));
+    });
+
+    it('should handle service errors', async () => {
+      const error = new Error('Service error');
+      (TeamService.addMember as jest.Mock).mockRejectedValue(error);
+
+      await TeamController.addTeamMember(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext
+      );
+
+      expect(mockNext).toHaveBeenCalledWith(error);
     });
   });
 });
