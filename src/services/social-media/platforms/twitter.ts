@@ -2,33 +2,31 @@ import axios from 'axios';
 import { TokenResponse } from '../../../types/social-media';
 import { AppError } from '../../../utils/errors/AppError';
 
-export async function exchangeTwitterCode(code: string, redirectUri: string): Promise<TokenResponse> {
-  try {
-    const response = await axios.post('https://api.twitter.com/2/oauth2/token', {
-      code,
-      grant_type: 'authorization_code',
-      client_id: process.env.TWITTER_CLIENT_ID,
-      client_secret: process.env.TWITTER_CLIENT_SECRET,
-      redirect_uri: redirectUri,
-    });
+export class PlatformService {
+  private baseUrl = 'https://api.twitter.com';
+  private clientId = process.env.TWITTER_CLIENT_ID;
+  private clientSecret = process.env.TWITTER_CLIENT_SECRET;
 
-    return {
-      accessToken: response.data.access_token,
-      refreshToken: response.data.refresh_token,
-      expiresIn: response.data.expires_in
-    };
-  } catch (error) {
-    throw new AppError('Failed to exchange Twitter authorization code', 500);
-  }
-}
+  async getAccessToken(code: string, redirectUri: string): Promise<TokenResponse> {
+    try {
+      const response = await axios.post(
+        `${this.baseUrl}/oauth2/token`,
+        {
+          grant_type: 'authorization_code',
+          code,
+          redirect_uri: redirectUri,
+          client_id: this.clientId,
+          client_secret: this.clientSecret
+        }
+      );
 
-export async function getTwitterAccountId(accessToken: string): Promise<string> {
-  try {
-    const response = await axios.get('https://api.twitter.com/2/users/me', {
-      headers: { Authorization: `Bearer ${accessToken}` }
-    });
-    return response.data.data.id;
-  } catch (error) {
-    throw new AppError('Failed to fetch Twitter account ID', 500);
+      return {
+        accessToken: response.data.access_token,
+        refreshToken: response.data.refresh_token,
+        accountId: response.data.account_id
+      };
+    } catch (error) {
+      throw new AppError('Failed to get Twitter access token', 500);
+    }
   }
 }
