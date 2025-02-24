@@ -7,6 +7,7 @@ module.exports = {
     '^.+\\.ts$': 'ts-jest'
   },
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
+  setupFilesAfterEnv: ['<rootDir>/src/__tests__/setup/setup.ts'],
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coverageReporters: ['text', 'lcov'],
@@ -16,6 +17,11 @@ module.exports = {
       functions: 80,
       lines: 80,
       statements: 80
+    }
+  },
+  globals: {
+    'ts-jest': {
+      isolatedModules: true
     }
   }
 };
