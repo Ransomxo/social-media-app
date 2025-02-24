@@ -13,6 +13,28 @@
     }
   ],
   "env": {
-    "NODE_ENV": "production"
-  }
+    "NODE_ENV": "production",
+    "DATABASE_URL": "@database_url",
+    "JWT_SECRET": "@jwt_secret",
+    "OPENAI_API_KEY": "@openai_api_key",
+    "ENCRYPTION_KEY": "@encryption_key"
+  },
+  "regions": ["iad1"],
+  "functions": {
+    "dist/index.js": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "https://omniposting.com"
+        }
+      ]
+    }
+  ]
 }
