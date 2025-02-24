@@ -11,6 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DIGITALOCEAN_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 137.184.15.8 >> ~/.ssh/known_hosts
+      
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -19,29 +26,13 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm@9.15.1
       
-      - name: Install dependencies
-        run: |
-          pnpm install
-          cd packages/frontend
-          pnpm install
-          
-      - name: Build frontend
-        run: |
-          cd packages/frontend
-          pnpm build
-          
       - name: Deploy to DigitalOcean
-        env:
-          SSH_KEY: ${{ secrets.DIGITALOCEAN_SSH_KEY }}
         run: |
-          echo "$SSH_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 137.184.15.8 >> ~/.ssh/known_hosts
-          
           ssh -o StrictHostKeyChecking=no root@137.184.15.8 "cd /root/social-media-app && \
             git fetch && \
             git checkout ${{ github.head_ref }} && \
             pnpm install && \
             cd packages/frontend && \
             pnpm build && \
-            pm2 restart frontend"
+            pm2 restart frontend && \
+            echo 'Deployment completed successfully'"
