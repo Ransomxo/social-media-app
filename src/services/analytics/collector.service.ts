@@ -49,7 +49,7 @@ export class AnalyticsCollectorService {
           data: {
             postId: post.id,
             socialAccountId: post.socialAccount.id,
-            metrics,
+            metrics: metrics as unknown as Record<string, unknown>,
             period: 'daily',
             startDate: new Date(),
             endDate: new Date()
@@ -132,11 +132,33 @@ export class AnalyticsCollectorService {
   }
 
   private static generateReportContent(analytics: any[], metrics: (keyof AnalyticsMetrics)[]): string {
-    // Implementation of HTML report generation
+    const platformSummary = analytics.reduce((acc, a) => {
+      const platform = a.socialAccount.platform;
+      if (!acc[platform]) {
+        acc[platform] = {
+          posts: 0,
+          metrics: Object.fromEntries(metrics.map(m => [m, 0]))
+        };
+      }
+      acc[platform].posts++;
+      metrics.forEach(m => {
+        acc[platform].metrics[m] += (a.metrics as AnalyticsMetrics)[m] || 0;
+      });
+      return acc;
+    }, {} as Record<string, { posts: number; metrics: Record<string, number> }>);
+
     return `
       <h1>Social Media Analytics Report</h1>
       <p>Period: ${format(new Date(), 'yyyy-MM-dd')}</p>
-      <!-- Report content -->
+      ${Object.entries(platformSummary).map(([platform, data]) => `
+        <h2>${platform} Summary</h2>
+        <p>Total Posts: ${data.posts}</p>
+        <ul>
+          ${Object.entries(data.metrics).map(([metric, value]) => `
+            <li>${metric}: ${value}</li>
+          `).join('')}
+        </ul>
+      `).join('')}
     `;
   }
 
@@ -146,7 +168,7 @@ export class AnalyticsCollectorService {
       format(a.createdAt, 'yyyy-MM-dd'),
       a.socialAccount.platform,
       a.post.id,
-      ...metrics.map(m => a.metrics[m])
+      ...metrics.map(m => (a.metrics as AnalyticsMetrics)[m] || 0)
     ]);
 
     return [
