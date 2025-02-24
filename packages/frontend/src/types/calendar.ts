@@ -6,7 +6,7 @@ export interface CalendarEvent {
   start: Date;
   end: Date;
   description?: string;
-  participants?: string[];
+  participants?: { name: string; avatar: string; }[];
   platform?: string;
   color?: string;
 }
