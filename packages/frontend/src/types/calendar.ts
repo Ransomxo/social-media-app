@@ -20,3 +20,12 @@ export interface DayColumn {
   date: Date;
   slots: TimeSlot[];
 }
+
+export interface CalendarHeaderProps {
+  currentDate: Date;
+  view: CalendarView;
+  onPrevious: () => void;
+  onNext: () => void;
+  onToday: () => void;
+  onViewChange: (view: CalendarView) => void;
+}
