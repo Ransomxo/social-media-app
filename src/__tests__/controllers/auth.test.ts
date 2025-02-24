@@ -1,17 +1,21 @@
 import { Request, Response } from 'express';
-import bcrypt from 'bcryptjs';
-import { register, login } from '../../controllers/auth';
+import { AuthController } from '../../controllers/auth';
 import { prismaMock } from '../setup/setup';
-import { ValidationError, UnauthorizedError } from '../../utils/errors/AppError';
+import bcrypt from 'bcrypt';
 
-describe('Auth Controller', () => {
+describe('AuthController', () => {
   let mockRequest: Partial<Request>;
   let mockResponse: Partial<Response>;
   let mockNext: jest.Mock;
 
   beforeEach(() => {
     mockRequest = {
-      body: {}
+      body: {
+        email: 'test@example.com',
+        password: 'password123',
+        firstName: 'Test',
+        lastName: 'User'
+      }
     };
     mockResponse = {
       status: jest.fn().mockReturnThis(),
@@ -21,71 +25,65 @@ describe('Auth Controller', () => {
   });
 
   describe('register', () => {
-    it('should create a new user and return token', async () => {
-      const userData = {
-        email: 'test@example.com',
-        password: 'password123',
-        firstName: 'Test',
-        lastName: 'User'
-      };
-
-      mockRequest.body = userData;
-
-      prismaMock.user.findUnique.mockResolvedValue(null);
-      prismaMock.user.create.mockResolvedValue({
+    it('should create a new user', async () => {
+      const hashedPassword = await bcrypt.hash('password123', 10);
+      const mockUser = {
         id: '1',
-        email: userData.email,
-        password: 'hashedPassword',
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        plan: 'minimal',
-        teamMembers: [],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
-
-      await register(mockRequest as Request, mockResponse as Response, mockNext);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(201);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: 'User registered successfully',
-          token: expect.any(String)
-        })
-      );
-    });
-  });
-
-  describe('login', () => {
-    it('should login user and return token', async () => {
-      const userData = {
         email: 'test@example.com',
-        password: 'password123'
-      };
-
-      const hashedPassword = await bcrypt.hash(userData.password, 10);
-      mockRequest.body = userData;
-
-      prismaMock.user.findUnique.mockResolvedValue({
-        id: '1',
-        email: userData.email,
         password: hashedPassword,
         firstName: 'Test',
         lastName: 'User',
         plan: 'minimal',
-        teamMembers: [],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
+        teamMembers: []
+      };
 
-      await login(mockRequest as Request, mockResponse as Response, mockNext);
+      prismaMock.user.create.mockResolvedValue(mockUser);
 
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: 'Login successful',
-          token: expect.any(String)
-        })
+      await AuthController.register(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext
       );
+
+      expect(mockResponse.status).toHaveBeenCalledWith(201);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        success: true,
+        data: {
+          id: mockUser.id,
+          email: mockUser.email,
+          firstName: mockUser.firstName,
+          lastName: mockUser.lastName
+        }
+      });
+    });
+  });
+
+  describe('login', () => {
+    it('should login user with valid credentials', async () => {
+      const hashedPassword = await bcrypt.hash('password123', 10);
+      const mockUser = {
+        id: '1',
+        email: 'test@example.com',
+        password: hashedPassword,
+        firstName: 'Test',
+        lastName: 'User',
+        plan: 'minimal',
+        teamMembers: []
+      };
+
+      prismaMock.user.findUnique.mockResolvedValue(mockUser);
+      process.env.JWT_SECRET = 'test-secret';
+
+      await AuthController.login(
+        mockRequest as Request,
+        mockResponse as Response,
+        mockNext
+      );
+
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        success: true,
+        token: expect.any(String)
+      });
     });
   });
 });
