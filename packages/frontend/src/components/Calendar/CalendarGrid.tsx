@@ -18,7 +18,7 @@ export default function CalendarGrid({
   events,
   onEventClick,
   onTimeSlotClick,
-  view = 'Month',
+  view = 'month',
 }: CalendarGridProps) {
   const timeSlots = useMemo(() => {
     return Array.from({ length: 8 }, (_, i) => {
