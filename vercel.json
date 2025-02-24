@@ -17,7 +17,8 @@
     "DATABASE_URL": "@database_url",
     "JWT_SECRET": "@jwt_secret",
     "OPENAI_API_KEY": "@openai_api_key",
-    "ENCRYPTION_KEY": "@encryption_key"
+    "ENCRYPTION_KEY": "@encryption_key",
+    "DEBUG": "app:*"
   },
   "regions": ["iad1"],
   "functions": {
