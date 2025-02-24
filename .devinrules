@@ -329,16 +329,25 @@ OPENAI_API_KEY=[Production API key]
 
 2. Add to GitHub Secrets:
    - Name: DIGITALOCEAN_SSH_KEY
-   - Format: Must be the complete private key including headers
+   - Format: Base64 encoded private key
+   ```bash
+   # Generate base64 encoded key
+   cat ~/.ssh/id_rsa | base64
    ```
-   -----BEGIN OPENSSH PRIVATE KEY-----
-   [key content]
-   -----END OPENSSH PRIVATE KEY-----
-   ```
+   - Add the base64 output to GitHub secrets
 
 3. Add Public Key to DigitalOcean:
    - Location: /root/.ssh/authorized_keys
    - Format: Single line public key
+   ```bash
+   # Generate public key from private key
+   ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
+   ```
+
+4. Verify SSH Connection:
+   ```bash
+   ssh -v root@137.184.15.8
+   ```
 
 ### Deployment Process
 1. Create Pull Request:
