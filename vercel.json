@@ -1,20 +1,13 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "framework": "node",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/index.js" }
-  ],
-  "headers": [
+  "builds": [
     {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "https://omniposting.com"
-        }
-      ]
+      "src": "dist/index.js",
+      "use": "@vercel/node",
+      "config": {
+        "maxDuration": 10,
+        "memory": 1024
+      }
     }
   ],
   "env": {
