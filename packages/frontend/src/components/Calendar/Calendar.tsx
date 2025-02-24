@@ -29,9 +29,9 @@ export default function Calendar() {
 
   const handleNext = () => {
     const newDate = new Date(currentDate);
-    if (view === 'Month') {
+    if (view === 'month') {
       newDate.setMonth(newDate.getMonth() + 1);
-    } else if (view === 'Week') {
+    } else if (view === 'week') {
       newDate.setDate(newDate.getDate() + 7);
     } else {
       newDate.setDate(newDate.getDate() + 1);
