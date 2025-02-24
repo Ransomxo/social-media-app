@@ -4,6 +4,7 @@ import { errorHandler } from './middleware/errorHandler';
 import authRoutes from './routes/auth';
 import teamRoutes from './routes/team';
 import socialMediaRoutes from './routes/social-media';
+import captionRoutes from './routes/ai/caption';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/team', teamRoutes);
 app.use('/api/social-media', socialMediaRoutes);
+app.use('/api/caption', captionRoutes);
 
 // Error handling
 app.use(errorHandler);
