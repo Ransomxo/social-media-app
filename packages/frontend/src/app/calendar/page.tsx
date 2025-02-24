@@ -1,8 +1,8 @@
+'use client';
+
 import React from 'react';
 import Calendar from '../../components/Calendar/Calendar';
 import { CalendarEvent } from '../../types/calendar';
-
-'use client';
 
 export default function CalendarPage() {
   const sampleEvents: CalendarEvent[] = [
