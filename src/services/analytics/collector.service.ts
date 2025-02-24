@@ -29,6 +29,13 @@ interface PlatformSummary {
   metrics: Record<keyof AnalyticsMetrics, number>;
 }
 
+interface AnalyticsData {
+  createdAt: Date;
+  metrics: Prisma.JsonValue;
+  socialAccount: { platform: string };
+  post: { id: string };
+}
+
 export class AnalyticsCollectorService {
   static async collectAnalytics(): Promise<void> {
     const posts = await prisma.post.findMany({
@@ -77,50 +84,46 @@ export class AnalyticsCollectorService {
   }
 
   static async generateReport(userId: string, options: ReportOptions): Promise<void> {
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
+    const analytics = await prisma.analytics.findMany({
+      where: {
+        socialAccount: {
+          userId
+        },
+        createdAt: {
+          gte: options.frequency === 'daily'
+            ? new Date(Date.now() - 24 * 60 * 60 * 1000)
+            : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+        }
+      },
       select: {
-        email: true,
-        socialAccounts: {
+        createdAt: true,
+        metrics: true,
+        socialAccount: {
           select: {
-            posts: {
-              select: {
-                id: true,
-                analytics: {
-                  select: {
-                    metrics: true,
-                    createdAt: true
-                  }
-                }
-              }
-            },
             platform: true
+          }
+        },
+        post: {
+          select: {
+            id: true
           }
         }
       }
     });
 
-    if (!user) {
-      throw new AppError('User not found', 404);
+    if (!analytics.length) {
+      throw new AppError('No analytics data found for the specified period', 404);
     }
 
-    const startDate = options.frequency === 'daily' 
-      ? new Date(Date.now() - 24 * 60 * 60 * 1000)
-      : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const processedAnalytics = analytics.map(a => ({
+      createdAt: a.createdAt,
+      metrics: a.metrics as Record<keyof AnalyticsMetrics, number>,
+      socialAccount: a.socialAccount,
+      post: a.post
+    }));
 
-    const analytics = user.socialAccounts.flatMap(account => 
-      account.posts.flatMap(post => 
-        post.analytics?.map(analytic => ({
-          createdAt: analytic.createdAt,
-          metrics: analytic.metrics as Record<keyof AnalyticsMetrics, number>,
-          socialAccount: { platform: account.platform },
-          post: { id: post.id }
-        })) ?? []
-      )
-    ).filter(analytic => analytic.createdAt >= startDate);
-
-    const reportContent = this.generateReportContent(analytics, options.metrics);
-    const csvContent = this.generateCSVReport(analytics, options.metrics);
+    const reportContent = this.generateReportContent(processedAnalytics, options.metrics);
+    const csvContent = this.generateCSVReport(processedAnalytics, options.metrics);
 
     const report: EmailReport = {
       to: options.email,
