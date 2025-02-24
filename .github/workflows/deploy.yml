@@ -4,11 +4,12 @@ on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
+    types: [ opened, synchronize, reopened ]
 
 jobs:
-  deploy:
+  deploy-preview:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     steps:
       - uses: actions/checkout@v2
       
@@ -20,7 +21,7 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm@9.15.1
       
-      - name: Deploy to DigitalOcean
+      - name: Deploy Preview to DigitalOcean
         uses: appleboy/ssh-action@master
         with:
           host: 137.184.15.8
@@ -28,9 +29,39 @@ jobs:
           key: ${{ secrets.DIGITALOCEAN_SSH_KEY }}
           script: |
             cd /root/social-media-app
-            git pull
+            git fetch
+            git checkout ${{ github.head_ref }}
             pnpm install
             cd packages/frontend
             pnpm build
             pm2 restart frontend
-            echo "Deployment completed"
+            echo "Preview deployment completed"
+
+  deploy-production:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          
+      - name: Install pnpm
+        run: npm install -g pnpm@9.15.1
+      
+      - name: Deploy to Production
+        uses: appleboy/ssh-action@master
+        with:
+          host: 137.184.15.8
+          username: root
+          key: ${{ secrets.DIGITALOCEAN_SSH_KEY }}
+          script: |
+            cd /root/social-media-app
+            git pull origin main
+            pnpm install
+            cd packages/frontend
+            pnpm build
+            pm2 restart frontend
+            echo "Production deployment completed"
