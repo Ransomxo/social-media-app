@@ -22,14 +22,17 @@ jobs:
         with:
           version: 9.15.1
 
-      - name: Setup Node.js with pnpm caching
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18.x'
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile --recursive
+        run: |
+          pnpm install --frozen-lockfile
+          cd packages/frontend
+          pnpm install --frozen-lockfile
       
       - name: Build frontend
         run: |
