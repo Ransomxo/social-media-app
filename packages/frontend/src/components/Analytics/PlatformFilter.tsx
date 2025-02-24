@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import { PlatformFilter } from '../../types/analytics';
+import type { PlatformFilter as IPlatformFilter } from '../../types/analytics';
 
 interface PlatformFilterProps {
-  platforms: PlatformFilter[];
+  platforms: IPlatformFilter[];
   onTogglePlatform: (platformId: string) => void;
 }
 
