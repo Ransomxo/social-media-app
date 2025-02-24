@@ -2,23 +2,25 @@
 
 import React from 'react';
 
+import { CalendarView } from '../../../types/calendar';
+
 interface ViewToggleProps {
-  view: 'Month' | 'Week' | 'Day';
-  onViewChange: (view: 'Month' | 'Week' | 'Day') => void;
+  view: CalendarView;
+  onViewChange: (view: CalendarView) => void;
 }
 
 export default function ViewToggle({ view, onViewChange }: ViewToggleProps) {
   return (
     <div className="view-toggle">
-      {(['Month', 'Week', 'Day'] as const).map((viewType) => (
+      {(['month', 'week', 'day'] as const).map((viewType) => (
         <button
           key={viewType}
           onClick={() => onViewChange(viewType)}
           className={`view-toggle-button ${view === viewType ? 'view-toggle-button-active' : ''} ${
-            viewType === 'Month' ? 'rounded-l-lg' : ''
-          } ${viewType === 'Day' ? 'rounded-r-lg' : ''}`}
+            viewType === 'month' ? 'rounded-l-lg' : ''
+          } ${viewType === 'day' ? 'rounded-r-lg' : ''}`}
         >
-          {viewType}
+          {viewType.charAt(0).toUpperCase() + viewType.slice(1)}
         </button>
       ))}
     </div>
