@@ -355,3 +355,19 @@ OPENAI_API_KEY=[Production API key]
 
 Note: DO NOT deploy to Vercel. All deployments are handled through DigitalOcean via our CI/CD pipeline.
 
+
+## Important Note on UI/UX Deployments
+For security reasons, merging to main branch requires repository admin approval:
+
+1. After creating your PR:
+   - Request review from rowdyroque8@gmail.com
+   - Wait for approval and merge by repository admin
+   - DO NOT attempt to merge directly to main
+
+2. Post-Merge Deployment:
+   - After admin merges your PR to main
+   - Changes will automatically deploy to DigitalOcean
+   - Monitor deployment at https://omniposting.com
+
+Contact rowdyroque8@gmail.com for any deployment or merge issues.
+
