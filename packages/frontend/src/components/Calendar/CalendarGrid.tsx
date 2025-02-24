@@ -49,6 +49,7 @@ export default function CalendarGrid({
       </div>
     ));
   };
+  };
 
   return (
     <div className="flex-1 calendar-grid">
