@@ -50,3 +50,13 @@ model TeamMember {
 
   @@unique([teamId, userId])
 }
+
+model ApiUsage {
+  id        String   @id @default(uuid())
+  userId    String
+  platform  String
+  timestamp DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, platform, timestamp])
+}
