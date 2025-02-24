@@ -321,6 +321,25 @@ OPENAI_API_KEY=[Production API key]
 
 ## UI/UX Deployment to DigitalOcean
 
+### SSH Key Setup
+1. Generate SSH Key:
+   ```bash
+   ssh-keygen -t ed25519 -C "deployment@omniposting.com"
+   ```
+
+2. Add to GitHub Secrets:
+   - Name: DIGITALOCEAN_SSH_KEY
+   - Format: Must be the complete private key including headers
+   ```
+   -----BEGIN OPENSSH PRIVATE KEY-----
+   [key content]
+   -----END OPENSSH PRIVATE KEY-----
+   ```
+
+3. Add Public Key to DigitalOcean:
+   - Location: /root/.ssh/authorized_keys
+   - Format: Single line public key
+
 ### Deployment Process
 1. Create Pull Request:
    ```bash
@@ -370,4 +389,3 @@ For security reasons, merging to main branch requires repository admin approval:
    - Monitor deployment at https://omniposting.com
 
 Contact rowdyroque8@gmail.com for any deployment or merge issues.
-
