@@ -29,10 +29,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: |
-          pnpm install --frozen-lockfile
-          cd packages/frontend
-          pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --recursive
       
       - name: Build frontend
         run: |
