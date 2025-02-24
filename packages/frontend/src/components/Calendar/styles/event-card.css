@@ -1,0 +1,10 @@
+.event-card-gradient {
+  @apply bg-gradient-to-r from-purple-900/90 to-purple-800/90 
+         hover:from-purple-800/90 hover:to-purple-700/90 
+         backdrop-blur-sm shadow-lg transition-all duration-200;
+}
+
+.event-avatar {
+  @apply w-6 h-6 rounded-full border-2 border-purple-900/50 
+         hover:border-purple-800/50 transition-colors duration-200;
+}

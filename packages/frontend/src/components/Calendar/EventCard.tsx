@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { CalendarEvent } from '../../types/calendar';
+import './styles/event-card.css';
 
 interface EventCardProps {
   event: CalendarEvent;

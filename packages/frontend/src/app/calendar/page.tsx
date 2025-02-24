@@ -21,9 +21,9 @@ export default function CalendarPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-900 to-purple-900/20">
       <div className="flex">
-        <aside className="w-64 p-6 border-r border-gray-800 bg-gray-900/95 backdrop-blur-sm">
+        <aside className="w-64 p-6 border-r border-purple-900/20 bg-gray-900/95 backdrop-blur-sm">
           <h3 className="text-lg font-semibold text-white mb-4">My Calendars</h3>
           <h3 className="text-lg font-semibold text-white mt-8 mb-4">Categories</h3>
         </aside>
