@@ -1,46 +1,30 @@
 import { Request, Response, NextFunction } from 'express';
 import { SocialMediaAccountService } from '../../services/social-media/account.service';
-import { ConnectAccountRequest } from '../../types/social-media';
 import { AppError } from '../../utils/errors/AppError';
 
 export class SocialMediaAccountController {
-  static async connectAccount(req: Request, res: Response, next: NextFunction): Promise<void> {
+  static async connectAccount(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
+      const { platform, code, redirectUri } = req.body;
       const userId = req.user?.id;
-      if (!userId) {
-        throw new AppError('Unauthorized', 401);
-      }
 
-      const connectRequest: ConnectAccountRequest = {
-        platform: req.body.platform,
-        code: req.body.code,
-        redirectUri: req.body.redirectUri
-      };
+      const account = await SocialMediaAccountService.connectAccount(
+        platform,
+        code,
+        redirectUri,
+        userId
+      );
 
-      await SocialMediaAccountService.connectAccount(userId, connectRequest);
-      
       res.status(201).json({
-        message: 'Social media account connected successfully'
+        message: 'Social media account connected successfully',
+        account
       });
     } catch (error) {
-      next(error);
-    }
-  }
-
-  static async getAccounts(req: Request, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        throw new AppError('Unauthorized', 401);
-      }
-
-      const accounts = await SocialMediaAccountService.getAccounts(userId);
-      
-      res.json({
-        accounts
-      });
-    } catch (error) {
-      next(error);
+      next(new AppError('Failed to connect social media account', 500));
     }
   }
 }
