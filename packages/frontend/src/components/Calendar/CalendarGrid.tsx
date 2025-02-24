@@ -36,9 +36,9 @@ export default function CalendarGrid({
   };
 
   const renderDayHeaders = () => {
-    const days = view === 'Week' ? 7 : view === 'Day' ? 1 : 7;
+    const days = view === 'week' ? 7 : view === 'day' ? 1 : 7;
     const dayLabels = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    const startIdx = view === 'Day' ? currentDate.getDay() : 0;
+    const startIdx = view === 'day' ? currentDate.getDay() : 0;
     
     return dayLabels.slice(startIdx, startIdx + days).map((day) => (
       <div
