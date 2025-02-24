@@ -1,0 +1,17 @@
+.analytics-card-gradient {
+  @apply bg-gradient-to-r from-purple-900/90 to-purple-800/90 
+         hover:from-purple-800/90 hover:to-purple-700/90 
+         backdrop-blur-sm shadow-lg transition-all duration-200;
+}
+
+.analytics-chart-container {
+  @apply p-6 rounded-lg bg-gray-900/95 backdrop-blur-sm 
+         border border-purple-900/20 shadow-lg;
+}
+
+.analytics-filter-button {
+  @apply px-4 py-2 rounded-md text-sm font-medium
+         text-gray-300 hover:text-white
+         bg-purple-900/50 hover:bg-purple-800/50
+         transition-all duration-200;
+}
