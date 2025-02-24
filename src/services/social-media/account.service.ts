@@ -21,12 +21,13 @@ export class SocialMediaAccountService {
       let refreshToken: string | undefined;
 
       switch (platform) {
-        case 'twitter':
-          const tokens = await TwitterService.getAccessToken(authCode, redirectUri);
-          accessToken = tokens.accessToken;
-          refreshToken = tokens.refreshToken;
-          accountId = tokens.accountId;
+        case 'twitter': {
+          const { accessToken: twitterAccessToken, refreshToken: twitterRefreshToken, accountId: twitterAccountId } = await TwitterService.getAccessToken(authCode, redirectUri);
+          accessToken = twitterAccessToken;
+          refreshToken = twitterRefreshToken;
+          accountId = twitterAccountId;
           break;
+        }
         default:
           throw new AppError(`Unsupported platform: ${platform}`, 400);
       }

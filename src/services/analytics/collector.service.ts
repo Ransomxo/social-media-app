@@ -1,16 +1,11 @@
 import prisma from '../../lib/prisma';
 import { SocialMediaPost } from '@prisma/client';
-import { Platform } from '../../types/models';
+import { Platform, AnalyticsMetrics } from '../../types/models';
 import logger from '../../utils/monitoring/logger';
 import { TwitterService } from '../social-media/platforms/twitter';
 import { AppError } from '../../utils/errors/AppError';
 
-interface AnalyticsData {
-  likes: number;
-  shares: number;
-  comments: number;
-  reach: number;
-}
+type AnalyticsData = AnalyticsMetrics;
 
 export class AnalyticsCollectorService {
   static async collectAnalytics(

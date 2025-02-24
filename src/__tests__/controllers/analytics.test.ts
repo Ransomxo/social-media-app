@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { AnalyticsController } from '../../controllers/analytics.controller';
 import { prismaMock } from '../setup/setup';
+import { Platform } from '../../types/models';
+import { SocialMediaPost } from '@prisma/client';
 
 describe('AnalyticsController', () => {
   let mockRequest: Partial<Request>;
@@ -29,10 +31,10 @@ describe('AnalyticsController', () => {
 
   describe('getAnalytics', () => {
     it('should return analytics data for all platforms', async () => {
-      const mockPosts = [
+      const mockPosts: SocialMediaPost[] = [
         {
           id: '1',
-          platform: 'twitter',
+          platform: 'twitter' as Platform,
           userId: '1',
           content: 'Test post',
           status: 'published',
@@ -57,7 +59,7 @@ describe('AnalyticsController', () => {
     });
 
     it('should filter by platform', async () => {
-      mockRequest.query = { platform: 'twitter' };
+      mockRequest.query = { platform: 'twitter' as Platform };
 
       await AnalyticsController.getAnalytics(
         mockRequest as Request,

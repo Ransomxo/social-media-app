@@ -5,6 +5,7 @@ export type Platform = 'twitter' | 'facebook' | 'instagram' | 'linkedin';
 export type TokenResponse = {
   accessToken: string;
   refreshToken?: string;
+  accountId?: string;
 };
 
 export type PostScheduleRequest = {
@@ -33,5 +34,3 @@ export type {
   TeamMember,
   ApiUsage
 };
-
-export { Platform as PlatformType };

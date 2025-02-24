@@ -5,7 +5,7 @@ const prisma = new PrismaClient({
   log: ['query', 'info', 'warn', 'error'],
 });
 
-async function verifyDatabase() {
+async function verifyDatabase(): Promise<void> {
   try {
     logger.info('Testing database connection...');
     await prisma.$connect();

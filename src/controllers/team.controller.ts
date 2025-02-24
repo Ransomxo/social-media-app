@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { TeamService } from '../services/team/team.service';
 import { AppError } from '../utils/errors/AppError';
-import { AppError } from '../utils/errors/AppError';
 
 export class TeamController {
   static async createTeam(
