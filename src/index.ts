@@ -2,45 +2,26 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { errorHandler } from './middleware/errorHandler';
 import authRoutes from './routes/auth';
-import socialMediaRoutes from './routes/social-media';
 import teamRoutes from './routes/team';
+import socialMediaRoutes from './routes/social-media';
 
 dotenv.config();
 
-const app: express.Application = express();
-const port: number = parseInt(process.env.PORT || '3000', 10);
+const app = express();
+const port = process.env.PORT || 3000;
 
-// Middleware
 app.use(express.json());
 
 // Routes
-app.get('/', (req: express.Request, res: express.Response): void => {
-  res.json({ message: 'Welcome to the Social Media Analytics API' });
-});
-
 app.use('/api/auth', authRoutes);
-app.use('/api/social-media', socialMediaRoutes);
 app.use('/api/team', teamRoutes);
+app.use('/api/social-media', socialMediaRoutes);
 
 // Error handling
 app.use(errorHandler);
 
-// Server start
-export const initializeApp = async () => {
-  try {
-    if (require.main === module) {
-      app.listen(port, () => {
-        console.log(`Server is running on port ${port}`);
-      });
-    }
-  } catch (error) {
-    console.error('Error starting server:', error);
-    process.exit(1);
-  }
-};
-
-if (require.main === module) {
-  initializeApp();
-}
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
 
 export default app;
