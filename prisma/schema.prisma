@@ -1,0 +1,99 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id              String               @id @default(uuid())
+  email           String               @unique
+  password        String
+  firstName       String
+  lastName        String
+  plan            String               @default("minimal")
+  teamMembers     String[]             @default([])
+  createdAt       DateTime             @default(now())
+  updatedAt       DateTime             @updatedAt
+  socialAccounts  SocialMediaAccount[]
+  ownedTeams      Team[]
+  teamMemberships TeamMember[]
+}
+
+model SocialMediaAccount {
+  id           String      @id @default(uuid())
+  platform     String // 'twitter', 'instagram', 'linkedin', etc.
+  accountId    String // Platform-specific account ID
+  accessToken  String // Encrypted access token
+  refreshToken String? // Optional refresh token
+  userId       String
+  user         User        @relation(fields: [userId], references: [id])
+  posts        Post[]
+  analytics    Analytics[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@index([userId])
+}
+
+model Post {
+  id              String             @id @default(uuid())
+  content         String
+  mediaUrls       String[]
+  scheduledTime   DateTime
+  status          String // 'scheduled', 'posted', 'failed'
+  socialAccountId String
+  socialAccount   SocialMediaAccount @relation(fields: [socialAccountId], references: [id])
+  analytics       Analytics?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([socialAccountId])
+}
+
+model Analytics {
+  id              String             @id @default(uuid())
+  postId          String?            @unique
+  post            Post?              @relation(fields: [postId], references: [id])
+  socialAccountId String
+  socialAccount   SocialMediaAccount @relation(fields: [socialAccountId], references: [id])
+  metrics         Json // Store platform-specific metrics
+  period          String // 'daily', 'weekly', 'monthly'
+  startDate       DateTime
+  endDate         DateTime
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@index([socialAccountId])
+}
+
+model Team {
+  id        String       @id @default(uuid())
+  name      String
+  ownerId   String
+  owner     User         @relation(fields: [ownerId], references: [id])
+  members   TeamMember[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@index([ownerId])
+}
+
+model TeamMember {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id])
+  role      String // 'admin', 'editor', 'viewer'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([teamId])
+}
