@@ -2,6 +2,8 @@ import { PrismaClient } from '@prisma/client';
 import { EncryptionService } from '../../utils/encryption';
 import { ConnectAccountRequest, TokenResponse, SocialMediaPlatform } from '../../types/social-media';
 import { AppError } from '../../utils/errors/AppError';
+import { exchangeTwitterCode, getTwitterAccountId } from './platforms/twitter';
+import { exchangeInstagramCode, getInstagramAccountId } from './platforms/instagram';
 
 const prisma = new PrismaClient();
 
@@ -19,20 +21,6 @@ const PLATFORMS: Record<string, SocialMediaPlatform> = {
     authUrl: 'https://api.instagram.com/oauth/authorize',
     tokenUrl: 'https://api.instagram.com/oauth/access_token',
     apiBaseUrl: 'https://graph.instagram.com'
-  },
-  linkedin: {
-    name: 'linkedin',
-    displayName: 'LinkedIn',
-    authUrl: 'https://www.linkedin.com/oauth/v2/authorization',
-    tokenUrl: 'https://www.linkedin.com/oauth/v2/accessToken',
-    apiBaseUrl: 'https://api.linkedin.com/v2'
-  },
-  facebook: {
-    name: 'facebook',
-    displayName: 'Facebook',
-    authUrl: 'https://www.facebook.com/v12.0/dialog/oauth',
-    tokenUrl: 'https://graph.facebook.com/v12.0/oauth/access_token',
-    apiBaseUrl: 'https://graph.facebook.com/v12.0'
   }
 };
 
@@ -88,17 +76,27 @@ export class SocialMediaAccountService {
     code: string,
     redirectUri: string
   ): Promise<TokenResponse> {
-    // Implementation will vary by platform
-    // This is a placeholder that will be implemented per platform
-    throw new Error('Not implemented');
+    switch (platform.name) {
+      case 'twitter':
+        return exchangeTwitterCode(code, redirectUri);
+      case 'instagram':
+        return exchangeInstagramCode(code, redirectUri);
+      default:
+        throw new AppError(`OAuth flow not implemented for ${platform.name}`, 501);
+    }
   }
 
   private static async getAccountId(
     platform: SocialMediaPlatform,
     accessToken: string
   ): Promise<string> {
-    // Implementation will vary by platform
-    // This is a placeholder that will be implemented per platform
-    throw new Error('Not implemented');
+    switch (platform.name) {
+      case 'twitter':
+        return getTwitterAccountId(accessToken);
+      case 'instagram':
+        return getInstagramAccountId(accessToken);
+      default:
+        throw new AppError(`Account ID fetch not implemented for ${platform.name}`, 501);
+    }
   }
 }
