@@ -12,7 +12,8 @@
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\"",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate deploy"
+    "prisma:migrate": "prisma migrate deploy",
+    "deploy": "vercel --prod"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",
