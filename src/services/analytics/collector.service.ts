@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Prisma } from '@prisma/client';
 import { AppError } from '../../utils/errors/AppError';
 import { EncryptionService } from '../../utils/encryption';
 import { collectTwitterMetrics } from './platforms/twitter';
@@ -22,6 +22,11 @@ export interface ReportOptions {
   frequency: 'daily' | 'weekly';
   metrics: (keyof AnalyticsMetrics)[];
   email: string;
+}
+
+interface PlatformSummary {
+  posts: number;
+  metrics: Record<keyof AnalyticsMetrics, number>;
 }
 
 export class AnalyticsCollectorService {
@@ -49,7 +54,7 @@ export class AnalyticsCollectorService {
           data: {
             postId: post.id,
             socialAccountId: post.socialAccount.id,
-            metrics: metrics as unknown as Record<string, unknown>,
+            metrics: metrics as Prisma.JsonObject,
             period: 'daily',
             startDate: new Date(),
             endDate: new Date()
@@ -131,21 +136,36 @@ export class AnalyticsCollectorService {
     }
   }
 
-  private static generateReportContent(analytics: any[], metrics: (keyof AnalyticsMetrics)[]): string {
-    const platformSummary = analytics.reduce((acc, a) => {
+  private static generateReportContent(
+    analytics: Array<{
+      metrics: Prisma.JsonValue;
+      socialAccount: { platform: string };
+    }>,
+    metrics: (keyof AnalyticsMetrics)[]
+  ): string {
+    const platformSummary = analytics.reduce<Record<string, PlatformSummary>>((acc, a) => {
       const platform = a.socialAccount.platform;
       if (!acc[platform]) {
         acc[platform] = {
           posts: 0,
-          metrics: Object.fromEntries(metrics.map(m => [m, 0]))
+          metrics: {
+            impressions: 0,
+            engagements: 0,
+            clicks: 0,
+            shares: 0,
+            likes: 0,
+            comments: 0,
+            reach: 0
+          }
         };
       }
       acc[platform].posts++;
+      const analyticsMetrics = a.metrics as Record<keyof AnalyticsMetrics, number>;
       metrics.forEach(m => {
-        acc[platform].metrics[m] += (a.metrics as AnalyticsMetrics)[m] || 0;
+        acc[platform].metrics[m] += analyticsMetrics[m] || 0;
       });
       return acc;
-    }, {} as Record<string, { posts: number; metrics: Record<string, number> }>);
+    }, {});
 
     return `
       <h1>Social Media Analytics Report</h1>
@@ -154,21 +174,29 @@ export class AnalyticsCollectorService {
         <h2>${platform} Summary</h2>
         <p>Total Posts: ${data.posts}</p>
         <ul>
-          ${Object.entries(data.metrics).map(([metric, value]) => `
-            <li>${metric}: ${value}</li>
+          ${metrics.map(metric => `
+            <li>${metric}: ${data.metrics[metric]}</li>
           `).join('')}
         </ul>
       `).join('')}
     `;
   }
 
-  private static generateCSVReport(analytics: any[], metrics: (keyof AnalyticsMetrics)[]): string {
+  private static generateCSVReport(
+    analytics: Array<{
+      createdAt: Date;
+      metrics: Prisma.JsonValue;
+      socialAccount: { platform: string };
+      post: { id: string };
+    }>,
+    metrics: (keyof AnalyticsMetrics)[]
+  ): string {
     const headers = ['Date', 'Platform', 'Post ID', ...metrics];
     const rows = analytics.map(a => [
       format(a.createdAt, 'yyyy-MM-dd'),
       a.socialAccount.platform,
       a.post.id,
-      ...metrics.map(m => (a.metrics as AnalyticsMetrics)[m] || 0)
+      ...metrics.map(m => (a.metrics as Record<keyof AnalyticsMetrics, number>)[m] || 0)
     ]);
 
     return [
