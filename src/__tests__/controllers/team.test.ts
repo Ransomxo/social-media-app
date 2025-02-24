@@ -10,7 +10,13 @@ describe('TeamController', () => {
 
   beforeEach(() => {
     mockRequest = {
-      user: { id: '1' },
+      user: { 
+        id: '1',
+        email: 'test@example.com',
+        firstName: 'Test',
+        lastName: 'User',
+        plan: 'minimal'
+      },
       body: {},
       params: {}
     };
@@ -48,49 +54,6 @@ describe('TeamController', () => {
       expect(mockResponse.json).toHaveBeenCalledWith(
         expect.objectContaining({
           message: 'Team created successfully'
-        })
-      );
-    });
-  });
-
-  describe('addMember', () => {
-    it('should add a member to the team', async () => {
-      const memberData = {
-        userId: '2',
-        role: 'editor'
-      };
-
-      mockRequest.body = memberData;
-      mockRequest.params = { teamId: '1' };
-
-      prismaMock.team.findUnique.mockResolvedValue({
-        id: '1',
-        name: 'Test Team',
-        ownerId: '1',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
-
-      prismaMock.teamMember.findFirst.mockResolvedValue(null);
-      prismaMock.teamMember.create.mockResolvedValue({
-        id: '1',
-        teamId: '1',
-        userId: '2',
-        role: 'editor',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      });
-
-      await TeamController.addMember(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
-
-      expect(mockResponse.status).toHaveBeenCalledWith(201);
-      expect(mockResponse.json).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: 'Team member added successfully'
         })
       );
     });

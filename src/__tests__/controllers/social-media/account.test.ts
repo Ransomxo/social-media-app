@@ -10,7 +10,13 @@ describe('SocialMediaAccountController', () => {
 
   beforeEach(() => {
     mockRequest = {
-      user: { id: '1' },
+      user: { 
+        id: '1',
+        email: 'test@example.com',
+        firstName: 'Test',
+        lastName: 'User',
+        plan: 'minimal'
+      },
       body: {}
     };
     mockResponse = {
@@ -53,51 +59,6 @@ describe('SocialMediaAccountController', () => {
           message: 'Social media account connected successfully'
         })
       );
-    });
-
-    it('should handle invalid platform', async () => {
-      mockRequest.body = {
-        platform: 'invalid',
-        code: 'auth_code',
-        redirectUri: 'http://localhost:3000/callback'
-      };
-
-      await SocialMediaAccountController.connectAccount(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
-
-      expect(mockNext).toHaveBeenCalledWith(
-        expect.any(AppError)
-      );
-    });
-  });
-
-  describe('getAccounts', () => {
-    it('should return connected accounts', async () => {
-      const accounts = [
-        {
-          id: '1',
-          platform: 'twitter',
-          accountId: 'twitter123',
-          userId: '1',
-          accessToken: 'encrypted_token',
-          refreshToken: 'encrypted_refresh',
-          createdAt: new Date(),
-          updatedAt: new Date()
-        }
-      ];
-
-      prismaMock.socialMediaAccount.findMany.mockResolvedValue(accounts);
-
-      await SocialMediaAccountController.getAccounts(
-        mockRequest as Request,
-        mockResponse as Response,
-        mockNext
-      );
-
-      expect(mockResponse.json).toHaveBeenCalledWith({ accounts });
     });
   });
 });

@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import bcrypt from 'bcryptjs';
 import { register, login } from '../../controllers/auth';
 import { prismaMock } from '../setup/setup';
 import { ValidationError, UnauthorizedError } from '../../utils/errors/AppError';
@@ -33,9 +34,12 @@ describe('Auth Controller', () => {
       prismaMock.user.findUnique.mockResolvedValue(null);
       prismaMock.user.create.mockResolvedValue({
         id: '1',
-        ...userData,
+        email: userData.email,
         password: 'hashedPassword',
+        firstName: userData.firstName,
+        lastName: userData.lastName,
         plan: 'minimal',
+        teamMembers: [],
         createdAt: new Date(),
         updatedAt: new Date()
       });
@@ -79,14 +83,16 @@ describe('Auth Controller', () => {
       };
 
       mockRequest.body = userData;
+      const hashedPassword = await bcrypt.hash(userData.password, 10);
 
       prismaMock.user.findUnique.mockResolvedValue({
         id: '1',
         email: userData.email,
-        password: await bcrypt.hash(userData.password, 10),
+        password: hashedPassword,
         firstName: 'Test',
         lastName: 'User',
         plan: 'minimal',
+        teamMembers: [],
         createdAt: new Date(),
         updatedAt: new Date()
       });
