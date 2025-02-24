@@ -1,18 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt, { SignOptions } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { JwtPayload } from '../types/jwt';
+import jwt from 'jsonwebtoken';
 import prisma from '../lib/prisma';
 import { ValidationError, UnauthorizedError } from '../utils/errors/AppError';
-
-const hashPassword = async (password: string): Promise<string> => {
-  const salt = await bcrypt.genSalt(10);
-  return bcrypt.hash(password, salt);
-};
-
-const validatePassword = async (hashedPassword: string, password: string): Promise<boolean> => {
-  return bcrypt.compare(password, hashedPassword);
-};
 
 export const register = async (
   req: Request,
@@ -22,37 +12,36 @@ export const register = async (
   try {
     const { email, password, firstName, lastName } = req.body;
 
-    // Validate input
-    if (!email || !email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+    // Validate email format
+    if (!email || !email.includes('@')) {
       throw new ValidationError('Invalid email format');
     }
-    if (!password || password.length < 8) {
-      throw new ValidationError('Password must be at least 8 characters long');
-    }
-    if (!firstName || !lastName) {
-      throw new ValidationError('First name and last name are required');
-    }
 
+    // Check if user exists
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       throw new ValidationError('Email already registered');
     }
 
-    const hashedPassword = await hashPassword(password);
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create user
     const user = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         firstName,
-        lastName,
-        plan: 'minimal',
-        teamMembers: [],
-      },
+        lastName
+      }
     });
 
-    const token = jwt.sign({ id: user.id } as JwtPayload, process.env.JWT_SECRET!, {
-      expiresIn: process.env.JWT_EXPIRATION || '24h'
-    } as SignOptions);
+    // Generate JWT
+    const token = jwt.sign(
+      { userId: user.id },
+      process.env.JWT_SECRET || 'default_secret',
+      { expiresIn: '24h' }
+    );
 
     res.status(201).json({
       message: 'User registered successfully',
@@ -61,9 +50,8 @@ export const register = async (
         id: user.id,
         email: user.email,
         firstName: user.firstName,
-        lastName: user.lastName,
-        plan: user.plan,
-      },
+        lastName: user.lastName
+      }
     });
   } catch (error) {
     next(error);
@@ -77,15 +65,25 @@ export const login = async (
 ): Promise<void> => {
   try {
     const { email, password } = req.body;
-    const user = await prisma.user.findUnique({ where: { email } });
 
-    if (!user || !(await validatePassword(user.password, password))) {
-      throw new UnauthorizedError('Invalid email or password');
+    // Find user
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      throw new UnauthorizedError('Invalid credentials');
     }
 
-    const token = jwt.sign({ id: user.id } as JwtPayload, process.env.JWT_SECRET!, {
-      expiresIn: process.env.JWT_EXPIRATION || '24h'
-    } as SignOptions);
+    // Verify password
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      throw new UnauthorizedError('Invalid credentials');
+    }
+
+    // Generate JWT
+    const token = jwt.sign(
+      { userId: user.id },
+      process.env.JWT_SECRET || 'default_secret',
+      { expiresIn: '24h' }
+    );
 
     res.json({
       message: 'Login successful',
@@ -94,9 +92,8 @@ export const login = async (
         id: user.id,
         email: user.email,
         firstName: user.firstName,
-        lastName: user.lastName,
-        plan: user.plan,
-      },
+        lastName: user.lastName
+      }
     });
   } catch (error) {
     next(error);
