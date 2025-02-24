@@ -11,31 +11,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       
-      - name: Install SSH Key
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.DIGITALOCEAN_SSH_KEY }}
-          known_hosts: unnecessary
-          if_key_exists: replace
-      
-      - name: Adding Known Hosts
-        run: ssh-keyscan -H 137.184.15.8 >> ~/.ssh/known_hosts
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '18.20.7'
-          
-      - name: Install pnpm
-        run: npm install -g pnpm@9.15.1
-      
       - name: Deploy to DigitalOcean
-        run: |
-          ssh -o StrictHostKeyChecking=no root@137.184.15.8 "cd /root/social-media-app && \
-            git fetch && \
-            git checkout ${{ github.head_ref }} && \
-            pnpm install && \
-            cd packages/frontend && \
-            pnpm build && \
-            pm2 restart frontend && \
-            echo 'Deployment completed successfully'"
+        uses: appleboy/ssh-action@master
+        with:
+          host: 137.184.15.8
+          username: root
+          key: ${{ secrets.DIGITALOCEAN_SSH_KEY }}
+          script: |
+            cd /root/social-media-app
+            git fetch
+            git checkout ${{ github.head_ref }}
+            pnpm install
+            cd packages/frontend
+            pnpm build
+            pm2 restart frontend
+            echo "Deployment completed successfully"
