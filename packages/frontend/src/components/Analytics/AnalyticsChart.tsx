@@ -65,7 +65,7 @@ export default function AnalyticsChart({ title, data }: AnalyticsChartProps) {
             y: {
               grid: { 
                 color: '#374151',
-                drawBorder: false
+                display: false
               },
               ticks: { 
                 color: '#fff',
@@ -78,7 +78,7 @@ export default function AnalyticsChart({ title, data }: AnalyticsChartProps) {
             x: {
               grid: { 
                 color: '#374151',
-                drawBorder: false
+                display: false
               },
               ticks: { 
                 color: '#fff',
