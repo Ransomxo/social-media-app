@@ -50,11 +50,21 @@ export class AnalyticsCollectorService {
           accessToken
         );
 
+        const metricsJson: Prisma.JsonObject = {
+          impressions: metrics.impressions,
+          engagements: metrics.engagements,
+          clicks: metrics.clicks,
+          shares: metrics.shares,
+          likes: metrics.likes,
+          comments: metrics.comments,
+          reach: metrics.reach
+        };
+
         await prisma.analytics.create({
           data: {
             postId: post.id,
             socialAccountId: post.socialAccount.id,
-            metrics: metrics as Prisma.JsonObject,
+            metrics: metricsJson,
             period: 'daily',
             startDate: new Date(),
             endDate: new Date()
@@ -69,14 +79,22 @@ export class AnalyticsCollectorService {
   static async generateReport(userId: string, options: ReportOptions): Promise<void> {
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      include: {
+      select: {
+        email: true,
         socialAccounts: {
-          include: {
+          select: {
             posts: {
-              include: {
-                analytics: true
+              select: {
+                id: true,
+                analytics: {
+                  select: {
+                    metrics: true,
+                    createdAt: true
+                  }
+                }
               }
-            }
+            },
+            platform: true
           }
         }
       }
@@ -90,20 +108,16 @@ export class AnalyticsCollectorService {
       ? new Date(Date.now() - 24 * 60 * 60 * 1000)
       : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
-    const analytics = await prisma.analytics.findMany({
-      where: {
-        socialAccount: {
-          userId: user.id
-        },
-        createdAt: {
-          gte: startDate
-        }
-      },
-      include: {
-        post: true,
-        socialAccount: true
-      }
-    });
+    const analytics = user.socialAccounts.flatMap(account => 
+      account.posts.flatMap(post => 
+        post.analytics?.map(analytic => ({
+          createdAt: analytic.createdAt,
+          metrics: analytic.metrics as Record<keyof AnalyticsMetrics, number>,
+          socialAccount: { platform: account.platform },
+          post: { id: post.id }
+        })) ?? []
+      )
+    ).filter(analytic => analytic.createdAt >= startDate);
 
     const reportContent = this.generateReportContent(analytics, options.metrics);
     const csvContent = this.generateCSVReport(analytics, options.metrics);
@@ -138,7 +152,7 @@ export class AnalyticsCollectorService {
 
   private static generateReportContent(
     analytics: Array<{
-      metrics: Prisma.JsonValue;
+      metrics: Record<keyof AnalyticsMetrics, number>;
       socialAccount: { platform: string };
     }>,
     metrics: (keyof AnalyticsMetrics)[]
@@ -160,9 +174,8 @@ export class AnalyticsCollectorService {
         };
       }
       acc[platform].posts++;
-      const analyticsMetrics = a.metrics as Record<keyof AnalyticsMetrics, number>;
       metrics.forEach(m => {
-        acc[platform].metrics[m] += analyticsMetrics[m] || 0;
+        acc[platform].metrics[m] += a.metrics[m] || 0;
       });
       return acc;
     }, {});
@@ -185,7 +198,7 @@ export class AnalyticsCollectorService {
   private static generateCSVReport(
     analytics: Array<{
       createdAt: Date;
-      metrics: Prisma.JsonValue;
+      metrics: Record<keyof AnalyticsMetrics, number>;
       socialAccount: { platform: string };
       post: { id: string };
     }>,
@@ -196,7 +209,7 @@ export class AnalyticsCollectorService {
       format(a.createdAt, 'yyyy-MM-dd'),
       a.socialAccount.platform,
       a.post.id,
-      ...metrics.map(m => (a.metrics as Record<keyof AnalyticsMetrics, number>)[m] || 0)
+      ...metrics.map(m => a.metrics[m] || 0)
     ]);
 
     return [
