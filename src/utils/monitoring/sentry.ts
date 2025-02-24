@@ -1,14 +1,14 @@
 import * as Sentry from '@sentry/node';
-import { ProfilingIntegration } from '@sentry/profiling-node';
+import { nodeProfilingIntegration } from '@sentry/profiling-node';
 import { Express } from 'express';
 
 export const initSentry = (app: Express): void => {
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
     integrations: [
-      new Sentry.Integrations.Http({ tracing: true }),
-      new Sentry.Integrations.Express({ app }),
-      new ProfilingIntegration(),
+      new Sentry.HttpClient({ tracing: true }),
+      new Sentry.Express({ app }),
+      nodeProfilingIntegration(),
     ],
     tracesSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
     profilesSampleRate: 1.0,
@@ -16,10 +16,10 @@ export const initSentry = (app: Express): void => {
   });
 
   // RequestHandler creates a separate execution context using domains
-  app.use(Sentry.Handlers.requestHandler());
+  app.use(Sentry.requestHandler());
   
   // TracingHandler creates a trace for every incoming request
-  app.use(Sentry.Handlers.tracingHandler());
+  app.use(Sentry.tracingHandler());
 };
 
-export const sentryErrorHandler = Sentry.Handlers.errorHandler;
+export const sentryErrorHandler = Sentry.errorHandler();
