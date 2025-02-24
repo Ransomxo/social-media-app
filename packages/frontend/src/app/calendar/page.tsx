@@ -5,7 +5,7 @@ import Calendar from '../../components/Calendar/Calendar';
 import { CalendarEvent } from '../../types/calendar';
 
 export default function CalendarPage() {
-  const sampleEvents = [
+  const sampleEvents: CalendarEvent[] = [
     {
       id: '1',
       title: 'Social Media Post - Instagram',
