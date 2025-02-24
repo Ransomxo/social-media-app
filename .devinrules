@@ -281,3 +281,40 @@ Development Guidelines:
    - Use environment variables for all sensitive data
    - Rotate personal access tokens regularly
 
+
+## Credential Access Instructions (PRIVATE REPOSITORY)
+
+### Development Environment Setup
+1. Request access from team lead (rowdyroque8@gmail.com) with:
+   - Your GitHub username
+   - Team role (UI/UX or Backend)
+   - Required access level
+
+2. You will receive:
+   - SSH key for DigitalOcean access (137.184.15.8)
+   - Environment variables file (.env)
+   - Database connection details
+   - API credentials
+
+### Required Environment Variables
+Frontend (.env):
+```
+NEXT_PUBLIC_API_URL=https://api.omniposting.com
+NEXT_PUBLIC_APP_URL=https://omniposting.com
+```
+
+Backend (.env):
+```
+PORT=3001
+DATABASE_URL=[Neon PostgreSQL connection string]
+JWT_SECRET=[Production JWT secret]
+OPENAI_API_KEY=[Production API key]
+```
+
+### Security Guidelines
+1. Never commit credentials to the repository
+2. Store all sensitive data in environment variables
+3. Use .env.example for template, not actual values
+4. Rotate credentials according to security policy
+5. Report any security concerns immediately
+
