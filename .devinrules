@@ -1,461 +1,225 @@
-# Social Media App Development Status
+# Omniposting Development Guidelines
 
-## Project Overview
-- Monorepo structure with Next.js frontend and Express.js backend
-- Deployment targets: omniposting.com (frontend) and api.omniposting.com (backend)
-- Database: Neon.tech PostgreSQL
-- Authentication: JWT-based with comprehensive token validation
+## Current Deployment Status
+- Frontend: https://omniposting.com (DigitalOcean)
+- Backend API: https://api.omniposting.com (DigitalOcean)
+- Database: Neon PostgreSQL
+- Infrastructure: DigitalOcean Droplet (137.184.15.8)
 
-## Current Status
+## Development Streams
 
-### Completed
-- [x] Basic project structure setup
-- [x] Authentication middleware implementation with improved error handling
-- [x] Analytics service implementations for all platforms
-- [x] Prisma schema updates with team management
-- [x] Frontend calendar component with image optimization
-- [x] Basic API endpoints with validation
-- [x] Test environment configuration and database setup
-- [x] DigitalOcean deployment configuration
-- [x] DNS configuration for omniposting.com and api.omniposting.com
-- [x] PM2 process management setup
-- [x] Nginx reverse proxy configuration
-- [x] Backend health endpoint implementation
-- [x] Analytics endpoint authentication fixes
-- [x] Test suite resolution for analytics endpoints
+### UI/UX Development Stream
+Focus: Frontend visual design and user experience
+Branch Naming: devin/ui-*
 
-### In Progress
-- [ ] SSL certificate setup
-- [ ] Production database configuration
-- [ ] Monitoring and logging implementation
-- [ ] Automated backup configuration
-- [ ] Email report generation system implementation
+Key Responsibilities:
+- Page layouts and components
+- Responsive design implementation
+- Visual theme consistency
+- User interaction flows
+- Form designs and validation UI
+- Loading states and animations
+- Error handling UI
 
-### Pending
-- [ ] Integration with social media platforms
-- [ ] User management system completion
-- [ ] Analytics data export automation
-- [ ] Team collaboration features
+Development Guidelines:
+1. Visual Theme:
+   - Dark mode interface with purple gradients
+   - Clean, minimalist form design
+   - Modern typography
+   - Social login options styling
+   - Consistent "Back to website" navigation
 
-## Infrastructure Configuration
+2. Key Pages:
+   - Login/Signup
+   - Dashboard
+   - Calendar Interface
+   - Analytics Dashboard
+   - Team Management
+   - Profile Settings
 
-### DigitalOcean Infrastructure
-- Droplet: Ubuntu 24.10 (IP: 137.184.15.8)
-- Process Manager: PM2 with auto-restart
-- Web Server: Nginx v1.24
-- Node.js: v18.20.7
-- Package Manager: pnpm v9.15.1
-- Domain configuration: omniposting.com and api.omniposting.com
-- Frontend build optimized with standalone output
-- Backend configured with health monitoring
-- Image optimization enabled with remote patterns
+3. Component Guidelines:
+   - Reusable components in packages/frontend/src/components/*
+   - Styled using Tailwind CSS
+   - Responsive design for all viewports
+   - Consistent loading states
+   - Error boundary implementation
 
-### Neon.tech Database
-- Database configuration managed through environment variables
-- Connection pooling enabled for optimal performance
-- Separate databases for development, testing, and production
-- Test database configured with proper migrations
-- Shadow database setup for Prisma migrations
+4. Testing:
+   - Visual regression testing
+   - Responsive design testing
+   - Cross-browser compatibility
+   - Accessibility compliance
 
-### Environment Variables Required
+5. Deployment:
+   - Changes automatically deploy to https://omniposting.com
+   - Preview deployments available for PRs
+   - Visual QA on live development site
 
-Frontend (omniposting.com):
-```
-NEXT_PUBLIC_API_URL=https://api.omniposting.com
-NEXT_PUBLIC_APP_URL=https://omniposting.com
-```
+### Backend Development Stream
+Focus: API development, infrastructure, and core functionality
+Branch Naming: devin/backend-*
 
-Backend (api.omniposting.com):
-```
-DATABASE_URL=[neon-connection-string]
-JWT_SECRET=[secure-secret]
-```
+Key Responsibilities:
+- API endpoint implementation
+- Database schema management
+- Authentication flows
+- Social media integrations
+- Analytics processing
+- Performance optimization
+- Security implementation
 
-Note: Environment variables will be configured in Railway.app during deployment setup. Previous Vercel configuration has been removed as part of the migration to Railway.app.
+Development Guidelines:
+1. API Development:
+   - RESTful endpoints in packages/backend/src/routes/*
+   - OpenAPI/Swagger documentation
+   - Strong type definitions
+   - Comprehensive error handling
+   - Rate limiting implementation
 
-## Current Status and Deployment Issues
+2. Core Features:
+   - Social media post scheduling
+   - Analytics data collection
+   - Team collaboration features
+   - Automated reporting system
+   - Platform integration management
 
-### Deployment Status (Last Updated: February 24, 2025 00:44:52 UTC)
-1. PR #16 Status:
-   - Branch: devin/1740283551-analytics-docs-and-fixes
-   - Contains: DigitalOcean deployment configuration, health monitoring
-   - Status: Deployed and running
+3. Database:
+   - Prisma schema management
+   - Migration handling
+   - Query optimization
+   - Data validation
 
-2. DigitalOcean Deployment Progress:
-   - Droplet IP: 137.184.15.8
-   - Status: Services running
-   - Completed Steps:
-     - Created and configured Droplet
-     - Set up Nginx reverse proxy
-     - Configured PM2 process management
-     - Deployed frontend and backend services
-     - Configured DNS records
-   - Next Steps:
-     - SSL certificate setup
-     - Production database configuration
-     - Monitoring and logging setup
-     - Automated backup implementation
+4. Security:
+   - JWT authentication
+   - Role-based access control
+   - API key management
+   - Input validation
+   - Security headers
 
-3. Railway.app Configuration Status:
-   Frontend (packages/frontend/railway.json):
-   - Build command: `cd ../.. && pnpm install && cd packages/frontend && pnpm install && pnpm build`
-   - Start command: `pnpm start`
-   - Watch patterns configured for frontend files
+5. Testing:
+   - Unit tests for business logic
+   - Integration tests for API
+   - Performance benchmarking
+   - Security testing
 
-   Backend (packages/backend/railway.json):
-   - Build command: `cd ../.. && pnpm install && cd packages/backend && pnpm install && pnpm build`
-   - Start command: `pnpm start`
-   - Watch patterns configured for backend files
+## File Ownership
 
-3. Required Environment Variables:
-   Frontend (omniposting.com):
+1. UI/UX Team Files:
    ```
-   NEXT_PUBLIC_API_URL=https://api.omniposting.com
-   NEXT_PUBLIC_APP_URL=https://omniposting.com
-   ```
-   Backend (api.omniposting.com):
-   ```
-   DATABASE_URL=[neon-connection-string]
-   JWT_SECRET=[secure-secret]
+   packages/frontend/src/app/*        # Page components
+   packages/frontend/src/components/* # Reusable components
+   packages/frontend/src/styles/*     # Theme and styling
+   packages/frontend/public/*         # Static assets
    ```
 
-4. Build Configuration:
-   - Using pnpm for package management
-   - TypeScript compilation required
-   - Prisma client generation needed
-   - Debug logging enabled in production
-
-4. Next Steps for New Session:
-   - Review Railway.app as potential alternative
-   - If staying with Vercel:
-     a) Verify environment variables in Vercel dashboard
-     b) Test builds locally with vercel cli
-     c) Consider splitting frontend/backend into separate repos
-     d) Implement proper build caching
-
-5. Critical Environment Variables:
-   Frontend (omniposting.com):
+2. Backend Team Files:
    ```
-   NEXT_PUBLIC_API_URL=https://api.omniposting.com
-   NEXT_PUBLIC_APP_URL=https://omniposting.com
-   ```
-   Backend (api.omniposting.com):
-   ```
-   DATABASE_URL=[neon-connection-string]
-   JWT_SECRET=[secure-secret]
+   packages/backend/*                # Express.js backend
+   packages/backend/prisma/*         # Database schema
+   packages/backend/src/routes/*     # API endpoints
+   packages/backend/src/services/*   # Business logic
+   deployment/*                      # Infrastructure
    ```
 
-6. Recent Changes:
-   - Updated ESLint configuration
-   - Simplified build commands
-   - Added debug logging
-   - Updated package.json scripts
-   - Modified TypeScript configuration
+## Development Setup
 
-## Handoff Instructions for Next Session
-
-### Priority Tasks
-1. Deployment Resolution:
-   - Review Railway.app migration feasibility
-   - If continuing with Vercel:
-     a) Fix ESLint installation in frontend build
-     b) Resolve TypeScript compilation in backend
-     c) Verify Prisma client generation
-     d) Test environment variable configuration
-
-2. Infrastructure Tasks:
-   - Configure proper build caching
-   - Set up deployment monitoring
-   - Implement proper error logging
-   - Verify database connections
-
-3. Feature Implementation:
-   - Complete email service integration
-   - Add social media platform connections
-   - Implement team collaboration features
-   - Set up analytics data export
-
-### Development Guidelines
-1. Build Process:
-   - Use pnpm for package management
-   - Run local builds before deployment
-   - Verify environment variables
-   - Check build logs thoroughly
-
-2. Testing Requirements:
-   - Run unit tests before deployment
-   - Verify API endpoints functionality
-   - Test database connections
-   - Validate environment configurations
-
-3. Documentation:
-   - Update deployment documentation
-   - Record configuration changes
-   - Document build process
-   - Note environment requirements
-
-## Development Notes
-- Use `pnpm` for package management
-- Run tests with `npm run test`
-- Local development requires .env.local setup
-- Always update documentation when making changes
-- Follow existing code patterns for consistency
-
-## Branch Strategy
-- Main development branch: main
-- Feature branches: feature/*
-- Bug fixes: fix/*
-- Current working branch: devin/1740283551-analytics-docs-and-fixes
-
-## Project Overview
-Social media management platform with multi-platform post scheduling and analytics capabilities.
-
-## Core Components
-1. Post Management
-   - Schedule posts across platforms
-   - Media upload and preview
-   - Draft management
-   - Post templates
-
-2. Analytics
-   - Platform-specific metrics
-   - Custom reporting
-   - Data visualization
-   - Export capabilities
-
-3. Team Features
-   - Role-based access
-   - Collaboration tools
-   - Activity tracking
-   - Workflow management
-
-## Technical Stack
-Frontend:
-- Next.js
-- TypeScript
-- TailwindCSS
-- React Components
-
-## UI/UX Development Guidelines
-
-### Pages to Implement
-1. Authentication
-   - Login (`/auth/login`)
-   - Signup (`/auth/signup`)
-2. Dashboard
-   - Home (`/`)
-   - Calendar View (`/app/calendar`)
-   - Analytics Dashboard (`/app/analytics`)
-3. Management
-   - Team Management (`/app/team`)
-   - Profile Settings (`/app/settings`)
-   - Platform Integrations (`/app/integrations`)
-
-### Core UI Requirements
-- Calendar interface with month/week/day views
-- Event creation modal for scheduling posts
-- Sidebar with filters and calendars list
-- Time-slot based event scheduling (6am-1pm format)
-- User avatars for team collaboration
-- Color-coded event categories
-- Drag-and-drop event scheduling
-
-### Development Workflow
-1. Branch Management
-   - Create feature branches from `main`
-   - Use prefix `feature/ui-*` for all UI work
-   - Example: `feature/ui-calendar-view`
-
-2. Component Development
-   - Create reusable components in `src/components`
-   - Document props and usage
-   - Include responsive designs
-   - Follow existing styling patterns
-
-3. State Management
-   - Use React hooks for local state
-   - Implement proper loading states
-   - Handle error scenarios
-   - Add proper TypeScript types
-
-4. Testing & Preview
-   - Test on multiple viewports
-   - Verify accessibility
-   - Check performance metrics
-   - Use mock data initially
-
-### Separation of Concerns
-1. Infrastructure Team (Current Session)
-   - Core authentication
-   - API integration
-   - Deployment configuration
-   - Environment setup
-   - Database management
-
-2. UI/UX Team (Separate Session)
-   - Page components
-   - User interface design
-   - Component library
-   - Interactive features
-   - Responsive layouts
-
-### File Ownership and Development Streams
-
-1. Infrastructure/Backend Stream
-   - Core Configuration:
-     - `.devinrules`: Project documentation and status
-     - `deployment/*`: DigitalOcean deployment scripts
-     - `nginx.conf`: Web server configuration
-     - `pnpm-workspace.yaml`: Monorepo configuration
-     - `tsconfig.json`: TypeScript configuration
-     - `turbo.json`: Build pipeline configuration
-   
-   - Backend Files:
-     - `packages/backend/*`: Express.js backend service
-     - `packages/backend/prisma/*`: Database schema and migrations
-     - `packages/backend/src/routes/*`: API endpoints
-     - `packages/backend/src/services/*`: Business logic
-     - `packages/backend/src/types/*`: TypeScript definitions
-
-   - Frontend Infrastructure:
-     - `packages/frontend/next.config.js`: Next.js configuration
-     - `packages/frontend/src/lib/*`: Shared utilities
-     - `packages/frontend/src/api/*`: API integration
-
-2. UI/UX Stream
-   - Frontend Components:
-     - `packages/frontend/src/app/*`: Page components
-     - `packages/frontend/src/components/*`: Reusable components
-     - `packages/frontend/src/styles/*`: Styling and themes
-     - `packages/frontend/src/hooks/*`: React hooks
-     - `packages/frontend/public/*`: Static assets
-
-### Coordination Rules
-1. Development Process
-   - UI team works in separate Devin session
-   - Use mock data during development
-   - Follow TypeScript interfaces
-   - Regular sync via PR reviews
-
-2. Avoid Modifying
-   - Core authentication logic
-   - API integration code
-   - Environment configurations
-   - Deployment settings
-
-3. Preview Requirements
-   - Local development server
-   - Mock data for testing
-   - Component isolation
-   - Responsive testing
-
-4. Documentation
-   - Update component docs
-   - Add usage examples
-   - Document props
-   - Note dependencies
-
-Backend:
-- Express.js
-- PostgreSQL
-- Prisma ORM
-- JWT Auth
-
-## Development Guidelines
-
-### Environment Setup
-1. Requirements
-   - Node.js 18.20.7
-   - pnpm 9.15.1
-   - PostgreSQL 16
-   - Git
-
-2. Local Development
+1. Environment Setup:
    ```bash
+   # Clone repository
+   gh repo clone Ransomxo/social-media-app
+   cd social-media-app
+
    # Install dependencies
    pnpm install
 
-   # Setup environment
+   # Set up environment variables (request access from team lead)
    cp .env.example .env
+   ```
 
-   # Start development servers
+2. Access Management:
+   - GitHub access: Request from repository admin
+   - Environment variables: Use secure credential management
+   - Infrastructure access: Coordinate with DevOps team
+   - Database access: Request from database admin
+
+3. Local Development:
+   ```bash
+   # Start frontend
+   cd packages/frontend
+   pnpm dev
+
+   # Start backend
+   cd packages/backend
    pnpm dev
    ```
 
-### Deployment Process
-1. DigitalOcean Setup
-   ```bash
-   # Initial server setup
-   ./deployment/scripts/setup.sh
+## Deployment Process
 
-   # Deploy updates
-   ./deployment/scripts/deploy.sh
-   ```
+1. Frontend (omniposting.com):
+   - Automatic deployment on main branch
+   - SSL/HTTPS enabled
+   - CDN caching configured
+   - Security headers implemented
 
-2. Service Management
-   ```bash
-   # View service status
-   pm2 list
-
-   # Check logs
-   pm2 logs [frontend|backend]
-
-   # Restart services
-   pm2 restart all
-   ```
-
-3. Configuration Files
-   - `nginx.conf`: Web server and reverse proxy
-   - `deployment/scripts/setup.sh`: Initial server configuration
-   - `deployment/scripts/deploy.sh`: Continuous deployment
-   - `.env`: Environment variables
-
-4. Health Monitoring
-   - Frontend: http://omniposting.com
-   - Backend: http://api.omniposting.com/health
-   - Process Manager: PM2 dashboard
-   - Nginx Status: systemctl status nginx
-
-## Testing
-- Unit tests: `pnpm test`
-- Integration: `pnpm test:integration`
-- Coverage: `pnpm test:coverage`
+2. Backend (api.omniposting.com):
+   - Automatic deployment on main branch
+   - Rate limiting enabled
+   - CORS configured
+   - Health monitoring active
 
 ## Security Guidelines
-1. Environment Variables
-   - Never commit .env files
-   - Use .env.example for templates
-   - Secure credential management
-   - Rotate secrets regularly
 
-2. Authentication
-   - Implement proper JWT handling
-   - Use secure session management
-   - Follow OAuth best practices
-   - Rate limit sensitive endpoints
+1. Credential Management:
+   - Never commit sensitive data
+   - Use environment variables
+   - Follow least privilege principle
+   - Rotate credentials regularly
 
-3. Data Protection
-   - Validate all inputs
-   - Sanitize database queries
-   - Encrypt sensitive data
-   - Regular security audits
+2. Code Security:
+   - Input validation
+   - SQL injection prevention
+   - XSS protection
+   - CSRF protection
 
-## Contributing
-1. Code Standards
-   - Follow TypeScript guidelines
-   - Maintain test coverage
-   - Document API changes
-   - Use consistent formatting
+## Testing Requirements
 
-2. Pull Requests
-   - Create feature branches
-   - Write clear descriptions
-   - Include test coverage
-   - Update documentation
+1. Frontend:
+   - Component unit tests
+   - Integration tests
+   - Visual regression tests
+   - Accessibility tests
 
-## Last Updated
-- Date: February 23, 2025 16:34:11 UTC
-- Last Action: Analytics endpoint test suite fixes completed
-- Next Planned Action: Resolve CI pipeline issues
-- Current Branch: devin/1740283551-analytics-docs-and-fixes
-- PR Status: #16 open with 1 failed check, 1 passed
+2. Backend:
+   - API endpoint tests
+   - Service unit tests
+   - Integration tests
+   - Performance tests
+
+## Documentation
+
+1. API Documentation:
+   - OpenAPI/Swagger specs
+   - Authentication flows
+   - Rate limits
+   - Error responses
+
+2. Frontend Documentation:
+   - Component storybook
+   - Theme guidelines
+   - Layout system
+   - Form validation
+
+## Monitoring
+
+1. Frontend:
+   - Error tracking
+   - Performance monitoring
+   - User analytics
+   - Loading metrics
+
+2. Backend:
+   - API metrics
+   - Error logging
+   - Performance tracking
+   - Database monitoring
+
