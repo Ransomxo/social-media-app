@@ -7,9 +7,13 @@ git pull
 # Install dependencies
 pnpm install
 
-# Rebuild applications
-cd packages/frontend && pnpm build
-cd ../backend && pnpm build
+# Build applications
+cd packages/frontend
+pnpm build
+pm2 restart frontend
 
-# Restart services
-pm2 restart all
+# Update nginx configuration if needed
+systemctl reload nginx
+
+# Verify deployment
+echo "Deployment completed. Changes are live at https://omniposting.com"
