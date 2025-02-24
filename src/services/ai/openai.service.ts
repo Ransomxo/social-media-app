@@ -39,13 +39,16 @@ export class OpenAIService {
       );
 
       if (!response.data.choices?.[0]?.message?.content) {
-        throw new AppError('Failed to generate caption', 500);
+        throw new AppError('Invalid response from OpenAI', 500);
       }
 
       return response.data.choices[0].message.content.trim();
     } catch (error) {
       if (error instanceof AppError) {
         throw error;
+      }
+      if ((error as { response?: { status: number } }).response?.status === 429) {
+        throw new AppError('Rate limit exceeded', 429);
       }
       throw new AppError('Failed to generate caption', 500);
     }
