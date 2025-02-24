@@ -318,3 +318,40 @@ OPENAI_API_KEY=[Production API key]
 4. Rotate credentials according to security policy
 5. Report any security concerns immediately
 
+
+## UI/UX Deployment to DigitalOcean
+
+### Deployment Process
+1. Create Pull Request:
+   ```bash
+   # Create feature branch
+   git checkout -b devin/ui-feature-name
+   
+   # Make your changes and commit
+   git add packages/frontend/src/components/* packages/frontend/src/app/*
+   git commit -m "feat: your feature description"
+   
+   # Push branch and create PR
+   git push origin devin/ui-feature-name
+   gh pr create --title "UI: Your feature title" --body "Description of your changes"
+   ```
+
+2. After PR Approval and Merge:
+   - Changes will be automatically deployed to DigitalOcean
+   - Frontend accessible at: https://omniposting.com
+   - Backend API at: https://api.omniposting.com
+
+3. Deployment Monitoring:
+   - Monitor PM2 logs on DigitalOcean
+   - Check deployment status in GitHub Actions
+   - Verify changes at https://omniposting.com
+   - Test functionality in production
+   - Monitor error logs
+
+4. Troubleshooting:
+   - Check PM2 logs: Contact DevOps team
+   - Deployment issues: Check GitHub Actions
+   - Access issues: Contact rowdyroque8@gmail.com
+
+Note: DO NOT deploy to Vercel. All deployments are handled through DigitalOcean via our CI/CD pipeline.
+
