@@ -33,7 +33,11 @@ export const authMiddleware = async (
       throw new UnauthorizedError('User not found');
     }
 
-    req.user = user;
+    req.user = {
+      ...user,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
     next();
   } catch (error) {
     if (error instanceof jwt.JsonWebTokenError) {

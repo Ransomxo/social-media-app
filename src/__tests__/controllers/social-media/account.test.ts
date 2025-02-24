@@ -21,7 +21,8 @@ describe('SocialMediaAccountController', () => {
         firstName: 'Test',
         lastName: 'User',
         plan: 'minimal',
-        teamMembers: []
+        createdAt: new Date(),
+  updatedAt: new Date()
       },
       body: {
         platform: 'twitter',

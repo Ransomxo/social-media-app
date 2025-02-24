@@ -35,7 +35,7 @@ describe('Test Utilities', () => {
     it('should chain status and json calls', () => {
       const mockRes = createMockResponse();
       const data = { test: 'value' };
-      mockRes.status(200).json(data);
+      mockRes.status!(200).json!(data);
       expect(mockRes.status).toHaveBeenCalledWith(200);
       expect(mockRes.json).toHaveBeenCalledWith(data);
     });
@@ -51,7 +51,6 @@ describe('Test Utilities', () => {
         firstName: 'Test',
         lastName: 'User',
         plan: 'minimal',
-        teamMembers: [],
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date)
       });
@@ -69,7 +68,6 @@ describe('Test Utilities', () => {
         firstName: 'Test',
         lastName: 'User',
         plan: 'minimal',
-        teamMembers: [],
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date)
       });

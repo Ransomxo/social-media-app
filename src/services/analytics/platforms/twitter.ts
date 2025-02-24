@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { AppError } from '../../../utils/errors/AppError';
-import { AnalyticsMetrics } from '../collector.service';
+import { AnalyticsMetrics } from '../../../types/models';
 
 export async function collectTwitterMetrics(postId: string, accessToken: string): Promise<AnalyticsMetrics> {
   try {

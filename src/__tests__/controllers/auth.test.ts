@@ -34,7 +34,8 @@ describe('AuthController', () => {
         firstName: 'Test',
         lastName: 'User',
         plan: 'minimal',
-        teamMembers: []
+        createdAt: new Date(),
+        updatedAt: new Date()
       };
 
       prismaMock.user.create.mockResolvedValue(mockUser);
@@ -68,7 +69,8 @@ describe('AuthController', () => {
         firstName: 'Test',
         lastName: 'User',
         plan: 'minimal',
-        teamMembers: []
+        createdAt: new Date(),
+        updatedAt: new Date()
       };
 
       prismaMock.user.findUnique.mockResolvedValue(mockUser);

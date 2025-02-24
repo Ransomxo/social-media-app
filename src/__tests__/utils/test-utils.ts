@@ -22,7 +22,6 @@ export const createMockUser = (overrides?: Partial<User>): User => ({
   firstName: 'Test',
   lastName: 'User',
   plan: 'minimal',
-  teamMembers: [],
   createdAt: new Date(),
   updatedAt: new Date(),
   ...overrides

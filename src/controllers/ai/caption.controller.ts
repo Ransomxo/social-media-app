@@ -10,7 +10,12 @@ export class CaptionController {
   ): Promise<void> {
     try {
       const { content, platform, tone, length } = req.body;
-      const caption = await OpenAIService.generateCaption(content, platform, tone, length);
+      const caption = await OpenAIService.generateCaption({
+        content,
+        platform,
+        tone,
+        length
+      });
       res.status(200).json({ caption });
     } catch (error) {
       next(new AppError('Failed to generate caption', 500));

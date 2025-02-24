@@ -14,6 +14,11 @@ const app = express();
 // Initialize Sentry (must be first)
 initSentry(app);
 
+// Health check endpoint
+app.get('/api/health', (req: Request, res: Response) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 // Middleware
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'https://omniposting.com',
@@ -60,8 +65,8 @@ app.use((err: AppError, req: Request, res: Response, _next: NextFunction): void 
   });
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
+const port = parseInt(process.env.PORT || '3000', 10);
+app.listen(port, '0.0.0.0', () => {
   logger.info(`Server running on port ${port}`);
 });
 

@@ -1,22 +1,23 @@
 import prisma from '../../../lib/prisma';
-import { SocialMediaPost, Platform } from '@prisma/client';
+import { SocialMediaPost } from '@prisma/client';
 import logger from '../../../utils/monitoring/logger';
 import { TwitterService } from '../platforms/twitter';
 import { AppError } from '../../../utils/errors/AppError';
+import { Platform } from '../../../types/models';
 
-interface PostScheduleRequest {
+export interface PostScheduleRequest {
   content: string;
   platform: Platform;
-  scheduledTime: Date;
+  scheduledFor: Date;
   userId: string;
 }
 
 export class PostSchedulerService {
   static async schedulePost(data: PostScheduleRequest): Promise<SocialMediaPost> {
-    const { content, platform, scheduledTime, userId } = data;
+    const { content, platform, scheduledFor, userId } = data;
 
     // Validate scheduling time
-    if (new Date(scheduledTime) <= new Date()) {
+    if (new Date(scheduledFor) <= new Date()) {
       throw new AppError('Scheduled time must be in the future', 400);
     }
 
@@ -25,7 +26,7 @@ export class PostSchedulerService {
       data: {
         content,
         platform,
-        scheduledTime,
+        scheduledFor,
         status: 'scheduled',
         userId
       }
@@ -65,10 +66,19 @@ export class PostSchedulerService {
 
     switch (post.platform) {
       case 'twitter':
-        await TwitterService.schedulePost(post.content, post.scheduledTime, account.accessToken);
+        await TwitterService.schedulePost(post.content, post.scheduledFor, account.accessToken);
         break;
       default:
         throw new AppError(`Unsupported platform: ${post.platform}`, 400);
     }
+  }
+
+  static async getScheduledPosts(userId: string): Promise<SocialMediaPost[]> {
+    return prisma.socialMediaPost.findMany({
+      where: {
+        userId,
+        status: 'scheduled'
+      }
+    });
   }
 }

@@ -1,5 +1,6 @@
 import prisma from '../../lib/prisma';
-import { SocialMediaPost, Platform } from '@prisma/client';
+import { SocialMediaPost } from '@prisma/client';
+import { Platform } from '../../types/models';
 import logger from '../../utils/monitoring/logger';
 import { TwitterService } from '../social-media/platforms/twitter';
 import { AppError } from '../../utils/errors/AppError';

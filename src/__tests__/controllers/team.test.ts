@@ -18,7 +18,8 @@ describe('TeamController', () => {
         firstName: 'Test',
         lastName: 'User',
         plan: 'minimal',
-        teamMembers: []
+        createdAt: new Date(),
+  updatedAt: new Date()
       },
       body: {
         userId: '2',
@@ -48,7 +49,7 @@ describe('TeamController', () => {
 
       (TeamService.addMember as jest.Mock).mockResolvedValue(mockTeamMember);
 
-      await TeamController.addTeamMember(
+      await TeamController.addMember(
         mockRequest as Request,
         mockResponse as Response,
         mockNext
@@ -65,7 +66,7 @@ describe('TeamController', () => {
     it('should handle missing fields', async () => {
       mockRequest.params = {};
       
-      await TeamController.addTeamMember(
+      await TeamController.addMember(
         mockRequest as Request,
         mockResponse as Response,
         mockNext
@@ -78,7 +79,7 @@ describe('TeamController', () => {
       const error = new Error('Service error');
       (TeamService.addMember as jest.Mock).mockRejectedValue(error);
 
-      await TeamController.addTeamMember(
+      await TeamController.addMember(
         mockRequest as Request,
         mockResponse as Response,
         mockNext

@@ -1,19 +1,19 @@
 import { Router } from 'express';
 import { AnalyticsController } from '../../controllers/analytics.controller';
-import { authenticate } from '../../middleware/auth';
+import { authMiddleware } from '../../middleware/auth';
 
 const router = Router();
 
 router.get(
   '/data',
-  authenticate,
+  authMiddleware,
   AnalyticsController.getAnalytics
 );
 
 router.get(
   '/metrics',
-  authenticate,
-  AnalyticsController.getMetrics
+  authMiddleware,
+  AnalyticsController.getAnalytics
 );
 
 export default router;

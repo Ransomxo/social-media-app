@@ -25,12 +25,12 @@ describe('OpenAIService', () => {
 
       mockedAxios.post.mockResolvedValueOnce(mockResponse);
 
-      const caption = await OpenAIService.generateCaption(
-        'Test content',
-        'twitter',
-        'professional',
-        'medium'
-      );
+      const caption = await OpenAIService.generateCaption({
+        content: 'Test content',
+        platform: 'twitter',
+        tone: 'professional',
+        length: 'medium'
+      });
 
       expect(caption).toBe('Generated test caption #awesome');
       expect(mockedAxios.post).toHaveBeenCalledWith(
@@ -44,12 +44,12 @@ describe('OpenAIService', () => {
       mockedAxios.post.mockRejectedValueOnce(new Error('API Error'));
 
       await expect(
-        OpenAIService.generateCaption(
-          'Test content',
-          'twitter',
-          'professional',
-          'medium'
-        )
+        OpenAIService.generateCaption({
+          content: 'Test content',
+          platform: 'twitter',
+          tone: 'professional',
+          length: 'medium'
+        })
       ).rejects.toThrow('Failed to generate caption');
     });
   });

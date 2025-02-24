@@ -2,6 +2,27 @@ import { Request, Response, NextFunction } from 'express';
 import { SocialMediaAccountService } from '../../services/social-media/account.service';
 
 export class SocialMediaAccountController {
+  static async getAccounts(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+
+      const accounts = await SocialMediaAccountService.getAccounts(userId);
+      res.json({
+        success: true,
+        data: accounts
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async connectAccount(
     req: Request,
     res: Response,

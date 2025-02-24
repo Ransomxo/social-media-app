@@ -47,15 +47,15 @@ export class SocialMediaAccountService {
           }
         });
       } catch (dbError) {
-        throw new AppError(`Failed to create social media account: ${dbError.message}`, 500);
+        throw new AppError(`Failed to create social media account: ${(dbError as Error).message}`, 500);
       }
     } catch (error) {
       if (error instanceof AppError) {
         throw error;
       }
       throw new AppError(
-        `Failed to connect ${platform} account: ${error.message}`,
-        error.statusCode || 500
+        `Failed to connect ${platform} account: ${(error as Error).message}`,
+        (error as { statusCode?: number }).statusCode || 500
       );
     }
   }
@@ -73,5 +73,15 @@ export class SocialMediaAccountService {
         platform
       }
     });
+  }
+
+  static async getAccounts(userId: string): Promise<SocialMediaAccount[]> {
+    try {
+      return await prisma.socialMediaAccount.findMany({
+        where: { userId }
+      });
+    } catch (error) {
+      throw new AppError('Failed to fetch social media accounts', 500);
+    }
   }
 }

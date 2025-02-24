@@ -6,6 +6,8 @@ declare namespace Express {
       firstName: string;
       lastName: string;
       plan: string;
+      createdAt: Date;
+      updatedAt: Date;
     }
   }
 }

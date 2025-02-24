@@ -15,7 +15,8 @@ describe('AnalyticsController', () => {
         firstName: 'Test',
         lastName: 'User',
         plan: 'minimal',
-        teamMembers: []
+        createdAt: new Date(),
+  updatedAt: new Date()
       },
       query: {}
     };
@@ -34,7 +35,8 @@ describe('AnalyticsController', () => {
           platform: 'twitter',
           userId: '1',
           content: 'Test post',
-          metrics: { likes: 10 },
+          status: 'published',
+          scheduledFor: new Date(),
           createdAt: new Date(),
           updatedAt: new Date()
         }

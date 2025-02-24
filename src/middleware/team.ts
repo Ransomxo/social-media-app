@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { AppError } from '../utils/errors/AppError';
 import prisma from '../lib/prisma';
 
-export const checkTeamPermissions = async (
+export const checkTeamAccess = (allowedRoles: string[]) => async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -18,12 +18,11 @@ export const checkTeamPermissions = async (
     const teamMember = await prisma.teamMember.findFirst({
       where: {
         userId,
-        teamId,
-        role: 'admin'
+        teamId
       }
     });
 
-    if (!teamMember) {
+    if (!teamMember || !allowedRoles.includes(teamMember.role)) {
       throw new AppError('Insufficient permissions', 403);
     }
 

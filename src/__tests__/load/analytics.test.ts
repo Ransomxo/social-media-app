@@ -15,7 +15,8 @@ describe('Analytics Load Testing', () => {
         firstName: 'Test',
         lastName: 'User',
         plan: 'minimal',
-        teamMembers: []
+        createdAt: new Date(),
+  updatedAt: new Date()
       },
       query: {}
     };
@@ -53,12 +54,12 @@ describe('Analytics Load Testing', () => {
       const largeDataset = Array(1000).fill(null).map((_, index) => ({
         id: `post${index}`,
         platform: 'twitter',
-        metrics: {
-          likes: Math.floor(Math.random() * 1000),
-          shares: Math.floor(Math.random() * 500),
-          comments: Math.floor(Math.random() * 200)
-        },
-        createdAt: new Date()
+        userId: '1',
+        content: 'Test post',
+        status: 'published',
+        scheduledFor: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date()
       }));
 
       prismaMock.socialMediaPost.findMany.mockResolvedValue(largeDataset);

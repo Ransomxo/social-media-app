@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { PostSchedulerService, CreatePostRequest } from '../../services/social-media/post/scheduler.service';
+import { PostSchedulerService, PostScheduleRequest } from '../../services/social-media/post/scheduler.service';
 import { AppError } from '../../utils/errors/AppError';
 
 export class PostController {
@@ -10,17 +10,18 @@ export class PostController {
         throw new AppError('Unauthorized', 401);
       }
 
-      const postRequest: CreatePostRequest = {
+      const postRequest: PostScheduleRequest = {
         content: req.body.content,
-        mediaUrls: req.body.mediaUrls || [],
-        scheduledTime: new Date(req.body.scheduledTime),
-        socialAccountIds: req.body.socialAccountIds
+        platform: req.body.platform,
+        scheduledFor: new Date(req.body.scheduledFor),
+        userId
       };
 
-      await PostSchedulerService.schedulePost(userId, postRequest);
+      const post = await PostSchedulerService.schedulePost(postRequest);
       
       res.status(201).json({
-        message: 'Post scheduled successfully'
+        success: true,
+        data: post
       });
     } catch (error) {
       next(error);
@@ -37,7 +38,8 @@ export class PostController {
       const posts = await PostSchedulerService.getScheduledPosts(userId);
       
       res.json({
-        posts
+        success: true,
+        data: posts
       });
     } catch (error) {
       next(error);

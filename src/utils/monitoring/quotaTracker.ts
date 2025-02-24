@@ -40,6 +40,6 @@ export class QuotaTracker {
       instagram: 1000
     };
 
-    return usage < limits[platform] || false;
+    return usage < (limits as Record<string, number>)[platform] || false;
   }
 }

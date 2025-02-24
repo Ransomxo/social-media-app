@@ -12,9 +12,11 @@ export async function exchangeInstagramCode(code: string, redirectUri: string): 
       redirect_uri: redirectUri,
     });
 
+    const accountId = await getInstagramAccountId(response.data.access_token);
     return {
       accessToken: response.data.access_token,
-      expiresIn: response.data.expires_in
+      refreshToken: response.data.refresh_token,
+      accountId
     };
   } catch (error) {
     throw new AppError('Failed to exchange Instagram authorization code', 500);
