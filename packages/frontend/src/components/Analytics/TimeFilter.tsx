@@ -1,10 +1,10 @@
 'use client';
 
 import React from 'react';
-import { TimeFilter } from '../../types/analytics';
+import type { TimeFilter as ITimeFilter } from '../../types/analytics';
 
 interface TimeFilterProps {
-  filters: TimeFilter[];
+  filters: ITimeFilter[];
   selectedFilter: string;
   onFilterChange: (filterId: string) => void;
 }
