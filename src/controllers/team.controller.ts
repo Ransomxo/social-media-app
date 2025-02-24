@@ -12,6 +12,10 @@ export class TeamController {
       const { name } = req.body;
       const userId = req.user?.id;
 
+      if (!userId) {
+        throw new AppError('User not authenticated', 401);
+      }
+
       const team = await TeamService.createTeam(name, userId);
 
       res.status(201).json({
@@ -19,7 +23,7 @@ export class TeamController {
         team
       });
     } catch (error) {
-      next(new AppError('Failed to create team', 500));
+      next(error);
     }
   }
 
@@ -30,17 +34,21 @@ export class TeamController {
   ): Promise<void> {
     try {
       const { teamId } = req.params;
-      const { userId, role } = req.body;
+      const { userId: memberId, role } = req.body;
       const ownerId = req.user?.id;
 
-      const member = await TeamService.addMember(teamId, userId, role, ownerId);
+      if (!ownerId) {
+        throw new AppError('User not authenticated', 401);
+      }
+
+      const member = await TeamService.addMember(teamId, memberId, role, ownerId);
 
       res.status(201).json({
         message: 'Team member added successfully',
         member
       });
     } catch (error) {
-      next(new AppError('Failed to add team member', 500));
+      next(error);
     }
   }
 }

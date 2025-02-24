@@ -12,6 +12,10 @@ export class SocialMediaAccountController {
       const { platform, code, redirectUri } = req.body;
       const userId = req.user?.id;
 
+      if (!userId) {
+        throw new AppError('User not authenticated', 401);
+      }
+
       const account = await SocialMediaAccountService.connectAccount(
         platform,
         code,
@@ -24,7 +28,7 @@ export class SocialMediaAccountController {
         account
       });
     } catch (error) {
-      next(new AppError('Failed to connect social media account', 500));
+      next(error);
     }
   }
 }
