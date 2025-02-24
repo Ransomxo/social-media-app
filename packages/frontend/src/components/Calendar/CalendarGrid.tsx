@@ -56,7 +56,7 @@ export default function CalendarGrid({
         <div className="sticky top-0 z-10 bg-gray-900/90 backdrop-blur-sm">
           <div className="grid grid-cols-[auto_1fr]">
             <div className="w-24 bg-gray-900/90 backdrop-blur-sm border-b border-gray-800/50 py-4" />
-            <div className={view === 'Day' ? 'grid grid-cols-1' : 'grid grid-cols-7'}>
+            <div className={view === 'day' ? 'grid grid-cols-1' : 'grid grid-cols-7'}>
               {renderDayHeaders()}
             </div>
           </div>
