@@ -1,24 +1,13 @@
 import { Router } from 'express';
 import { authMiddleware } from '../../middleware/auth';
+import { PostController } from '../../controllers/social-media/post.controller';
 
 const router = Router();
 
 // Schedule a new post
-router.post('/schedule', authMiddleware, async (req, res, next) => {
-  // Implementation coming in post scheduling system step
-  res.status(501).json({ message: 'Not implemented yet' });
-});
-
-// Generate caption using AI
-router.post('/generate-caption', authMiddleware, async (req, res, next) => {
-  // Implementation coming in OpenAI integration step
-  res.status(501).json({ message: 'Not implemented yet' });
-});
+router.post('/schedule', authMiddleware, PostController.schedulePost);
 
 // Get scheduled posts
-router.get('/', authMiddleware, async (req, res, next) => {
-  // Implementation coming in post scheduling system step
-  res.status(501).json({ message: 'Not implemented yet' });
-});
+router.get('/', authMiddleware, PostController.getScheduledPosts);
 
 export default router;
