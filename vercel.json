@@ -3,20 +3,13 @@
   "builds": [
     {
       "src": "dist/index.js",
-      "use": "@vercel/node",
-      "config": {
-        "maxDuration": 10,
-        "memory": 1024
-      }
+      "use": "@vercel/node"
     }
   ],
-  "env": {
-    "NODE_ENV": "production",
-    "DATABASE_URL": "@database_url",
-    "JWT_SECRET": "@jwt_secret",
-    "OPENAI_API_KEY": "@openai_api_key",
-    "ENCRYPTION_KEY": "@encryption_key",
-    "DEBUG": "app:*"
-  },
-  "regions": ["iad1"]
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "dist/index.js"
+    }
+  ]
 }
