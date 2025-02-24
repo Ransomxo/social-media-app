@@ -31,7 +31,7 @@ interface PlatformSummary {
 
 interface AnalyticsData {
   createdAt: Date;
-  metrics: Prisma.JsonValue;
+  metrics: Record<keyof AnalyticsMetrics, number>;
   socialAccount: { platform: string };
   post: { id: string };
 }
@@ -86,14 +86,25 @@ export class AnalyticsCollectorService {
   static async generateReport(userId: string, options: ReportOptions): Promise<void> {
     const analytics = await prisma.analytics.findMany({
       where: {
-        socialAccount: {
-          userId
-        },
-        createdAt: {
-          gte: options.frequency === 'daily'
-            ? new Date(Date.now() - 24 * 60 * 60 * 1000)
-            : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-        }
+        AND: [
+          {
+            socialAccount: {
+              userId
+            }
+          },
+          {
+            createdAt: {
+              gte: options.frequency === 'daily'
+                ? new Date(Date.now() - 24 * 60 * 60 * 1000)
+                : new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+            }
+          },
+          {
+            post: {
+              isNot: null
+            }
+          }
+        ]
       },
       select: {
         createdAt: true,
@@ -115,12 +126,14 @@ export class AnalyticsCollectorService {
       throw new AppError('No analytics data found for the specified period', 404);
     }
 
-    const processedAnalytics = analytics.map(a => ({
-      createdAt: a.createdAt,
-      metrics: a.metrics as Record<keyof AnalyticsMetrics, number>,
-      socialAccount: a.socialAccount,
-      post: a.post
-    }));
+    const processedAnalytics: AnalyticsData[] = analytics
+      .filter((a): a is typeof a & { post: { id: string } } => a.post !== null)
+      .map(a => ({
+        createdAt: a.createdAt,
+        metrics: a.metrics as Record<keyof AnalyticsMetrics, number>,
+        socialAccount: a.socialAccount,
+        post: a.post
+      }));
 
     const reportContent = this.generateReportContent(processedAnalytics, options.metrics);
     const csvContent = this.generateCSVReport(processedAnalytics, options.metrics);
@@ -154,10 +167,7 @@ export class AnalyticsCollectorService {
   }
 
   private static generateReportContent(
-    analytics: Array<{
-      metrics: Record<keyof AnalyticsMetrics, number>;
-      socialAccount: { platform: string };
-    }>,
+    analytics: AnalyticsData[],
     metrics: (keyof AnalyticsMetrics)[]
   ): string {
     const platformSummary = analytics.reduce<Record<string, PlatformSummary>>((acc, a) => {
@@ -199,12 +209,7 @@ export class AnalyticsCollectorService {
   }
 
   private static generateCSVReport(
-    analytics: Array<{
-      createdAt: Date;
-      metrics: Record<keyof AnalyticsMetrics, number>;
-      socialAccount: { platform: string };
-      post: { id: string };
-    }>,
+    analytics: AnalyticsData[],
     metrics: (keyof AnalyticsMetrics)[]
   ): string {
     const headers = ['Date', 'Platform', 'Post ID', ...metrics];
