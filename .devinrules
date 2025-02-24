@@ -223,3 +223,61 @@ Development Guidelines:
    - Performance tracking
    - Database monitoring
 
+
+## Credential Management
+
+### Required Credentials
+1. Infrastructure Access:
+   - DigitalOcean Droplet (137.184.15.8)
+   - Contact: rowdyroque8@gmail.com for SSH key access
+   - Access Level: Root via SSH key authentication
+
+2. Database Access:
+   - Neon PostgreSQL Instance
+   - Request access through team lead
+   - Connection string format: postgresql://user:pass@host/database
+
+3. Environment Variables:
+   Frontend (.env):
+   ```
+   NEXT_PUBLIC_API_URL=https://api.omniposting.com
+   NEXT_PUBLIC_APP_URL=https://omniposting.com
+   ```
+
+   Backend (.env):
+   ```
+   PORT=3001
+   DATABASE_URL=[request from database admin]
+   JWT_SECRET=[request from security team]
+   OPENAI_API_KEY=[request from team lead]
+   ```
+
+### Credential Access Process
+1. Development Environment Setup:
+   - Copy .env.example to .env in both frontend and backend
+   - Request credentials from team lead (rowdyroque8@gmail.com)
+   - Use secure channels for credential transmission
+   - Never commit .env files to repository
+
+2. Production Credentials:
+   - Managed via DigitalOcean environment configuration
+   - Access restricted to DevOps team
+   - Rotation schedule: Every 90 days
+   - Emergency rotation process documented in internal wiki
+
+3. Access Request Process:
+   a. Email request to rowdyroque8@gmail.com
+   b. Include:
+      - Team role (UI/UX or Backend)
+      - Required access level
+      - Project justification
+   c. Follow security onboarding process
+   d. Sign NDA if required
+
+4. Security Guidelines:
+   - Never share credentials via unsecured channels
+   - Do not store credentials in code or documentation
+   - Report any potential security issues immediately
+   - Use environment variables for all sensitive data
+   - Rotate personal access tokens regularly
+
