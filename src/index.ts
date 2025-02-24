@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { initSentry } from './utils/monitoring/sentry';
 import { apiLimiter, authLimiter, socialMediaLimiter } from './utils/monitoring/rateLimit';
@@ -7,6 +7,7 @@ import authRoutes from './routes/auth';
 import socialMediaRoutes from './routes/social-media';
 import teamRoutes from './routes/team';
 import logger from './utils/monitoring/logger';
+import { AppError } from './utils/errors/AppError';
 
 const app = express();
 
@@ -35,7 +36,7 @@ app.use('/api/social-media', socialMediaRoutes);
 app.use('/api/team', teamRoutes);
 
 // Error handling
-app.use((err, req, res, next) => {
+app.use((err: AppError, req: Request, res: Response, _next: NextFunction): void => {
   logger.error('Application error', {
     error: err,
     request: {

@@ -1,150 +1,81 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../../lib/prisma';
+import { SocialMediaPost, Platform } from '@prisma/client';
+import logger from '../../../utils/monitoring/logger';
+import { TwitterService } from '../platforms/twitter';
 import { AppError } from '../../../utils/errors/AppError';
-import { EncryptionService } from '../../../utils/encryption';
 
-const prisma = new PrismaClient();
-
-export interface CreatePostRequest {
+interface PostScheduleRequest {
   content: string;
-  mediaUrls: string[];
+  platform: Platform;
   scheduledTime: Date;
-  socialAccountIds: string[];
+  userId: string;
 }
 
-export interface ScheduledPost {
+interface PostResponse {
   id: string;
-  content: string;
-  mediaUrls: string[];
-  scheduledTime: Date;
+  platform: string;
   status: string;
-  socialAccount: {
-    id: string;
-    platform: string;
-  };
-  createdAt: Date;
-  updatedAt: Date;
+  externalId?: string;
 }
 
 export class PostSchedulerService {
-  static async schedulePost(userId: string, request: CreatePostRequest): Promise<void> {
-    const { content, mediaUrls, scheduledTime, socialAccountIds } = request;
+  static async schedulePost(data: PostScheduleRequest): Promise<SocialMediaPost> {
+    const { content, platform, scheduledTime, userId } = data;
 
-    // Validate request
-    if (!content) {
-      throw new AppError('Content is required', 400);
-    }
-    if (scheduledTime < new Date()) {
+    // Validate scheduling time
+    if (new Date(scheduledTime) <= new Date()) {
       throw new AppError('Scheduled time must be in the future', 400);
     }
-    if (!socialAccountIds.length) {
-      throw new AppError('At least one social media account is required', 400);
-    }
 
-    // Verify account ownership
-    const accounts = await prisma.socialMediaAccount.findMany({
-      where: {
-        id: { in: socialAccountIds },
+    // Create post record
+    const post = await prisma.socialMediaPost.create({
+      data: {
+        content,
+        platform,
+        scheduledTime,
+        status: 'scheduled',
         userId
       }
     });
 
-    if (accounts.length !== socialAccountIds.length) {
-      throw new AppError('Invalid social media account IDs', 400);
-    }
+    // Schedule the post
+    try {
+      await this.scheduleForPlatform(post);
+      return post;
+    } catch (error) {
+      logger.error('Failed to schedule post', {
+        postId: post.id,
+        platform,
+        error
+      });
+      
+      await prisma.socialMediaPost.update({
+        where: { id: post.id },
+        data: { status: 'failed' }
+      });
 
-    // Create posts for each platform
-    await Promise.all(accounts.map(account => 
-      prisma.post.create({
-        data: {
-          content,
-          mediaUrls,
-          scheduledTime,
-          status: 'scheduled',
-          socialAccountId: account.id
-        }
-      })
-    ));
-  }
-
-  static async getScheduledPosts(userId: string): Promise<ScheduledPost[]> {
-    const posts = await prisma.post.findMany({
-      where: {
-        socialAccount: {
-          userId
-        }
-      },
-      include: {
-        socialAccount: {
-          select: {
-            id: true,
-            platform: true
-          }
-        }
-      },
-      orderBy: {
-        scheduledTime: 'asc'
-      }
-    });
-
-    return posts;
-  }
-
-  static async processScheduledPosts(): Promise<void> {
-    const now = new Date();
-    const posts = await prisma.post.findMany({
-      where: {
-        status: 'scheduled',
-        scheduledTime: {
-          lte: now
-        }
-      },
-      include: {
-        socialAccount: true
-      }
-    });
-
-    for (const post of posts) {
-      try {
-        await this.publishPost(post);
-        await prisma.post.update({
-          where: { id: post.id },
-          data: { status: 'posted' }
-        });
-      } catch (error) {
-        console.error(`Failed to publish post ${post.id}:`, error);
-        await prisma.post.update({
-          where: { id: post.id },
-          data: { 
-            status: 'failed',
-            updatedAt: new Date()
-          }
-        });
-      }
+      throw new AppError('Failed to schedule post', 500);
     }
   }
 
-  private static async publishPost(post: any): Promise<void> {
-    const accessToken = EncryptionService.decrypt(post.socialAccount.accessToken);
-    
-    switch (post.socialAccount.platform) {
+  private static async scheduleForPlatform(post: SocialMediaPost): Promise<void> {
+    const account = await prisma.socialMediaAccount.findFirst({
+      where: {
+        userId: post.userId,
+        platform: post.platform
+      }
+    });
+
+    if (!account) {
+      throw new AppError(`No connected ${post.platform} account found`, 400);
+    }
+
+    switch (post.platform) {
       case 'twitter':
-        await this.publishToTwitter(post, accessToken);
-        break;
-      case 'instagram':
-        await this.publishToInstagram(post, accessToken);
+        await TwitterService.schedulePost(post.content, post.scheduledTime, account.accessToken);
         break;
       default:
-        throw new AppError(`Unsupported platform: ${post.socialAccount.platform}`, 400);
+        throw new AppError(`Unsupported platform: ${post.platform}`, 400);
     }
-  }
-
-  private static async publishToTwitter(post: any, accessToken: string): Promise<void> {
-    // Implementation will be added in platform-specific handlers
-    throw new Error('Not implemented');
-  }
-
-  private static async publishToInstagram(post: any, accessToken: string): Promise<void> {
-    // Implementation will be added in platform-specific handlers
-    throw new Error('Not implemented');
   }
 }

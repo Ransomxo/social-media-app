@@ -1,29 +1,39 @@
-import { PlatformService } from './platforms/twitter';
-import { EncryptionService } from '../../utils/encryption';
 import prisma from '../../lib/prisma';
+import { EncryptionService } from '../../utils/encryption';
+import { SocialMediaAccount } from '@prisma/client';
 
 export class SocialMediaAccountService {
-  static async connectAccount(
+  static async createAccount(
+    userId: string,
     platform: string,
-    code: string,
-    redirectUri: string,
-    userId: string
-  ) {
-    const platformService = new PlatformService();
-    const tokens = await platformService.getAccessToken(code, redirectUri);
-
-    const encryptedAccessToken = EncryptionService.encrypt(tokens.accessToken);
-    const encryptedRefreshToken = tokens.refreshToken 
-      ? EncryptionService.encrypt(tokens.refreshToken)
+    accountId: string,
+    accessToken: string,
+    refreshToken?: string
+  ): Promise<SocialMediaAccount> {
+    const encryptedAccessToken = EncryptionService.encrypt(accessToken);
+    const encryptedRefreshToken = refreshToken 
+      ? EncryptionService.encrypt(refreshToken)
       : null;
 
     return prisma.socialMediaAccount.create({
       data: {
-        platform,
-        accountId: tokens.accountId,
         userId,
+        platform,
+        accountId,
         accessToken: encryptedAccessToken,
         refreshToken: encryptedRefreshToken
+      }
+    });
+  }
+
+  static async getAccount(
+    userId: string,
+    platform: string
+  ): Promise<SocialMediaAccount | null> {
+    return prisma.socialMediaAccount.findFirst({
+      where: {
+        userId,
+        platform
       }
     });
   }
