@@ -1,0 +1,55 @@
+# Project Documentation
+
+## Deployment Configuration
+
+### Frontend (omniposting.com)
+- Deployed on Digital Ocean droplet
+- Build output: standalone Next.js application
+- Nginx configuration in packages/frontend/nginx/omniposting.conf
+- Deployment script in packages/frontend/scripts/deploy.sh
+
+### Build and Deploy Process
+1. Build the frontend:
+   ```bash
+   cd packages/frontend
+   npm install
+   npm run build
+   ```
+
+2. Deploy to production:
+   - Build files are in .next/standalone/
+   - Copy build files to /var/www/omniposting.com/
+   - Configure nginx using omniposting.conf
+   - Restart nginx service
+
+### Environment Setup
+- Node.js 18+
+- Next.js 14
+- Nginx
+- PM2 for process management
+
+### Domain Configuration
+- Frontend: https://omniposting.com/
+- Backend API: https://api.omniposting.com/
+
+### Development Guidelines
+- UI/UX changes must be tested locally before deployment
+- Follow the dark mode theme with purple accents
+- Use Tailwind CSS for styling
+- Maintain component-based architecture
+
+### Deployment Steps
+1. SSH into the Digital Ocean droplet
+2. Navigate to /var/www/omniposting.com
+3. Pull the latest changes from the repository
+4. Run the deployment script:
+   ```bash
+   cd packages/frontend
+   ./scripts/deploy.sh
+   ```
+
+### Infrastructure
+- Digital Ocean droplet hosts both frontend and backend
+- Nginx serves the frontend application
+- PM2 manages the Node.js processes
+- SSL certificates managed through Let's Encrypt
