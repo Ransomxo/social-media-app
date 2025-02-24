@@ -69,8 +69,10 @@ export default function Calendar() {
       title: eventData.title,
       start: eventData.start,
       end: eventData.end,
+      description: eventData.description,
       color: 'bg-purple-600/20 text-purple-200',
       participants: eventData.participants,
+      platform: eventData.platforms.join(', '),
     };
 
     setEvents([...events, newEvent]);
